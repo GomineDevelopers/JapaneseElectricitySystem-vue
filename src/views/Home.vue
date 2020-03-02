@@ -32,6 +32,7 @@ export default {
   background-color: #fff;
   line-height: 44px;
   padding: 0;
+  border-bottom: 1px solid #646464;
 }
 .el-main {
   height: calc(100% - 156px);
