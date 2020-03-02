@@ -1,6 +1,11 @@
 html,
 body {
   height: 100%;
+  margin: 0;
+  padding: 0;
+}
+.height_auto {
+  height: 100%;
 }
 /* 默认色 */
 .theme_color1 {
@@ -56,17 +61,15 @@ body {
   width: 4.2rem;
 }
 .common_Stitle_font4 {
-  width: 4.30rem;
+  width: 4.3rem;
 }
 .common_Stitle_font5 {
   width: 2.2rem;
-
 }
 
-
 /* 通用约定字体大小 */
-.common_fontsize{
-    font-size: 0.32rem;
+.common_fontsize {
+  font-size: 0.32rem;
 }
 /* 通用小灰字体 */
 .common_Sgray_font {
@@ -90,36 +93,35 @@ body {
   color: #81d8ce;
 }
 
-
 /* text-align: center */
-.textAlignCenter_w100{
-    text-align: center;
-    width:100vw;
+.textAlignCenter_w100 {
+  text-align: center;
+  width: 100vw;
 }
-.textAlignCenter_w100p{
-    text-align: center;
-    width:100%;
+.textAlignCenter_w100p {
+  text-align: center;
+  width: 100%;
 }
-.textAlignCenter{
-    text-align: center;
+.textAlignCenter {
+  text-align: center;
 }
-.inlineBlock{
-    display:inline-block ;
+.inlineBlock {
+  display: inline-block;
 }
-.blockB_floatL{
+.blockB_floatL {
   display: block;
   float: left;
 }
 
-.verticalAlignTop{
+.verticalAlignTop {
   vertical-align: top;
 }
 
-.w100{
+.w100 {
   width: 100%;
 }
 
 /* ***** */
-.m_test{
+.m_test {
   font-size: 6.7rem;
 }
