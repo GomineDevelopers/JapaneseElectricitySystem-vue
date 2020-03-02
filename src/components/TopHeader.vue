@@ -1,14 +1,6 @@
 <template>
   <el-row class="top_header">
-    <el-row class="header_right">
-      <span>
-        <img src="https://img.yzcdn.cn/vant/cat.jpeg" />
-        <i class="el-icon-arrow-down iconSize"></i>
-      </span>
-      <span class="logout_btn" @click="logout" title="退出登录">
-        <i class="el-icon-setting iconSize"></i>退出
-      </span>
-    </el-row>
+   
   </el-row>
 </template>
 <script>
