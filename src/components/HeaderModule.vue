@@ -7,8 +7,8 @@
         <span>快速注册</span>
       </el-col>
       <el-col :span="12" class="text_align_right">
-        <span>我的订单</span>
-        <span>购物车</span>
+        <span><img src="../assets/pic/order_icon.png" /> 我的订单</span>
+        <span><img src="../assets/pic/shopping_cart_icon.png" /> 购物车</span>
       </el-col>
     </el-row>
   </el-row>
@@ -45,5 +45,10 @@ export default {
 .text_align_right span {
   cursor: pointer;
   margin-left: 32px;
+}
+.text_align_right span img {
+  width: 20px;
+  height: 20px;
+  vertical-align: sub;
 }
 </style>

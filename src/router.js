@@ -7,7 +7,6 @@ Vue.use(Router);
 // 404 - 404
 // 首页 - Home(/)
 
-
 export default new Router({
   mode: "history",
   base: process.env.BASE_URL,
@@ -15,7 +14,15 @@ export default new Router({
     {
       path: "/",
       name: "home",
-      component: () => import("@/views/Home")
+      component: () => import("@/views/Home"),
+      redirect: "/homepage",
+      children: [
+        {
+          path: "/homepage",
+          name: "HomePage",
+          component: () => import("@/views/HomePage")
+        }
+      ]
     },
     {
       path: "/test",
@@ -35,5 +42,6 @@ export default new Router({
       name: "Register",
       component: () => import("@/views/Register")
     },
+
   ]
 });
