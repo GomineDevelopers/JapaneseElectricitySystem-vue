@@ -36,6 +36,10 @@ export default {
 }
 .el-main {
   height: calc(100% - 156px);
+  width: 62.5%;
+  min-width: 1200px;
+  margin: 0 auto;
+  padding: 0;
 }
 .el-footer {
   background-color: #2b2a2f;
