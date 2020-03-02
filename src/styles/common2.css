@@ -1,0 +1,317 @@
+@media screen and (max-width: 375px) {
+  html {
+    font-size: 11px;
+  }
+}
+@media screen and (max-width: 414px) {
+  html {
+    font-size: 13px;
+  }
+}
+.flex {
+  display: -webkit-flex;
+  display: flex;
+}
+.flex_1 {
+  flex: 1;
+}
+.flex_align_center {
+  align-items: center;
+}
+.flex_direction {
+  flex-direction: column;
+}
+.flex_justify_content {
+  justify-content: center;
+}
+.flex_justify_between {
+  justify-content: space-between;
+}
+
+/* vant样式重写 */
+.van-cell {
+  padding: 0rem;
+}
+.van-cell .van-field__control {
+  color: #41485d;
+}
+/* 修改input默认placeholder颜色 */
+.van-cell .van-field__control::-webkit-input-placeholder {
+  color: #d1d1d6;
+}
+.van-cell .van-field__control:-moz-placeholder {
+  color: #d1d1d6;
+}
+.van-cell .van-field__control::-moz-placeholder {
+  color: #d1d1d6;
+}
+.van-cell .van-field__control::-ms-input-placeholder {
+  color: #d1d1d6;
+}
+
+/* 外层容器 */
+.van_container {
+  height: 100%;
+}
+.height_auto {
+  height: 100%;
+}
+.font_weight_500 {
+  font-weight: 500;
+}
+
+/* ****** 输入搜索框 */
+.van_container_body .van-cell .van-field__control {
+  font-size: 0.28rem;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  height: 0.4rem;
+}
+.van-field__left-icon .van-icon,
+.van-field__right-icon .van-icon {
+  font-size: 0.5rem;
+  color: #81d8ce;
+  margin-top: 0.05rem;
+}
+.van_container_body .van-search {
+  padding: 0rem 0rem;
+}
+.van_container_body .van-search__content {
+  padding-left: 0rem;
+}
+.van_container_body .van-field__left-icon {
+  display: none;
+}
+.van_container_body .van-cell__value--alone {
+  padding-left: 0rem;
+  height: 0.4rem;
+}
+.van_container_body .van-field__body {
+  height: 0.4rem;
+}
+.van_container_body .van-search .van-cell {
+  padding: 0.18rem 0.48rem;
+  background: rgba(255, 255, 255, 1);
+  border-radius: 0.44rem;
+  border: 0.02rem solid #81d8ce;
+}
+.van-search__content {
+  background: rgba(255, 255, 255, 1);
+}
+
+/* 字体设置 */
+.main_font {
+  font-size: 0.3rem;
+  color: #41485d;
+  font-weight: 500;
+}
+.main_font2 {
+  font-size: 0.32rem;
+  color: #111a34;
+  font-weight: 500;
+}
+.main_font3 {
+  font-size: 0.28rem;
+  color: #858b9c;
+  font-weight: 400;
+}
+.main_font4 {
+  font-size: 0.28rem;
+  color: #41485d;
+  font-weight: 400;
+}
+.main_font5 {
+  font-size: 0.28rem;
+  color: #111a34;
+  font-weight: 500;
+}
+.main_font6 {
+  font-size: 0.28rem;
+  color: #41485d;
+  font-weight: 400;
+}
+.public_green_small {
+  font-size: 0.26rem;
+  color: #81d8ce;
+  font-weight: 400;
+}
+.padding_mudule {
+  padding: 0rem 0.32rem;
+}
+
+/* 按钮 */
+.public_button_middle {
+  width: 100%;
+  margin: 1rem 0rem;
+}
+.public_button_middle button {
+  display: block;
+  width: 3.6rem;
+  height: 0.9rem;
+  line-height: 0.9rem;
+  text-align: center;
+  background: rgba(129, 216, 206, 1);
+  border-radius: 0.45rem;
+  font-size: 0.32rem;
+  font-weight: 500;
+  color: #fff;
+  margin: 0rem auto;
+  border: none;
+  background: rgba(255, 255, 255, 0);
+  letter-spacing: 0.1rem;
+}
+/* 右侧箭头 > 样式 */
+.arrow_icon {
+  width: 0.6rem;
+  height: 0.6rem;
+}
+
+/* 侧边栏导航样式 */
+/* ****** 内容左侧导航 */
+.left_sidebar .van-sidebar {
+  height: 100%;
+  width: 1.8rem;
+  background: #f3f4f8;
+}
+.left_sidebar .van-sidebar-item {
+  position: relative;
+  font-size: 0.28rem;
+  color: #3a4055;
+  font-weight: 600;
+  background: #f3f4f8;
+  padding: 0.24rem 0rem;
+}
+.left_sidebar .van-sidebar-item__text {
+  margin-left: 0.19rem;
+}
+.left_sidebar .van-sidebar-item::after {
+  content: "";
+  position: absolute;
+  left: -0.01rem;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 0.34rem;
+  border-left: 0.06rem solid transparent;
+}
+.left_sidebar .van-sidebar-item--select {
+  color: #81d8ce;
+  border-color: transparent;
+  background: #fff;
+}
+.left_sidebar .van-sidebar-item--select::after {
+  border-color: #81d8ce;
+}
+.right_content.flex_1 {
+  overflow-y: auto;
+}
+
+/* 药店列表 */
+.pharmacy_list {
+  padding-right: 0.32rem;
+  min-height: 2.8rem;
+  border-bottom: 1px solid #eee;
+}
+.pharmacy_list_body {
+  width: 100%;
+}
+.list_item_top {
+  height: 1.02rem;
+  margin-bottom: 0.24rem;
+}
+.pharmacy_tips {
+  margin-top: 0.18rem;
+}
+.navigation_icon {
+  position: absolute;
+  top: 0;
+  right: 0.2rem;
+  width: 0.385rem;
+  height: 0.385rem;
+}
+.pharmacy_name span,
+.pharmacy_tips span {
+  display: block;
+}
+.pharmacy_name .main_font2 {
+  max-width: 2.5rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.pharmacy_time {
+  font-size: 0.28rem;
+  color: #81d8ce;
+  margin-left: 0.24rem;
+}
+.pharmacy_tips span {
+  font-size: 0.18rem;
+  padding: 0.03rem 0.09rem;
+  border-radius: 1rem;
+  border: 0.01rem solid;
+  text-align: center;
+  line-height: 0.32rem;
+  margin-right: 0.14rem;
+  white-space: nowrap;
+}
+.pharmacy_tips span.hour {
+  color: #f7af27;
+  border-color: #f7af27;
+}
+.pharmacy_tips span.health_insurance {
+  color: #26c2e1;
+  border-color: #26c2e1;
+}
+.pharmacy_tips span.cooperation {
+  color: #3cd7be;
+  border-color: #3cd7be;
+}
+.pharmacy_tips span.coupon {
+  color: #ff6865;
+  border-color: #ff6865;
+}
+.pharmacy_tel {
+  margin-bottom: 0.18rem;
+}
+.pharmacy_tel img,
+.pharmacy_address img {
+  width: 0.28rem;
+  height: 0.31rem;
+  margin-right: 0.18rem;
+}
+.pharmacy_tel,
+.pharmacy_address {
+  font-size: 0.28rem;
+  color: #858b9c;
+}
+
+/* 药店名字下面的3个小标签 24h营业 医保定点 合作药店 */
+.pharmacy_tips {
+  margin-top: 0.18rem;
+}
+.pharmacy_img {
+  width: 1.02rem;
+  height: 1.02rem;
+  margin-right: 0.24rem;
+  border-radius: 0.1rem;
+}
+.pharmacy_tips span {
+  font-size: 0.18rem;
+  border-radius: 1rem;
+  border: 0.01rem solid;
+  text-align: center;
+  line-height: 0.32rem;
+  margin-right: 0.14rem;
+  padding: 0.03rem 0.09rem;
+}
+.pharmacy_tips span.hour {
+  color: #f7af27;
+  border-color: #f7af27;
+}
+.pharmacy_tips span.health_insurance {
+  color: #26c2e1;
+  border-color: #26c2e1;
+}
+.pharmacy_tips span.cooperation {
+  color: #3cd7be;
+  border-color: #3cd7be;
+}
