@@ -2,7 +2,7 @@
   <div class="Home height_auto">
     <el-container class="height_auto">
       <el-header><HeaderModule></HeaderModule></el-header>
-      <el-main>Main</el-main>
+      <el-main><router-view /></el-main>
       <el-footer class="el-footer"><FooterModule></FooterModule></el-footer>
     </el-container>
   </div>
@@ -35,7 +35,6 @@ export default {
   border-bottom: 1px solid #646464;
 }
 .el-main {
-  height: calc(100% - 156px);
   width: 62.5%;
   min-width: 1200px;
   margin: 0 auto;
