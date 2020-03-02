@@ -1,99 +1,38 @@
-html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
+ /* html,
+ body {
+   height: 100%;
+   width: 100vw;
+ } */
+
+.flex {
+  display: -webkit-flex;
+  display: flex;
 }
+.flex_1 {
+  flex: 1;
+}
+.flex_align_center {
+  align-items: center;
+}
+.flex_direction {
+  flex-direction: column;
+}
+.flex_justify_content {
+  justify-content: center;
+}
+.flex_justify_between {
+  justify-content: space-between;
+}
+
+
 .height_auto {
   height: 100%;
 }
-/* 默认色 */
-.theme_color1 {
-  color: #111a34;
-}
-/* 正文色 */
-.theme_color2 {
-  color: #41485d;
-}
-/* 辅助色 */
-.theme_color3 {
-  color: #111a34;
-}
-/* 副标题和描述色 */
-.theme_color4 {
-  color: #858b9c;
-}
-/* 禁用色 */
-.theme_color5 {
-  color: #c5cad5;
-}
-.theme_backgroundcolor5 {
-  background-color: #c5cad5;
-}
-/* 主题字体：绿色 */
-.theme_color6 {
-  color: #81d8ce;
-}
-/* 主题字背景：白色 */
-.theme_background_color {
-  background: #ffffff;
-}
-/* 主题背景：绿色 */
-.theme_background_color2 {
-  background: #81d8ce;
-}
-
-/* 通用小标题字体 */
-.common_Stitle_font {
-  color: #111a34;
-  font-size: 0.32rem;
+.font_weight_500 {
   font-weight: 500;
 }
-.common_Stitle_font2 {
-  color: #111a34;
-  font-size: 0.32rem;
-  font-weight: bold;
-  display: inline-block;
-  width: 1.68rem;
-  vertical-align: top;
-}
-.common_Stitle_font3 {
-  width: 4.2rem;
-}
-.common_Stitle_font4 {
-  width: 4.3rem;
-}
-.common_Stitle_font5 {
-  width: 2.2rem;
-}
 
-/* 通用约定字体大小 */
-.common_fontsize {
-  font-size: 0.32rem;
-}
-/* 通用小灰字体 */
-.common_Sgray_font {
-  color: #c5cad5;
-  font-size: 0.28rem;
-  font-weight: 400;
-}
-/* 通用小黑字体 */
-.common_Sblack_font {
-  font-size: 0.28rem;
-  font-weight: 400;
-  color: #666f83;
-}
-/* 通用绿色按钮 */
-.common_middle_btn {
-  background-color: #81d8ce;
-  color: #ffffff;
-}
-.common_middle_btn2 {
-  background-color: #ffffff;
-  color: #81d8ce;
-}
 
-/* text-align: center */
 .textAlignCenter_w100 {
   text-align: center;
   width: 100vw;
@@ -117,11 +56,22 @@ body {
   vertical-align: top;
 }
 
+.inlineBlock_verTop{
+  display: inline-block;
+  vertical-align: top;
+}
+.inlineBlock_verTopP > div{
+  display: inline-block;
+  vertical-align: top;
+}
+
 .w100 {
   width: 100%;
 }
+.FontSize0{
+  font-size: 0;
+}
 
-/* ***** */
-.m_test {
-  font-size: 6.7rem;
+button:hover {
+  cursor: pointer;
 }

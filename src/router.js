@@ -22,10 +22,18 @@ export default new Router({
       name: "Test",
       component: () => import("@/views/Test")
     },
-
     { path: "/404", name: "NotFound404", component: () => import("@/views/NotFound404") },
     { path: "*", redirect: "/404" },
     // ********* system
-
+    {
+      path: "/login",
+      name: "Login",
+      component: () => import("@/views/Login")
+    },
+    {
+      path: "/register",
+      name: "Register",
+      component: () => import("@/views/Register")
+    },
   ]
 });
