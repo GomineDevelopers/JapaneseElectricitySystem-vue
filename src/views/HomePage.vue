@@ -109,6 +109,19 @@ export default {
   border-radius: 5px 0px 0px 5px;
   opacity: 0.3;
 }
+.el-tabs--border-card {
+  border: none;
+}
+.el-tabs--border-card > .el-tabs__header {
+  border-bottom: none;
+}
+.el-tabs--border-card > .el-tabs__header .el-tabs__item {
+  border: none;
+}
+.el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active {
+  border-left: none;
+  border-right: none;
+}
 </style>
 <style scoped>
 .top_body {
@@ -169,4 +182,9 @@ export default {
   color: #775563;
 }
 /* 头部搜索结束 */
+
+/* 商品列表开始 */
+.home_page_content {
+  margin-top: 42px;
+}
 </style>
