@@ -1,8 +1,10 @@
- /* html,
- body {
-   height: 100%;
-   width: 100vw;
- } */
+html,
+body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  /* width: 100vw; */
+}
 
 .flex {
   display: -webkit-flex;
@@ -24,14 +26,12 @@
   justify-content: space-between;
 }
 
-
 .height_auto {
   height: 100%;
 }
 .font_weight_500 {
   font-weight: 500;
 }
-
 
 .textAlignCenter_w100 {
   text-align: center;
@@ -56,11 +56,11 @@
   vertical-align: top;
 }
 
-.inlineBlock_verTop{
+.inlineBlock_verTop {
   display: inline-block;
   vertical-align: top;
 }
-.inlineBlock_verTopP > div{
+.inlineBlock_verTopP > div {
   display: inline-block;
   vertical-align: top;
 }
@@ -68,7 +68,7 @@
 .w100 {
   width: 100%;
 }
-.FontSize0{
+.FontSize0 {
   font-size: 0;
 }
 

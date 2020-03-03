@@ -9,6 +9,8 @@ import {
   CheckboxGroup,
   Checkbox,
   Container,
+  Carousel,
+  CarouselItem,
   Header,
   Footer,
   Aside,
