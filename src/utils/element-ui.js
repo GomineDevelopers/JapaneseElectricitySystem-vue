@@ -22,7 +22,17 @@ import {
   MessageBox,
   Message,
   Tabs,
-  TabPane
+  TabPane,
+  Pagination,
+  InputNumber,
+  Steps,
+  Step,
+  table,
+  TableColumn,
+  Rate,
+  Radio,
+  RadioGroup,
+  Dialog
 } from "element-ui";
 Vue.use(Button);
 Vue.use(Input);
@@ -47,3 +57,16 @@ Vue.use(Tabs);
 Vue.use(TabPane);
 Vue.prototype.$messageBox = MessageBox;
 Vue.prototype.$message = Message;
+Vue.use(Pagination);
+Vue.use(InputNumber);
+Vue.use(Steps);
+Vue.use(Step);
+Vue.use(table);
+Vue.use(TableColumn);
+Vue.use(Rate);
+Vue.use(Radio);
+Vue.use(RadioGroup);
+Vue.use(Dialog);
+
+
+Vue.prototype.$confirm = MessageBox.confirm;

@@ -22,3 +22,17 @@
 .flex_justify_between {
   justify-content: space-between;
 }
+
+.common.el-header {
+  height: 44px !important;
+  background-color: #fff;
+  line-height: 44px;
+  padding: 0;
+  border-bottom: 1px solid #646464;
+}
+.el-footer {
+  background-color: #2b2a2f;
+  height: 112px !important;
+  color: #fff8f8;
+  min-width: 1200px;
+}

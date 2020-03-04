@@ -5,7 +5,14 @@ Vue.use(Router);
 
 // 测试 - Test
 // 404 - 404
+
 // 首页 - Home(/)
+// 登录（密码登录/验证码登录） - Login
+// 注册 - Register
+// 商品详情 - ProductDetails 
+// 购物车 - ShoppingTrolley 
+// 核对订单信息（+添加收货地址） - CheckOrderInformation
+
 
 export default new Router({
   mode: "history",
@@ -42,6 +49,20 @@ export default new Router({
       name: "Register",
       component: () => import("@/views/Register")
     },
-
+    {
+      path: "/productdetails",
+      name: "ProductDetails",
+      component: () => import("@/views/ProductDetails")
+    },
+    {
+      path: "/shoppingtrolley",
+      name: "ShoppingTrolley",
+      component: () => import("@/views/ShoppingTrolley")
+    },
+    {
+      path: "/checkorderinformation",
+      name: "CheckOrderInformation",
+      component: () => import("@/views/CheckOrderInformation")
+    },
   ]
 });

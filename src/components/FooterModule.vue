@@ -1,13 +1,13 @@
 <template>
-  <el-row class="FooterModule">
+  <el-row class="textAlignCenter_w100p FooterModule">
     <el-row class="footer_content main_width_1200">
       <el-row class="footer_logo">隐私政策 - XXX海购</el-row>
-      <el-row>
+      <div class="textAlignCenter_w100p">
         <span>增值电信业务经营许可证：贵B-20160288</span>
         <span>（贵）网械平台备字[2018]第00007号</span>
         <span>贵公安网备33010802002216</span>
         <span>贵ICP备16011229号</span>
-      </el-row>
+      </div>
     </el-row>
   </el-row>
 </template>
@@ -25,6 +25,7 @@ export default {
 .FooterModule {
   font-size: 14px;
   text-align: center;
+  min-width: 1200px;
 }
 .FooterModule span {
   margin-left: 27px;
