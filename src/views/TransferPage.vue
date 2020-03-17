@@ -1,5 +1,5 @@
 <template>
-  <div class="TransferPage">
+  <div class="TransferPage height_auto">
     <vue-headful title="商城"></vue-headful>
   </div>
 </template>
@@ -25,4 +25,3 @@ export default {
 .TransferPage {
 }
 </style>
-

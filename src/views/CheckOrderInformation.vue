@@ -1,11 +1,14 @@
 <template>
-  <div class="CheckOrderInformation">
+  <div class="CheckOrderInformation height_auto">
     <vue-headful title="核对订单信息"></vue-headful>
     <el-header class="common">
       <HeaderModule id="navigation"></HeaderModule>
     </el-header>
     <el-main class="common">
-      <TopSearchBox :searchType="'CheckOrderInformation'" :categories="[]"></TopSearchBox>
+      <TopSearchBox
+        :searchType="'CheckOrderInformation'"
+        :categories="[]"
+      ></TopSearchBox>
 
       <div class="textAlignCenter_w100p steps_settings">
         <el-steps :active="1" align-center>
@@ -29,20 +32,24 @@
             <div class="adc_left">
               <span class="adc_font1">寄送至</span>
               <span class="adc_font2">
-                {{ CheckedAddress}}
+                {{ CheckedAddress }}
                 <span v-show="default_radio == address_raido">默认地址</span>
               </span>
             </div>
-            <div class="adc_right" @click="addressEditDialog('edit')">修改地址</div>
+            <div class="adc_right" @click="addressEditDialog('edit')">
+              修改地址
+            </div>
           </div>
           <div class="all_address">
             <el-radio-group v-model="address_raido" @change="radioChange">
-              <template v-for="(item,index) in ALL_Address">
-                <div class="perRadio" :key="index+ 'ad'">
+              <template v-for="(item, index) in ALL_Address">
+                <div class="perRadio" :key="index + 'ad'">
                   <el-radio :label="index">
-                    <span
-                      class="address_detail"
-                    >{{item.text}}&nbsp;({{item.name}})&nbsp;{{item.phone}}</span>
+                    <span class="address_detail"
+                      >{{ item.text }}&nbsp;({{ item.name }})&nbsp;{{
+                        item.phone
+                      }}</span
+                    >
                   </el-radio>
                 </div>
               </template>
@@ -63,7 +70,7 @@
               <template slot-scope="scope">
                 <div class="inlineBlock_verTopP">
                   <div class="Shopping_img_p">
-                    <img class="Shopping_img" :src="scope.row.ImgUrl " alt />
+                    <img class="Shopping_img" :src="scope.row.ImgUrl" alt />
                   </div>
                   <div class="product_text">{{ scope.row.productInfo }}</div>
                 </div>
@@ -72,7 +79,9 @@
             <el-table-column header-align="center" label="单价" width="220">
               <template slot-scope="scope">
                 <div>
-                  <div class="m_unitPriceHistory">￥{{ scope.row.unitPriceHistory }}</div>
+                  <div class="m_unitPriceHistory">
+                    ￥{{ scope.row.unitPriceHistory }}
+                  </div>
                   <div class="m_unitPrice">￥{{ scope.row.unitPrice }}</div>
                 </div>
               </template>
@@ -93,30 +102,44 @@
         <div class="inlineBlock_verTopP remark_p">
           <div class="remark">订单备注：</div>
           <div>
-            <textarea v-model="OrderRemark" placeholder="给卖家留言" name id cols="50" rows="5"></textarea>
+            <textarea
+              v-model="OrderRemark"
+              placeholder="给卖家留言"
+              name
+              id
+              cols="50"
+              rows="5"
+            ></textarea>
           </div>
         </div>
         <div class="shopping_over">
           <div class="soa1">
             <span>运费：</span>
             <span class="soa2">￥</span>
-            <span class="soa3">{{Number(freight)}}</span>
+            <span class="soa3">{{ Number(freight) }}</span>
           </div>
           <div class="soa1 sob1">
             <span>应付总金额（含运费）：</span>
             <span class="soa2">￥</span>
-            <span class="soa3">{{Number(freight) + Number(totalValue)}}</span>
+            <span class="soa3">{{ Number(freight) + Number(totalValue) }}</span>
           </div>
           <div class>
-            <button class="m_btn1 m_btn1b" @click="router_to('/shoppingtrolley')">上一步</button>
-            <button class="m_btn1 m_btn2 m_btn1b m_btn2b" @click="Settlement()">提交订单</button>
+            <button
+              class="m_btn1 m_btn1b"
+              @click="router_to('/shoppingtrolley')"
+            >
+              上一步
+            </button>
+            <button class="m_btn1 m_btn2 m_btn1b m_btn2b" @click="Settlement()">
+              提交订单
+            </button>
           </div>
         </div>
       </div>
 
       <!-- 对话框 -->
       <el-dialog
-        :title="addressEditType+'收货地址'"
+        :title="addressEditType + '收货地址'"
         :visible.sync="dialogVisible"
         width="30%"
         :before-close="handleClose"
@@ -125,14 +148,24 @@
           <div class="inlineBlock_verTopP dcPerRow">
             <div class="dc_sTtile">收货人姓名：</div>
             <div>
-              <input v-model="u_name" class="dc_input" placeholder="请输入" type="text" />
+              <input
+                v-model="u_name"
+                class="dc_input"
+                placeholder="请输入"
+                type="text"
+              />
             </div>
           </div>
 
           <div class="inlineBlock_verTopP dcPerRow">
             <div class="dc_sTtile">电话号码：</div>
             <div>
-              <input v-model="u_phone" class="dc_input" placeholder="请输入" type="text" />
+              <input
+                v-model="u_phone"
+                class="dc_input"
+                placeholder="请输入"
+                type="text"
+              />
             </div>
           </div>
 
@@ -140,7 +173,11 @@
             <div class="dc_sTtile">收货地址：</div>
             <div>
               <div class="linkage">
-                <el-select v-model="sheng" @change="choseProvince" placeholder="省级地区">
+                <el-select
+                  v-model="sheng"
+                  @change="choseProvince"
+                  placeholder="省级地区"
+                >
                   <el-option
                     v-for="item in province"
                     :key="item.id"
@@ -149,7 +186,11 @@
                   ></el-option>
                 </el-select>
                 <br />
-                <el-select v-model="shi" @change="choseCity" placeholder="市级地区">
+                <el-select
+                  v-model="shi"
+                  @change="choseCity"
+                  placeholder="市级地区"
+                >
                   <el-option
                     v-for="item in shi1"
                     :key="item.id"
@@ -158,7 +199,11 @@
                   ></el-option>
                 </el-select>
                 <br />
-                <el-select v-model="qu" @change="choseBlock" placeholder="区级地区">
+                <el-select
+                  v-model="qu"
+                  @change="choseBlock"
+                  placeholder="区级地区"
+                >
                   <el-option
                     v-for="item in qu1"
                     :key="item.id"
@@ -173,7 +218,12 @@
           <div class="inlineBlock_verTopP dcPerRow">
             <div class="dc_sTtile">详细地址：</div>
             <div>
-              <input v-model="u_address" class="dc_input" placeholder="请输入" type="text" />
+              <input
+                v-model="u_address"
+                class="dc_input"
+                placeholder="请输入"
+                type="text"
+              />
             </div>
           </div>
           <!-- <div class="buy_settings">
@@ -904,11 +954,7 @@ export default {
 };
 </script>
 
-
-
-
-
-<style >
+<style>
 /* ***** 进度条 */
 .CheckOrderInformation .el-step__head.is-finish {
   color: #775563;
@@ -1269,4 +1315,3 @@ input::-ms-input-placeholder {
   line-height: 20px;
 }
 </style>
-

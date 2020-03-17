@@ -1,13 +1,20 @@
 <template>
-  <div class="EvaluationDetails">
+  <div class="EvaluationDetails height_auto">
     <vue-headful title="评价详情"></vue-headful>
     <el-header class="common">
       <HeaderModule id="navigation"></HeaderModule>
     </el-header>
     <el-main class="common">
-      <TopSearchBox :searchType="'EvaluationDetails'" :categories="[]"></TopSearchBox>
+      <TopSearchBox
+        :searchType="'EvaluationDetails'"
+        :categories="[]"
+      ></TopSearchBox>
       <div class="pc_content">
-        <PageFlow :Flow1="'首页'" :Flow2="'我的订单'" :Flow3="'评价详情'"></PageFlow>
+        <PageFlow
+          :Flow1="'首页'"
+          :Flow2="'我的订单'"
+          :Flow3="'评价详情'"
+        ></PageFlow>
       </div>
 
       <div class="mc_content">
@@ -20,7 +27,7 @@
             style="width: 100%"
             @selection-change="handleSelectionChange"
             default-expand-all
-            :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+            :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
           >
             <el-table-column header-align="center" label="订单号" width="200">
               <template slot-scope="scope">
@@ -33,7 +40,7 @@
                   <div class="Shopping_img_p">
                     <img class="Shopping_img" :src="scope.row.ImgUrl" alt />
                   </div>
-                  <div class="product_text">{{scope.row.productInfo }}</div>
+                  <div class="product_text">{{ scope.row.productInfo }}</div>
                 </div>
               </template>
             </el-table-column>
@@ -76,7 +83,11 @@
                 </div>
               </template>
             </el-table-column>-->
-            <el-table-column header-align="center" label="商品/服务/时效评分" width="200">
+            <el-table-column
+              header-align="center"
+              label="商品/服务/时效评分"
+              width="200"
+            >
               <template slot-scope="scope">
                 <div>
                   <el-rate
@@ -106,8 +117,8 @@
             <el-table-column header-align="center" label="评论图片" width="250">
               <template slot-scope="scope">
                 <div class="inlineBlock_verTopP">
-                  <template v-for="(item,index) in scope.row.Comments_imgs ">
-                    <div class="Shopping_img_p2" :key="index+ 'ci'">
+                  <template v-for="(item, index) in scope.row.Comments_imgs">
+                    <div class="Shopping_img_p2" :key="index + 'ci'">
                       <img class="Shopping_img" :src="item" alt />
                     </div>
                   </template>
@@ -116,8 +127,8 @@
             </el-table-column>
             <el-table-column header-align="center" label="评论内容" width="250">
               <template slot-scope="scope">
-                <div>{{scope.row.content}}</div>
-                <div class="rd_date">{{scope.row.created_at}}</div>
+                <div>{{ scope.row.content }}</div>
+                <div class="rd_date">{{ scope.row.created_at }}</div>
               </template>
             </el-table-column>
           </el-table>
@@ -421,7 +432,7 @@ export default {
   }
 };
 </script>
-<style >
+<style>
 /* **** 表格 table */
 .EvaluationDetails .el-table td {
   text-align: center;
@@ -528,4 +539,3 @@ export default {
   margin-right: 20px;
 }
 </style>
-

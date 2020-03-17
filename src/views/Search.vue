@@ -4,26 +4,23 @@
       <el-header class="common">
         <HeaderModule id="navigation"></HeaderModule>
       </el-header>
-      <el-main class="common">
-        <router-view />
-      </el-main>
+      <!-- <el-main class="common"> -->
+      <router-view />
+      <!-- </el-main> -->
       <!-- <div class="el-main common">
         <router-view />
       </div>-->
-      <el-footer class="el-footer">
-        <FooterModule></FooterModule>
-      </el-footer>
     </el-container>
   </div>
 </template>
 <script>
 import HeaderModule from "@/components/HeaderModule";
-import FooterModule from "@/components/FooterModule";
+// import FooterModule from "@/components/FooterModule";
 export default {
   name: "Search",
   components: {
-    HeaderModule,
-    FooterModule
+    HeaderModule
+    // FooterModule
   },
 
   data() {
@@ -37,6 +34,5 @@ export default {
   methods: {}
 };
 </script>
-<style>
-</style>
+<style></style>
 <style scoped></style>

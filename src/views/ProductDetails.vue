@@ -1,15 +1,22 @@
 <template>
-  <div class="ProductDetails">
+  <div class="ProductDetails height_auto">
     <vue-headful title="商品详情"></vue-headful>
     <el-header class="common">
       <HeaderModule id="navigation"></HeaderModule>
     </el-header>
     <el-main class="common">
-      <TopSearchBox :searchType="'ProductDetails'" :categories="[]"></TopSearchBox>
+      <TopSearchBox
+        :searchType="'ProductDetails'"
+        :categories="[]"
+      ></TopSearchBox>
 
       <div class="pd_content">
         <!-- 页面流程 -->
-        <PageFlow :Flow1="'首页'" :Flow2="'油画'" :Flow3="PData.title"></PageFlow>
+        <PageFlow
+          :Flow1="'首页'"
+          :Flow2="'油画'"
+          :Flow3="PData.title"
+        ></PageFlow>
 
         <!-- 商品信息 -->
         <div class="inlineBlock_verTopP product_info">
@@ -31,20 +38,22 @@
             <magnifier :imgList="smallPicArr"></magnifier>
           </div>
           <div class="pi_right">
-            <div class="pir_keywords">{{PData.description}}</div>
+            <div class="pir_keywords">{{ PData.description }}</div>
             <div class="inlineBlock_verTopP pir_info">
               <div class="info_font">
                 市场价：
-                <span class="info2_font">￥{{PData.price}}</span>
+                <span class="info2_font">￥{{ PData.price }}</span>
               </div>
               <div class="info_font">
                 月销量：
-                <span class="info2_font">{{PData.sold_count}}</span>
+                <span class="info2_font">{{ PData.sold_count }}</span>
               </div>
             </div>
             <div class="inlineBlock_verTopP pir_price">
               <div class="rmb">￥</div>
-              <div class="rmb rmb_value">{{PData.price * PData.discount }}</div>
+              <div class="rmb rmb_value">
+                {{ PData.price * PData.discount }}
+              </div>
             </div>
             <div class="inlineBlock_verTopP pir_count">
               <div class="pir_count_Title">数量：</div>
@@ -57,12 +66,19 @@
                   label="商品数量"
                 ></el-input-number>
               </div>
-              <div class="pir_count_Inventory">库存{{PData.stock}}件</div>
+              <div class="pir_count_Inventory">库存{{ PData.stock }}件</div>
             </div>
             <div class="pir_btns">
               <div class>
-                <button @click="Shopping('BuyNow')" class="i_btn">立即购买</button>
-                <button @click="Shopping('ShoppingTrolley')" class="i_btn i_btn2">加入购物车</button>
+                <button @click="Shopping('BuyNow')" class="i_btn">
+                  立即购买
+                </button>
+                <button
+                  @click="Shopping('ShoppingTrolley')"
+                  class="i_btn i_btn2"
+                >
+                  加入购物车
+                </button>
               </div>
             </div>
           </div>
@@ -72,25 +88,33 @@
           <div class="inlineBlock_verTopP pid_title">
             <div class="inlineBlock_verTopP pid_left">
               <div
-                v-show="PIDType =='introduction'"
+                v-show="PIDType == 'introduction'"
                 class="PIDChoose0 PIDChoose1"
-                @click="PIDType ='introduction'"
-              >商品介绍</div>
+                @click="PIDType = 'introduction'"
+              >
+                商品介绍
+              </div>
               <div
-                v-show="PIDType =='evaluate'"
+                v-show="PIDType == 'evaluate'"
                 class="PIDChoose0 PIDChoose2"
-                @click="PIDType ='introduction'"
-              >商品介绍</div>
+                @click="PIDType = 'introduction'"
+              >
+                商品介绍
+              </div>
               <div
-                v-show="PIDType =='evaluate'"
+                v-show="PIDType == 'evaluate'"
                 class="PIDChoose0 PIDChoose1 PIDMargin"
-                @click="PIDType ='evaluate'"
-              >累计评价（{{PData.review_count}}）</div>
+                @click="PIDType = 'evaluate'"
+              >
+                累计评价（{{ PData.review_count }}）
+              </div>
               <div
-                v-show="PIDType =='introduction'"
+                v-show="PIDType == 'introduction'"
                 class="PIDChoose0 PIDChoose2 PIDMargin"
-                @click="PIDType ='evaluate'"
-              >累计评价（{{PData.review_count}}）</div>
+                @click="PIDType = 'evaluate'"
+              >
+                累计评价（{{ PData.review_count }}）
+              </div>
             </div>
           </div>
 
@@ -101,18 +125,30 @@
                 <div class="mi_title">产品详情</div>
                 <div class="mi_content">
                   <div class="inlineBlock_verTopP perMic">
-                    <template v-for="(item,index) in mi_contentArr.slice(0,3) ">
-                      <div :key="index+ 'mic1'" class="perMic_child">{{item.name}}：{{item.value}}</div>
+                    <template
+                      v-for="(item, index) in mi_contentArr.slice(0, 3)"
+                    >
+                      <div :key="index + 'mic1'" class="perMic_child">
+                        {{ item.name }}：{{ item.value }}
+                      </div>
                     </template>
                   </div>
                   <div class="inlineBlock_verTopP perMic">
-                    <template v-for="(item,index) in mi_contentArr.slice(3,6) ">
-                      <div :key="index+ 'mic2'" class="perMic_child">{{item.name}}：{{item.value}}</div>
+                    <template
+                      v-for="(item, index) in mi_contentArr.slice(3, 6)"
+                    >
+                      <div :key="index + 'mic2'" class="perMic_child">
+                        {{ item.name }}：{{ item.value }}
+                      </div>
                     </template>
                   </div>
                   <div class="inlineBlock_verTopP perMic">
-                    <template v-for="(item,index) in mi_contentArr.slice(6,9) ">
-                      <div :key="index+ 'mic3'" class="perMic_child">{{item.name}}：{{item.value}}</div>
+                    <template
+                      v-for="(item, index) in mi_contentArr.slice(6, 9)"
+                    >
+                      <div :key="index + 'mic3'" class="perMic_child">
+                        {{ item.name }}：{{ item.value }}
+                      </div>
                     </template>
                   </div>
                 </div>
@@ -144,7 +180,7 @@
 
             <!--  -->
             <div class="rate_orign">
-              <div class="mi_title">累计评价（{{PData.review_count}}）</div>
+              <div class="mi_title">累计评价（{{ PData.review_count }}）</div>
               <div style="height:16px;"></div>
               <div class="productContent">
                 <div class="inlineBlock_verTopP productGrade">
@@ -160,17 +196,17 @@
                     ></el-rate>
                   </div>
                 </div>
-                <template v-for="(item,index) in RateDataArr ">
-                  <div :key="index+ 'rd'" class="perRateData">
-                    <div class="rd_text">{{item.text}}</div>
+                <template v-for="(item, index) in RateDataArr">
+                  <div :key="index + 'rd'" class="perRateData">
+                    <div class="rd_text">{{ item.text }}</div>
                     <div class="inlineBlock_verTopP rd_imgs">
-                      <template v-for="(itemC,indexC) in item.imgs ">
-                        <div :key="indexC+ 'rdimgs'" class="perRateDataImg">
+                      <template v-for="(itemC, indexC) in item.imgs">
+                        <div :key="indexC + 'rdimgs'" class="perRateDataImg">
                           <img class="rate_img" :src="itemC" alt />
                         </div>
                       </template>
                     </div>
-                    <div class="rd_date">{{item.date}}</div>
+                    <div class="rd_date">{{ item.date }}</div>
                   </div>
                 </template>
               </div>
@@ -194,17 +230,17 @@
                     ></el-rate>
                   </div>
                 </div>
-                <template v-for="(item,index) in RateDataArr ">
-                  <div :key="index+ 'rd'" class="perRateData">
-                    <div class="rd_text">{{item.text}}</div>
+                <template v-for="(item, index) in RateDataArr">
+                  <div :key="index + 'rd'" class="perRateData">
+                    <div class="rd_text">{{ item.text }}</div>
                     <div class="inlineBlock_verTopP rd_imgs">
-                      <template v-for="(itemC,indexC) in item.imgs ">
-                        <div :key="indexC+ 'rdimgs'" class="perRateDataImg">
+                      <template v-for="(itemC, indexC) in item.imgs">
+                        <div :key="indexC + 'rdimgs'" class="perRateDataImg">
                           <img class="rate_img" :src="itemC" alt />
                         </div>
                       </template>
                     </div>
-                    <div class="rd_date">{{item.date}}</div>
+                    <div class="rd_date">{{ item.date }}</div>
                   </div>
                 </template>
               </div>
@@ -989,4 +1025,3 @@ export default {
   opacity: 0.9;
 }
 </style>
-

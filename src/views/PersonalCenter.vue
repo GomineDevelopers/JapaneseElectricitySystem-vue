@@ -1,17 +1,28 @@
 <template>
-  <div class="PersonalCenter">
+  <div class="PersonalCenter height_auto">
     <vue-headful title="个人中心"></vue-headful>
     <el-header class="common">
       <HeaderModule id="navigation"></HeaderModule>
     </el-header>
     <el-main class="common">
-      <TopSearchBox :searchType="'PersonalCenter'" :categories="[]"></TopSearchBox>
+      <TopSearchBox
+        :searchType="'PersonalCenter'"
+        :categories="[]"
+      ></TopSearchBox>
       <div class="pc_content">
-        <PageFlow :Flow1="'首页'" :Flow2="'个人中心'" :Flow3="Flow3_Setting"></PageFlow>
+        <PageFlow
+          :Flow1="'首页'"
+          :Flow2="'个人中心'"
+          :Flow3="Flow3_Setting"
+        ></PageFlow>
       </div>
 
       <div class="mainTabs">
-        <el-tabs :tab-position="tabPosition" style="height: 200px;" v-model="activeName1">
+        <el-tabs
+          :tab-position="tabPosition"
+          style="height: 200px;"
+          v-model="activeName1"
+        >
           <el-tab-pane name="1">
             <span slot="label">
               <i class="el-icon-user-solid"></i>&nbsp;&nbsp;用户资料
@@ -25,22 +36,35 @@
                 <div class="avatar_img_edit">
                   <el-upload
                     action="alert"
-                    :before-upload="(value)=> beforeAvatarUpload(value,1)"
-                    :on-change="(file, fileList)=> loadJsonFromFile(file, fileList,1)"
+                    :before-upload="value => beforeAvatarUpload(value, 1)"
+                    :on-change="
+                      (file, fileList) => loadJsonFromFile(file, fileList, 1)
+                    "
                     :on-preview="handlePictureCardPreview"
                     :on-remove="handleRemove"
-                  >上传头像</el-upload>
+                    >上传头像</el-upload
+                  >
                 </div>
               </div>
 
-              <div class="sTitle2">手机号：{{user_phone}}</div>
+              <div class="sTitle2">手机号：{{ user_phone }}</div>
               <div class="sTitle1">*昵称：</div>
               <div class="ui_input_p">
-                <input class="ui_input" placeholder="请输入" v-model="uiInput1" type="text" />
+                <input
+                  class="ui_input"
+                  placeholder="请输入"
+                  v-model="uiInput1"
+                  type="text"
+                />
               </div>
               <div class="sTitle1">真实姓名：</div>
               <div class="ui_input_p">
-                <input class="ui_input" placeholder="请输入" v-model="uiInput2" type="text" />
+                <input
+                  class="ui_input"
+                  placeholder="请输入"
+                  v-model="uiInput2"
+                  type="text"
+                />
               </div>
               <div class="sTitle1">*性别：</div>
               <div class="radio_box">
@@ -70,12 +94,18 @@
                   <div class="pane_content">
                     <el-row class="flex searchInput">
                       <el-row class="input_content flex_1">
-                        <el-input v-model="input1" placeholder="请输入"></el-input>
+                        <el-input
+                          v-model="input1"
+                          placeholder="请输入"
+                        ></el-input>
                       </el-row>
                       <el-button class="search_button">订单搜索</el-button>
                     </el-row>
                     <!-- *  -->
-                    <PersonalCenterTable @func="initOrderList" :tableData="tableData1"></PersonalCenterTable>
+                    <PersonalCenterTable
+                      @func="initOrderList"
+                      :tableData="tableData1"
+                    ></PersonalCenterTable>
                   </div>
                   <!-- *** -->
                 </el-tab-pane>
@@ -84,12 +114,18 @@
                   <div class="pane_content">
                     <el-row class="flex searchInput">
                       <el-row class="input_content flex_1">
-                        <el-input v-model="input1" placeholder="请输入"></el-input>
+                        <el-input
+                          v-model="input1"
+                          placeholder="请输入"
+                        ></el-input>
                       </el-row>
                       <el-button class="search_button">订单搜索</el-button>
                     </el-row>
                     <!-- *  -->
-                    <PersonalCenterTable @func="initOrderList" :tableData="tableData2"></PersonalCenterTable>
+                    <PersonalCenterTable
+                      @func="initOrderList"
+                      :tableData="tableData2"
+                    ></PersonalCenterTable>
                   </div>
                   <!-- *** -->
                 </el-tab-pane>
@@ -98,12 +134,18 @@
                   <div class="pane_content">
                     <el-row class="flex searchInput">
                       <el-row class="input_content flex_1">
-                        <el-input v-model="input1" placeholder="请输入"></el-input>
+                        <el-input
+                          v-model="input1"
+                          placeholder="请输入"
+                        ></el-input>
                       </el-row>
                       <el-button class="search_button">订单搜索</el-button>
                     </el-row>
                     <!-- *  -->
-                    <PersonalCenterTable @func="initOrderList" :tableData="tableData7"></PersonalCenterTable>
+                    <PersonalCenterTable
+                      @func="initOrderList"
+                      :tableData="tableData7"
+                    ></PersonalCenterTable>
                   </div>
                   <!-- *** -->
                 </el-tab-pane>
@@ -112,12 +154,18 @@
                   <div class="pane_content">
                     <el-row class="flex searchInput">
                       <el-row class="input_content flex_1">
-                        <el-input v-model="input1" placeholder="请输入"></el-input>
+                        <el-input
+                          v-model="input1"
+                          placeholder="请输入"
+                        ></el-input>
                       </el-row>
                       <el-button class="search_button">订单搜索</el-button>
                     </el-row>
                     <!-- *  -->
-                    <PersonalCenterTable @func="initOrderList" :tableData="tableData3"></PersonalCenterTable>
+                    <PersonalCenterTable
+                      @func="initOrderList"
+                      :tableData="tableData3"
+                    ></PersonalCenterTable>
                   </div>
                   <!-- *** -->
                 </el-tab-pane>
@@ -126,12 +174,18 @@
                   <div class="pane_content">
                     <el-row class="flex searchInput">
                       <el-row class="input_content flex_1">
-                        <el-input v-model="input1" placeholder="请输入"></el-input>
+                        <el-input
+                          v-model="input1"
+                          placeholder="请输入"
+                        ></el-input>
                       </el-row>
                       <el-button class="search_button">订单搜索</el-button>
                     </el-row>
                     <!-- *  -->
-                    <PersonalCenterTable @func="initOrderList" :tableData="tableData4"></PersonalCenterTable>
+                    <PersonalCenterTable
+                      @func="initOrderList"
+                      :tableData="tableData4"
+                    ></PersonalCenterTable>
                   </div>
                   <!-- *** -->
                 </el-tab-pane>
@@ -140,12 +194,18 @@
                   <div class="pane_content">
                     <el-row class="flex searchInput">
                       <el-row class="input_content flex_1">
-                        <el-input v-model="input1" placeholder="请输入"></el-input>
+                        <el-input
+                          v-model="input1"
+                          placeholder="请输入"
+                        ></el-input>
                       </el-row>
                       <el-button class="search_button">订单搜索</el-button>
                     </el-row>
                     <!-- *  -->
-                    <PersonalCenterTable @func="initOrderList" :tableData="tableData5"></PersonalCenterTable>
+                    <PersonalCenterTable
+                      @func="initOrderList"
+                      :tableData="tableData5"
+                    ></PersonalCenterTable>
                   </div>
                   <!-- *** -->
                 </el-tab-pane>
@@ -154,12 +214,18 @@
                   <div class="pane_content">
                     <el-row class="flex searchInput">
                       <el-row class="input_content flex_1">
-                        <el-input v-model="input1" placeholder="请输入"></el-input>
+                        <el-input
+                          v-model="input1"
+                          placeholder="请输入"
+                        ></el-input>
                       </el-row>
                       <el-button class="search_button">订单搜索</el-button>
                     </el-row>
                     <!-- *  -->
-                    <PersonalCenterTable @func="initOrderList" :tableData="tableData6"></PersonalCenterTable>
+                    <PersonalCenterTable
+                      @func="initOrderList"
+                      :tableData="tableData6"
+                    ></PersonalCenterTable>
                   </div>
                   <!-- *** -->
                 </el-tab-pane>
@@ -176,34 +242,63 @@
             <div class="left_pane_content">
               <div class="address_title">收货地址</div>
               <!-- 遍历 -->
-              <template v-for="(item,index) in AddressArr ">
-                <div class="inlineBlock_verTopP aa_commonFont" :key="index+ 'aa'">
+              <template v-for="(item, index) in AddressArr">
+                <div
+                  class="inlineBlock_verTopP aa_commonFont"
+                  :key="index + 'aa'"
+                >
                   <div>
-                    <span v-if="item.chooseType == true" class="default_font">默认</span>
-                    <span>{{item.province}}{{item.city}}{{item.district}}{{item.address}}</span>
-                    <span>（{{item.name}}）</span>
-                    <span>{{item.phone}}</span>
+                    <span v-if="item.chooseType == true" class="default_font"
+                      >默认</span
+                    >
+                    <span
+                      >{{ item.province }}{{ item.city }}{{ item.district
+                      }}{{ item.address }}</span
+                    >
+                    <span>（{{ item.name }}）</span>
+                    <span>{{ item.phone }}</span>
                   </div>
                   <!--  -->
                   <div class="operation">
                     <span
                       class="operation_font"
-                      @click="addressEditDialog('edit',item.id,item.name,item.phone,item.province,item.city,item.district,item.address,item.chooseType,item.zip)"
-                    >编辑</span>
+                      @click="
+                        addressEditDialog(
+                          'edit',
+                          item.id,
+                          item.name,
+                          item.phone,
+                          item.province,
+                          item.city,
+                          item.district,
+                          item.address,
+                          item.chooseType,
+                          item.zip
+                        )
+                      "
+                      >编辑</span
+                    >
                     <span
                       @click="deleteAssignAddress(item.id)"
                       class="operation_font operation_font2"
-                    >删除</span>
+                      >删除</span
+                    >
                     <span
                       @click="defaultAssignAddress(item.id)"
                       class="operation_font operation_font3"
-                    >设为默认地址</span>
+                      >设为默认地址</span
+                    >
                   </div>
                 </div>
               </template>
 
               <div class="add_new_address">
-                <button class="btn_add_address" @click="addressEditDialog('new')">新增地址</button>
+                <button
+                  class="btn_add_address"
+                  @click="addressEditDialog('new')"
+                >
+                  新增地址
+                </button>
               </div>
             </div>
             <!-- **** 收货地址 收尾 -->
@@ -213,7 +308,7 @@
 
       <!-- 对话框 -->
       <el-dialog
-        :title="addressEditType+'收货地址'"
+        :title="addressEditType + '收货地址'"
         :visible.sync="dialogVisible"
         width="30%"
         :before-close="handleClose"
@@ -222,14 +317,24 @@
           <div class="inlineBlock_verTopP dcPerRow">
             <div class="dc_sTtile">收货人姓名：</div>
             <div>
-              <input v-model="u_name" class="dc_input" placeholder="请输入" type="text" />
+              <input
+                v-model="u_name"
+                class="dc_input"
+                placeholder="请输入"
+                type="text"
+              />
             </div>
           </div>
 
           <div class="inlineBlock_verTopP dcPerRow">
             <div class="dc_sTtile">电话号码：</div>
             <div>
-              <input v-model="u_phone" class="dc_input" placeholder="请输入" type="text" />
+              <input
+                v-model="u_phone"
+                class="dc_input"
+                placeholder="请输入"
+                type="text"
+              />
             </div>
           </div>
 
@@ -237,7 +342,11 @@
             <div class="dc_sTtile">收货地址：</div>
             <div>
               <div class="linkage">
-                <el-select v-model="sheng" @change="choseProvince" placeholder="省级地区">
+                <el-select
+                  v-model="sheng"
+                  @change="choseProvince"
+                  placeholder="省级地区"
+                >
                   <el-option
                     v-for="item in province"
                     :key="item.id"
@@ -246,7 +355,11 @@
                   ></el-option>
                 </el-select>
                 <br />
-                <el-select v-model="shi" @change="choseCity" placeholder="市级地区">
+                <el-select
+                  v-model="shi"
+                  @change="choseCity"
+                  placeholder="市级地区"
+                >
                   <el-option
                     v-for="item in shi1"
                     :key="item.id"
@@ -255,7 +368,11 @@
                   ></el-option>
                 </el-select>
                 <br />
-                <el-select v-model="qu" @change="choseBlock" placeholder="区级地区">
+                <el-select
+                  v-model="qu"
+                  @change="choseBlock"
+                  placeholder="区级地区"
+                >
                   <el-option
                     v-for="item in qu1"
                     :key="item.id"
@@ -270,7 +387,12 @@
           <div class="inlineBlock_verTopP dcPerRow">
             <div class="dc_sTtile">详细地址：</div>
             <div>
-              <input v-model="u_address" class="dc_input" placeholder="请输入" type="text" />
+              <input
+                v-model="u_address"
+                class="dc_input"
+                placeholder="请输入"
+                type="text"
+              />
             </div>
           </div>
 
@@ -661,7 +783,6 @@ export default {
                   good1.time +
                   "," +
                   good1.quality;
-
 
                 productInfoArr.push(productInfo);
 
@@ -1462,7 +1583,7 @@ export default {
   }
 };
 </script>
-<style >
+<style>
 /* ***** 左侧Tabs */
 .PersonalCenter .el-tabs--left {
   height: auto !important;
@@ -1849,4 +1970,3 @@ input::-ms-input-placeholder {
   margin-top: 16px;
 }
 </style>
-

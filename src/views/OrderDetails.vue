@@ -1,13 +1,23 @@
 <template>
-  <div class="OrderDetails">
+  <div class="OrderDetails height_auto">
     <vue-headful title="订单详情"></vue-headful>
     <el-header class="common">
       <HeaderModule id="navigation"></HeaderModule>
     </el-header>
     <el-main class="common">
-      <TopSearchBox :searchType="'OrderDetails'" :categories="[]"></TopSearchBox>
-      <div v-if="ifShopping != true || ifOverShopping == true" class="pc_content">
-        <PageFlow :Flow1="'首页'" :Flow2="'我的订单'" :Flow3="'订单详情'"></PageFlow>
+      <TopSearchBox
+        :searchType="'OrderDetails'"
+        :categories="[]"
+      ></TopSearchBox>
+      <div
+        v-if="ifShopping != true || ifOverShopping == true"
+        class="pc_content"
+      >
+        <PageFlow
+          :Flow1="'首页'"
+          :Flow2="'我的订单'"
+          :Flow3="'订单详情'"
+        ></PageFlow>
       </div>
       <div
         v-if="ifShopping == true && ifOverShopping == false"
@@ -23,25 +33,38 @@
       <div class="od_content">
         <div class="sTitle1">订单详情</div>
         <div class="odcCommonFont odc_0">
-          <div>订单编号：{{OrderNumber}}</div>
-          <div v-if="ifShopping != true ">支付方式：{{Payment}}</div>
-          <div v-if="ifShopping == true &&  ifOverShopping == true">支付方式：微信支付</div>
+          <div>订单编号：{{ OrderNumber }}</div>
+          <div v-if="ifShopping != true">支付方式：{{ Payment }}</div>
+          <div v-if="ifShopping == true && ifOverShopping == true">
+            支付方式：微信支付
+          </div>
           <div>
             交易状态：
             <span
               v-if="ifShopping == true && ifOverShopping == false"
               class="m_TransactionStatus1"
-            >待付款</span>
+              >待付款</span
+            >
             <!-- <span v-if="ifOverShopping == true" class="m_TransactionStatus2">已完成</span> -->
             <!-- 后面为了区分 购买页面过来 和 个人中心过来 -->
             <span
-              v-if="ifShopping == true && ifOverShopping == true && TransactionStatus != '待收货'"
+              v-if="
+                ifShopping == true &&
+                  ifOverShopping == true &&
+                  TransactionStatus != '待收货'
+              "
               class="m_TransactionStatus3"
-            >待收货</span>
+              >待收货</span
+            >
             <span
-              v-if="TransactionStatus == '待付款'  && ifShopping !=  true && ifOverShopping == false"
+              v-if="
+                TransactionStatus == '待付款' &&
+                  ifShopping != true &&
+                  ifOverShopping == false
+              "
               class="m_TransactionStatus1"
-            >{{TransactionStatus}}</span>
+              >{{ TransactionStatus }}</span
+            >
             <!-- <span
               v-if="TransactionStatus == '待付款'"
               class="m_TransactionStatus1"
@@ -49,30 +72,39 @@
             <span
               v-if="TransactionStatus == '已完成'"
               class="m_TransactionStatus2"
-            >{{TransactionStatus}}</span>
+              >{{ TransactionStatus }}</span
+            >
             <span
               v-if="TransactionStatus == '待收货'"
               class="m_TransactionStatus3"
-            >{{TransactionStatus}}</span>
+              >{{ TransactionStatus }}</span
+            >
             <span
               v-if="TransactionStatus == '已取消'"
               class="m_TransactionStatus4"
-            >{{TransactionStatus}}</span>
+              >{{ TransactionStatus }}</span
+            >
             <span
               v-if="TransactionStatus == '待评价'"
               class="m_TransactionStatus5"
-            >{{TransactionStatus}}</span>
+              >{{ TransactionStatus }}</span
+            >
             <span
-              v-if="TransactionStatus == '-'  && ifShopping !=  true && ifOverShopping == false"
-            >{{TransactionStatus}}</span>
+              v-if="
+                TransactionStatus == '-' &&
+                  ifShopping != true &&
+                  ifOverShopping == false
+              "
+              >{{ TransactionStatus }}</span
+            >
           </div>
-          <div>买家留言：{{OrderRemark}}</div>
+          <div>买家留言：{{ OrderRemark }}</div>
         </div>
         <div class="sTitle1">收货人信息</div>
         <div class="odcCommonFont odc_0">
-          <div>收货人：{{receiver}}</div>
-          <div>收货地址：{{shippingAddress}}</div>
-          <div>联系方式：{{phone}}</div>
+          <div>收货人：{{ receiver }}</div>
+          <div>收货地址：{{ shippingAddress }}</div>
+          <div>联系方式：{{ phone }}</div>
         </div>
         <div class="sTitle1 sTitle2">商品清单</div>
         <div class="odc_0">
@@ -90,21 +122,23 @@
                     <div class="Shopping_img_p">
                       <img class="Shopping_img" :src="scope.row.ImgUrl" alt />
                     </div>
-                    <div class="product_text">{{scope.row.productInfo }}</div>
+                    <div class="product_text">{{ scope.row.productInfo }}</div>
                   </div>
                 </template>
               </el-table-column>
               <el-table-column header-align="center" label="单价" width="250">
                 <template slot-scope="scope">
                   <div>
-                    <div class="m_unitPriceHistory">￥{{ scope.row.unitPriceHistory }}</div>
+                    <div class="m_unitPriceHistory">
+                      ￥{{ scope.row.unitPriceHistory }}
+                    </div>
                     <div class="m_unitPrice">￥{{ scope.row.unitPrice }}</div>
                   </div>
                 </template>
               </el-table-column>
               <el-table-column header-align="center" label="数量" width="250">
                 <template slot-scope="scope">
-                  <div>{{scope.row.count }}</div>
+                  <div>{{ scope.row.count }}</div>
                 </template>
               </el-table-column>
               <el-table-column header-align="center" label="总价" width="250">
@@ -122,12 +156,12 @@
         <div class="soa1">
           <span>运费：</span>
           <span class="soa2">￥</span>
-          <span class="soa3">{{Number(freight)}}</span>
+          <span class="soa3">{{ Number(freight) }}</span>
         </div>
         <div class="soa1 sob1">
           <span>应付总金额（含运费）：</span>
           <span class="soa2">￥</span>
-          <span class="soa3">{{Number(freight) + Number(totalValue)}}</span>
+          <span class="soa3">{{ Number(freight) + Number(totalValue) }}</span>
         </div>
         <!-- <div v-if="ifShopping !=  true &&  ifOverShopping == false" class> -->
         <!-- <div
@@ -137,29 +171,49 @@
           <button class="m_btn1 m_btn1b" @click="CustomerServiceManage('none')">售后</button>
           <button @click="MakeComments()" class="m_btn1 m_btn2 m_btn1b m_btn2b">评价</button>
         </div>-->
-        <div v-if="TransactionStatus =='待评价'" class>
-          <button class="m_btn1 m_btn1b" @click="CustomerServiceManage('none')">售后</button>
-          <button @click="MakeComments()" class="m_btn1 m_btn2 m_btn1b m_btn2b">评价</button>
+        <div v-if="TransactionStatus == '待评价'" class>
+          <button class="m_btn1 m_btn1b" @click="CustomerServiceManage('none')">
+            售后
+          </button>
+          <button @click="MakeComments()" class="m_btn1 m_btn2 m_btn1b m_btn2b">
+            评价
+          </button>
         </div>
-        <div v-if="TransactionStatus =='待收货'" class>
-          <button @click="ConfirmReceipt()" class="m_btn1 m_btn2 m_btn1b m_btn2b">确认收货</button>
+        <div v-if="TransactionStatus == '待收货'" class>
+          <button
+            @click="ConfirmReceipt()"
+            class="m_btn1 m_btn2 m_btn1b m_btn2b"
+          >
+            确认收货
+          </button>
         </div>
-        <div v-if="TransactionStatus =='已完成'" class>
-          <button @click="EvaluationDetails()" class="m_btn1 m_btn2 m_btn1b m_btn2b">我的评论</button>
+        <div v-if="TransactionStatus == '已完成'" class>
+          <button
+            @click="EvaluationDetails()"
+            class="m_btn1 m_btn2 m_btn1b m_btn2b"
+          >
+            我的评论
+          </button>
         </div>
       </div>
 
-      <div class v-if="ifShopping ==  true && ifOverShopping == false">
+      <div class v-if="ifShopping == true && ifOverShopping == false">
         <div class="ms_title TextAlignRight">选择支付方式</div>
         <!-- <div style="height:32px;"></div> -->
         <div class="payfor_btns TextAlignRight">
-          <button class="inlineBlock_verTopP m_btn1 m_btnb" @click="PayFor('wechat')">
+          <button
+            class="inlineBlock_verTopP m_btn1 m_btnb"
+            @click="PayFor('wechat')"
+          >
             <div class="WXImgUrl_p">
               <img class="WXImgUrl" :src="WXImgUrl" alt />
             </div>
             <div class="wx_text">微信支付</div>
           </button>
-          <button class="inlineBlock_verTopP m_btn1 m_btnb m_btnb2" @click="PayFor('Alipay')">
+          <button
+            class="inlineBlock_verTopP m_btn1 m_btnb m_btnb2"
+            @click="PayFor('Alipay')"
+          >
             <div class="WXImgUrl_p">
               <img class="WXImgUrl" :src="ZFBImgUrl" alt />
             </div>
@@ -174,9 +228,16 @@
     <div v-show="DialogQRCode == true" class="DialogQRCode">
       <div class="DialogQRCode_bg">
         <h3>扫描二维码进行支付</h3>
-        <img v-show="payForType == 'wechat'" class="img_Dialog" :src="img_Dialog" alt />
+        <img
+          v-show="payForType == 'wechat'"
+          class="img_Dialog"
+          :src="img_Dialog"
+          alt
+        />
         <!-- <div v-show="payForType == 'Alipay'" class="AlipayHtml" v-html="AliPayHtml"></div> -->
-        <el-button class="closeBtn" @click="CancelPayFor()">关闭({{shoppingCount}}s)</el-button>
+        <el-button class="closeBtn" @click="CancelPayFor()"
+          >关闭({{ shoppingCount }}s)</el-button
+        >
       </div>
     </div>
 
@@ -635,7 +696,6 @@ export default {
                             // div.innerHTML = response.data; // html code
                             // newTab.document.body.appendChild(div);
                             // newTab.document.forms.alipaysubmit.submit();
-
                           }, 1000);
                         }
                       })
@@ -752,7 +812,7 @@ export default {
   }
 };
 </script>
-<style >
+<style>
 /* **** 表格 table */
 .OrderDetails .el-table td {
   text-align: center;
@@ -1062,4 +1122,3 @@ export default {
   width: 1000px;
 }
 </style>
-

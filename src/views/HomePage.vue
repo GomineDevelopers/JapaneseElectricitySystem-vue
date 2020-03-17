@@ -1,70 +1,96 @@
 <template>
-  <div class="HomePage">
-    <!-- 顶部输入框开始 -->
+  <div class="HomePage height_auto">
+    <el-main class="common">
+      <!-- 顶部输入框开始 -->
+      <TopSearchBox
+        :searchType="'HomePage'"
+        :categories="categories"
+      ></TopSearchBox>
+      <!-- 顶部输入框结束 -->
 
-    <TopSearchBox :searchType="'HomePage'" :categories="categories"></TopSearchBox>
-    <!-- 顶部输入框结束 -->
+      <!-- 轮播开始 -->
+      <el-carousel v-if="ifSearch != true" :interval="5000" arrow="always">
+        <el-carousel-item
+          v-for="(imgItem, index2) in carouselList"
+          :key="index2 + 'img'"
+        >
+          <img
+            class="m_carouselList"
+            @click="goHref(imgItem.HrefURL)"
+            :src="imgItem.ImgURL"
+          />
+          <!-- <img :v-lazy="imgItem" /> -->
+        </el-carousel-item>
+      </el-carousel>
+      <!-- 轮播结束 -->
 
-    <!-- 轮播开始 -->
-    <el-carousel v-if="ifSearch !=true " :interval="5000" arrow="always">
-      <el-carousel-item v-for="(imgItem, index2) in carouselList" :key="index2 + 'img'">
-        <img class="m_carouselList" @click="goHref(imgItem.HrefURL)" :src="imgItem.ImgURL" />
-        <!-- <img :v-lazy="imgItem" /> -->
-      </el-carousel-item>
-    </el-carousel>
-    <!-- 轮播结束 -->
-
-    <!-- 分类开始 -->
-    <el-row class="home_page_content">
-      <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick">
-        <template v-for="(item,index) in categoriesDetails ">
-          <el-tab-pane :key="index + 'cd' " :label="item.name" :name="String(index)">
-            <div class="inlineBlock_verTopP">
-              <template v-for="(itemC,indexC) in productArr[index] ">
-                <div
-                  class="perPic"
-                  :style="{backgroundImage: 'url(' + itemC.ImgUrl + ')'}"
-                  :key="indexC+ 'pa'"
-                >
+      <!-- 分类开始 -->
+      <el-row class="home_page_content">
+        <el-tabs
+          type="border-card"
+          v-model="activeName"
+          @tab-click="handleClick"
+        >
+          <template v-for="(item, index) in categoriesDetails">
+            <el-tab-pane
+              :key="index + 'cd'"
+              :label="item.name"
+              :name="String(index)"
+            >
+              <div class="inlineBlock_verTopP">
+                <template v-for="(itemC, indexC) in productArr[index]">
                   <div
-                    class="product_intro"
-                    @mouseover="showDetails(indexC,true)"
-                    @mouseout="showDetails(indexC,false)"
-                    @click="detailsPageManage(index,indexC)"
+                    class="perPic"
+                    :style="{ backgroundImage: 'url(' + itemC.ImgUrl + ')' }"
+                    :key="indexC + 'pa'"
                   >
-                    <div v-show="indexC == index_ShowPD" class="product_intro_details">
-                      <div class="pid_child">
-                        <div class="d_1">{{itemC.art}}</div>
-                        <div class="d_2">{{itemC.title}},{{itemC.created_at}}</div>
-                        <div class="d_3">￥{{itemC.price}}</div>
+                    <div
+                      class="product_intro"
+                      @mouseover="showDetails(indexC, true)"
+                      @mouseout="showDetails(indexC, false)"
+                      @click="detailsPageManage(index, indexC)"
+                    >
+                      <div
+                        v-show="indexC == index_ShowPD"
+                        class="product_intro_details"
+                      >
+                        <div class="pid_child">
+                          <div class="d_1">{{ itemC.art }}</div>
+                          <div class="d_2">
+                            {{ itemC.title }},{{ itemC.created_at }}
+                          </div>
+                          <div class="d_3">￥{{ itemC.price }}</div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </template>
-            </div>
+                </template>
+              </div>
 
-            <!-- 分页 -->
-            <div class="textAlignCenter_w100p pagination_settings">
-              <el-pagination
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange($event,index)"
-                :current-page="CurrentCategoryIdPageArr[index]"
-                :page-sizes="[9]"
-                :page-size="9"
-                layout="total, sizes, prev, pager, next, jumper "
-                :total="CurrentCategoryIdTotal"
-                background
-              ></el-pagination>
-            </div>
-            <!-- 分页 -->
-          </el-tab-pane>
-        </template>
-      </el-tabs>
-    </el-row>
-    <!-- 分类结束 -->
-
+              <!-- 分页 -->
+              <div class="textAlignCenter_w100p pagination_settings">
+                <el-pagination
+                  @size-change="handleSizeChange"
+                  @current-change="handleCurrentChange($event, index)"
+                  :current-page="CurrentCategoryIdPageArr[index]"
+                  :page-sizes="[9]"
+                  :page-size="9"
+                  layout="total, sizes, prev, pager, next, jumper "
+                  :total="CurrentCategoryIdTotal"
+                  background
+                ></el-pagination>
+              </div>
+              <!-- 分页 -->
+            </el-tab-pane>
+          </template>
+        </el-tabs>
+      </el-row>
+      <!-- 分类结束 -->
+    </el-main>
     <FooterNav></FooterNav>
+    <el-footer class="el-footer">
+      <FooterModule></FooterModule>
+    </el-footer>
   </div>
 </template>
 <script>
@@ -73,13 +99,15 @@ import Vue from "vue";
 import TopSearchBox from "@/components/TopSearchBox";
 
 import FooterNav from "@/components/FooterNav";
+import FooterModule from "@/components/FooterModule";
 import { geCategories, getGoodsById, refresh_token, ads } from "@/api/api";
 
 export default {
   name: "HomePage",
   components: {
     TopSearchBox,
-    FooterNav
+    FooterNav,
+    FooterModule
   },
 
   data() {
@@ -142,7 +170,7 @@ export default {
         //   type: data[i].type, // 作品类型
         //   theme: data[i].theme, // 题材
         //   updated_at: data[i].updated_at, // 更新时间
-        //   // ImgUrl: require("@/assets/pic/product.png") // 产品图（需要Arr）// ★★★首页数据  
+        //   // ImgUrl: require("@/assets/pic/product.png") // 产品图（需要Arr）// ★★★首页数据
         //   ImgUrl: image, // 产品图（需要Arr）// ★★★首页数据
         //   ImgUrls: images
         // }
@@ -270,7 +298,7 @@ export default {
             vm.carouselList.push({
               ImgURL: global.IMGPrefix + data[i].image,
               HrefURL: data[i].url
-            }); 
+            });
           }
           // console.log(vm.carouselList);
         })
@@ -431,7 +459,7 @@ export default {
                 type: data[i].type, // 作品类型
                 theme: data[i].theme, // 题材
                 updated_at: data[i].updated_at, // 更新时间
-                // ImgUrl: require("@/assets/pic/product.png") // 产品图（需要Arr）// ★★★首页数据 
+                // ImgUrl: require("@/assets/pic/product.png") // 产品图（需要Arr）// ★★★首页数据
                 ImgUrl: image, // 产品图（需要Arr）// ★★★首页数据
                 ImgUrls: images
 
@@ -503,7 +531,8 @@ export default {
 <style>
 /* 每一页设置min-height不同 --首页*/
 .mac .common.el-main {
-  min-height: 1453px;
+  /* min-height: 1453px; */
+  min-height: calc(100% - 485px);
 }
 
 /* 轮播 */

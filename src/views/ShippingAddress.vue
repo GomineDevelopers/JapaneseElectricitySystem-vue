@@ -1,13 +1,20 @@
 <template>
-  <div class="ShippingAddress">
+  <div class="ShippingAddress height_auto">
     <vue-headful title="收货地址"></vue-headful>
     <el-header class="common">
       <HeaderModule id="navigation"></HeaderModule>
     </el-header>
     <el-main class="common">
-      <TopSearchBox :searchType="'ShippingAddress'" :categories="[]"></TopSearchBox>
+      <TopSearchBox
+        :searchType="'ShippingAddress'"
+        :categories="[]"
+      ></TopSearchBox>
       <div class="pc_content">
-        <PageFlow :Flow1="'首页'" :Flow2="'我的订单'" :Flow3="'个人中心'"></PageFlow>
+        <PageFlow
+          :Flow1="'首页'"
+          :Flow2="'我的订单'"
+          :Flow3="'个人中心'"
+        ></PageFlow>
       </div>
     </el-main>
 
@@ -45,11 +52,9 @@ export default {
   methods: {}
 };
 </script>
-<style >
-</style>
+<style></style>
 
 <style scoped>
 .ShippingAddress {
 }
 </style>
-

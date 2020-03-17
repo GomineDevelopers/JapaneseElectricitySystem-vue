@@ -1,13 +1,20 @@
 <template>
-  <div class="MakeComments">
+  <div class="MakeComments height_auto">
     <vue-headful title="发表评论"></vue-headful>
     <el-header class="common">
       <HeaderModule id="navigation"></HeaderModule>
     </el-header>
     <el-main class="common">
-      <TopSearchBox :searchType="'MakeComments'" :categories="[]"></TopSearchBox>
+      <TopSearchBox
+        :searchType="'MakeComments'"
+        :categories="[]"
+      ></TopSearchBox>
       <div class="pc_content">
-        <PageFlow :Flow1="'首页'" :Flow2="'我的订单'" :Flow3="'商品评价'"></PageFlow>
+        <PageFlow
+          :Flow1="'首页'"
+          :Flow2="'我的订单'"
+          :Flow3="'商品评价'"
+        ></PageFlow>
       </div>
 
       <div class="mc_content">
@@ -31,11 +38,15 @@
                   <div class="Shopping_img_p">
                     <img class="Shopping_img" :src="scope.row.ImgUrl" alt />
                   </div>
-                  <div class="product_text">{{scope.row.productInfo }}</div>
+                  <div class="product_text">{{ scope.row.productInfo }}</div>
                 </div>
               </template>
             </el-table-column>
-            <el-table-column header-align="center" label="商品/服务/时效评分" width="180">
+            <el-table-column
+              header-align="center"
+              label="商品/服务/时效评分"
+              width="180"
+            >
               <template slot-scope="scope">
                 <div>
                   <el-rate
@@ -68,9 +79,17 @@
                         action="alert"
                         list-type="picture-card"
                         :auto-upload="false"
-                        :before-upload="(value)=> beforeAvatarUpload(value,scope.row.index)"
-                        :on-change="(file, fileList)=> loadJsonFromFile(file, fileList,scope.row.index)"
-                        :on-preview="(file) => handlePictureCardPreview(file, scope.row.index)"
+                        :before-upload="
+                          value => beforeAvatarUpload(value, scope.row.index)
+                        "
+                        :on-change="
+                          (file, fileList) =>
+                            loadJsonFromFile(file, fileList, scope.row.index)
+                        "
+                        :on-preview="
+                          file =>
+                            handlePictureCardPreview(file, scope.row.index)
+                        "
                         :on-remove="handleRemove"
                       >
                         <i class="el-icon-plus"></i>
@@ -103,9 +122,11 @@
                   <div class="shopping_over">
                     <div class>
                       <button
-                        @click="make_comments(scope.row.Gid,scope.row.index)"
+                        @click="make_comments(scope.row.Gid, scope.row.index)"
                         class="m_btn1 m_btn2 m_btn1b m_btn2b m_btn3"
-                      >发表评论</button>
+                      >
+                        发表评论
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -348,7 +369,7 @@ export default {
   }
 };
 </script>
-<style >
+<style>
 /* **** 表格 table */
 .MakeComments .el-table td {
   text-align: center;
@@ -588,4 +609,3 @@ export default {
   padding-left: 0px;
 }
 </style>
-

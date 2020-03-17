@@ -1,7 +1,7 @@
 .main_width_1200 {
   width: 62.5%;
   min-width: 1200px;
-  
+
   margin: 0 auto;
 }
 @media screen and (max-width: 1200px) {
@@ -12,7 +12,7 @@
   }
 }
 
-.el-message{
+.el-message {
   z-index: 20000 !important;
 }
 .flex {
@@ -52,9 +52,11 @@
   padding: 0;
   overflow: inherit;
 }
-
-
-
+/* 每一页设置min-height不同 --首页*/
+.mac .common.el-main {
+  /* min-height: 1453px; */
+  min-height: calc(100% - 485px);
+}
 .el-footer {
   background-color: #2b2a2f;
   height: 138px !important;
@@ -62,10 +64,7 @@
   min-width: 1200px;
 }
 
-
 /* ***** elementui - messige 图标大小 */
-.el-icon-info{
+.el-icon-info {
   font-size: 16px;
 }
-
-

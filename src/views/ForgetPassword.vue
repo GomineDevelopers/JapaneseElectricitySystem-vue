@@ -1,5 +1,5 @@
 <template>
-  <div class="ForgetPassword">
+  <el-row class="ForgetPassword height_auto">
     <vue-headful title="重置密码"></vue-headful>
     <el-container class="height_auto">
       <el-header>
@@ -33,7 +33,12 @@
             <div class="PR_left">手机号</div>
             <div>
               <div class="PR_right">
-                <input class="m_input" v-model="phone" placeholder="请输入手机号" type="text" />
+                <input
+                  class="m_input"
+                  v-model="phone"
+                  placeholder="请输入手机号"
+                  type="text"
+                />
               </div>
             </div>
           </div>
@@ -42,7 +47,12 @@
             <div class="PR_left">新密码</div>
             <div>
               <div class="PR_right">
-                <input class="m_input" v-model="password" placeholder="0-16位字符" type="password" />
+                <input
+                  class="m_input"
+                  v-model="password"
+                  placeholder="0-16位字符"
+                  type="password"
+                />
               </div>
             </div>
           </div>
@@ -51,7 +61,12 @@
             <div class="PR_left">确认新密码</div>
             <div>
               <div class="PR_right">
-                <input class="m_input" v-model="password2" placeholder="0-16位字符" type="password" />
+                <input
+                  class="m_input"
+                  v-model="password2"
+                  placeholder="0-16位字符"
+                  type="password"
+                />
               </div>
             </div>
           </div>
@@ -73,7 +88,12 @@
                     <button @click="getVCodeImg()" class="v_code_btnShow v_code_btnShow2">获取图片验证码</button>
                   </div>-->
                   <div>
-                    <img @click="getVCodeImg()" class="img_v_code_img" :src="ImgUrl" alt />
+                    <img
+                      @click="getVCodeImg()"
+                      class="img_v_code_img"
+                      :src="ImgUrl"
+                      alt
+                    />
                   </div>
                 </div>
               </div>
@@ -84,19 +104,28 @@
             <div>
               <div class="inlineBlock_verTopP PR_right">
                 <div>
-                  <input class="m_input m_input2" v-model="v_code" placeholder="短信验证码" type="text" />
+                  <input
+                    class="m_input m_input2"
+                    v-model="v_code"
+                    placeholder="短信验证码"
+                    type="text"
+                  />
                 </div>
                 <div>
                   <button
                     v-if="ifGetAuthCode"
                     @click="getVCode('get')"
                     class="v_code_btnShow"
-                  >获取短信验证码</button>
+                  >
+                    获取短信验证码
+                  </button>
                   <button
                     v-if="!ifGetAuthCode"
                     @click="getVCode('refuse')"
                     class="v_code_btnShow"
-                  >{{countDown}}s后获取</button>
+                  >
+                    {{ countDown }}s后获取
+                  </button>
                 </div>
               </div>
             </div>
@@ -107,12 +136,11 @@
           </div>
         </div>
       </div>
+      <el-footer class="el-footer">
+        <FooterModule></FooterModule>
+      </el-footer>
     </el-container>
-
-    <el-footer class="el-footer">
-      <FooterModule></FooterModule>
-    </el-footer>
-  </div>
+  </el-row>
 </template>
 <script>
 import FooterModule from "@/components/FooterModule";
@@ -289,7 +317,7 @@ export default {
   }
 };
 </script>
-<style >
+<style>
 .ForgetPassword .el-checkbox__input.is-checked .el-checkbox__inner,
 .ForgetPassword .el-checkbox__input.is-indeterminate .el-checkbox__inner {
   background-color: #775563;
@@ -298,17 +326,12 @@ export default {
 .ForgetPassword .el-checkbox__input.is-checked + .el-checkbox__label {
   color: #775563;
 }
+.ForgetPassword .el-header {
+  height: 88px !important;
+}
 </style>
 
-
-
 <style scoped>
-.ForgetPassword {
-}
-
-.ForgetPassword .el-header {
-  height: 80px;
-}
 .ForgetPassword .top_header {
   height: 88px;
   line-height: 88px;
@@ -380,8 +403,7 @@ export default {
 .ForgetPassword .R_content {
   padding-top: 100px;
   min-width: 1200px;
-  /* height: 700px; */
-  padding-bottom: 260px;
+  height: calc(100% - 328px);
 }
 .ForgetPassword .R_content_child {
   min-width: 1200px;
@@ -463,6 +485,7 @@ export default {
   height: 47px;
   background: rgba(119, 85, 99, 1);
   border-radius: 4px;
+  margin-top: 37px;
+  margin-left: 93px;
 }
 </style>
-

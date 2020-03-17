@@ -590,15 +590,14 @@ export default {
 .Login .el-checkbox__input.is-checked + .el-checkbox__label {
   color: #775563;
 }
+.Login .el-header {
+  height: 44px !important;
+}
 </style>
 <style scoped>
 .Login {
+  overflow: hidden;
 }
-
-.Login .el-main {
-  height: calc(100% - 156px);
-}
-
 .Login .img_logo_p {
   padding-left: 210px;
 }
@@ -630,7 +629,9 @@ export default {
   /* width: 100vw; */
   width: 100%;
   height: calc(100% - 182px);
-  /* height: 45.8vw; */
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
 }
 @media screen and (max-width: 1200px) {
   .Login .login_content {
@@ -651,12 +652,12 @@ export default {
 
   background: rgba(255, 255, 255, 1);
   position: absolute;
-  right: 7vw;
-  margin-top: 10vw;
+  right: 11vw;
+  /* margin-top: 10vw; */
 }
 @media screen and (max-width: 1200px) {
   .Login .login_box {
-    margin-top: 80px;
+    /* margin-top: 80px; */
     left: 780px;
   }
 }

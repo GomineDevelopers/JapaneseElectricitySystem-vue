@@ -1,11 +1,14 @@
 <template>
-  <div class="ShoppingTrolley">
+  <div class="ShoppingTrolley height_auto">
     <vue-headful title="购物车"></vue-headful>
     <el-header class="common">
       <HeaderModule id="navigation"></HeaderModule>
     </el-header>
     <el-main class="common">
-      <TopSearchBox :searchType="'ShoppingTrolley'" :categories="[]"></TopSearchBox>
+      <TopSearchBox
+        :searchType="'ShoppingTrolley'"
+        :categories="[]"
+      ></TopSearchBox>
 
       <div class="textAlignCenter_w100p steps_settings">
         <el-steps :active="0" align-center>
@@ -29,7 +32,7 @@
               <template slot-scope="scope">
                 <div class="inlineBlock_verTopP">
                   <div class="Shopping_img_p">
-                    <img class="Shopping_img" :src="scope.row.ImgUrl " alt />
+                    <img class="Shopping_img" :src="scope.row.ImgUrl" alt />
                   </div>
                   <div class="product_text">{{ scope.row.productInfo }}</div>
                 </div>
@@ -38,7 +41,9 @@
             <el-table-column header-align="center" label="单价" width="150">
               <template slot-scope="scope">
                 <div>
-                  <div class="m_unitPriceHistory">￥{{ scope.row.unitPriceHistory }}</div>
+                  <div class="m_unitPriceHistory">
+                    ￥{{ scope.row.unitPriceHistory }}
+                  </div>
                   <div class="m_unitPrice">￥{{ scope.row.unitPrice }}</div>
                 </div>
               </template>
@@ -54,7 +59,7 @@
                   <!-- {{ scope.row.count }} -->
                   <el-input-number
                     v-model="scope.row.count"
-                    @change="handleChange($event,scope.row.id)"
+                    @change="handleChange($event, scope.row.id)"
                     :min="1"
                     :max="Number(scope.row.stock)"
                     label="商品数量"
@@ -69,10 +74,9 @@
             </el-table-column>
             <el-table-column header-align="center" label="操作" width="150">
               <template slot-scope="scope">
-                <div
-                  @click="deleteProduct(scope.row.id)"
-                  class="m_operation"
-                >{{ scope.row.operation }}</div>
+                <div @click="deleteProduct(scope.row.id)" class="m_operation">
+                  {{ scope.row.operation }}
+                </div>
               </template>
             </el-table-column>
           </el-table>
@@ -94,7 +98,7 @@
           <div class="bsr_1">
             应付总金额（不含运费）：
             <span class="bsr_1b">¥</span>
-            <span class="bsr_1c">{{totalValue}}</span>
+            <span class="bsr_1c">{{ totalValue }}</span>
           </div>
           <div class="bsr_2">
             <button @click="Settlement()" class="bs_btn">结算</button>
@@ -539,10 +543,10 @@ export default {
   }
 };
 </script>
-<style >
+<style>
 /* 每一页设置min-height不同 - .mac 指定页*/
 .mac .ShoppingTrolley .common.el-main {
-  min-height: 550px;
+  /* min-height: 550px; */
 }
 
 /* ***** 进度条 */
@@ -758,4 +762,3 @@ export default {
   color: #fff;
 }
 </style>
-
