@@ -2,23 +2,13 @@
   <div class="HomePage height_auto">
     <el-main class="common">
       <!-- 顶部输入框开始 -->
-      <TopSearchBox
-        :searchType="'HomePage'"
-        :categories="categories"
-      ></TopSearchBox>
+      <TopSearchBox :searchType="'HomePage'" :categories="categories"></TopSearchBox>
       <!-- 顶部输入框结束 -->
 
       <!-- 轮播开始 -->
       <el-carousel v-if="ifSearch != true" :interval="5000" arrow="always">
-        <el-carousel-item
-          v-for="(imgItem, index2) in carouselList"
-          :key="index2 + 'img'"
-        >
-          <img
-            class="m_carouselList"
-            @click="goHref(imgItem.HrefURL)"
-            :src="imgItem.ImgURL"
-          />
+        <el-carousel-item v-for="(imgItem, index2) in carouselList" :key="index2 + 'img'">
+          <img class="m_carouselList" @click="goHref(imgItem.HrefURL)" :src="imgItem.ImgURL" />
           <!-- <img :v-lazy="imgItem" /> -->
         </el-carousel-item>
       </el-carousel>
@@ -26,23 +16,16 @@
 
       <!-- 分类开始 -->
       <el-row class="home_page_content">
-        <el-tabs
-          type="border-card"
-          v-model="activeName"
-          @tab-click="handleClick"
-        >
+        <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick">
           <template v-for="(item, index) in categoriesDetails">
-            <el-tab-pane
-              :key="index + 'cd'"
-              :label="item.name"
-              :name="String(index)"
-            >
+            <el-tab-pane :key="index + 'cd'" :label="item.name" :name="String(index)">
               <div class="inlineBlock_verTopP">
                 <template v-for="(itemC, indexC) in productArr[index]">
                   <div
                     class="perPic"
                     :style="{ backgroundImage: 'url(' + itemC.ImgUrl + ')' }"
                     :key="indexC + 'pa'"
+                    v-show="itemC.stock != 0"
                   >
                     <div
                       class="product_intro"
@@ -50,15 +33,10 @@
                       @mouseout="showDetails(indexC, false)"
                       @click="detailsPageManage(index, indexC)"
                     >
-                      <div
-                        v-show="indexC == index_ShowPD"
-                        class="product_intro_details"
-                      >
+                      <div v-show="indexC == index_ShowPD" class="product_intro_details">
                         <div class="pid_child">
                           <div class="d_1">{{ itemC.art }}</div>
-                          <div class="d_2">
-                            {{ itemC.title }},{{ itemC.created_at }}
-                          </div>
+                          <div class="d_2">{{ itemC.title }},{{ itemC.created_at }}</div>
                           <div class="d_3">￥{{ itemC.price }}</div>
                         </div>
                       </div>
@@ -191,24 +169,15 @@ export default {
     };
   },
   mounted() {
+    
+
     console.log("~!!!!!!!!!!!!!!!!!!!!!!!!!");
     console.log(this.$route);
     console.log(this.$router);
-
     let vm = this;
-    if (
-      this.$route.query.IfSearch == true ||
-      this.$route.query.IfSearch == "true"
-    ) {
-      // 搜索显示结果
-      vm.ifSearch = true;
-      console.log(vm.ifSearch);
-      vm.SearchResult();
-    } else {
-      // 普通显示分类
-      vm.InitCategories();
-      vm.getAdPictures(); // 获取轮播图  // 后台图片-待处理
-    }
+    // 普通显示分类
+    vm.InitCategories();
+    vm.getAdPictures(); // 获取轮播图  // 后台图片-待处理
   },
   methods: {
     goHref(m_href) {
@@ -218,72 +187,7 @@ export default {
         window.location.href = m_href;
       }
     },
-    SearchResult() {
-      console.log("SearchResult");
-      let vm = this;
-      vm.categoriesDetails.push({
-        id: 0,
-        name: "搜索结果"
-      });
-      let temp_productArr = JSON.parse(this.$route.query.productArr);
-      let length = temp_productArr.length;
-      let temp_PArr1 = [];
-      for (let i = 0; i < length; i++) {
-        let obj = temp_productArr[i];
-        let images_length = obj.images.length;
-        obj.ImgUrl = "";
-        obj.ImgUrls = [];
-        if (images_length == 0) {
-          try {
-            obj.ImgUrl = require("@/assets/pic/product.png"); //无图处理
-            obj.ImgUrls.push(require("@/assets/pic/product.png")); //无图处理
-          } catch (error) {
-            console.log(error);
-          }
-        } else if (images_length >= 0) {
-          try {
-            // 有图处理
-            obj.ImgUrl = global.IMGPrefix + obj.images[0].image;
-            obj.ImgUrls = [];
-            for (let k = 0; k < images_length; k++) {
-              obj.ImgUrls.push(global.IMGPrefix + obj.images[k].image);
-            }
-          } catch (error) {
-            console.log(error);
-          }
-        }
-
-        temp_PArr1.push({
-          ...obj
-        });
-      }
-      vm.productArr.push([]); // 搜索结果表只有1个分类！ length为1
-      Vue.set(vm.productArr, 0, temp_PArr1);
-      console.log(vm.productArr);
-
-      // art: "tony.steuber"
-      // category_id: 3
-      // content: "Exercitationem sit et eos sint. Sit repellendus voluptas optio ratione omnis. Dolore quia quod numquam mollitia debitis nam."
-      // created_at: "2013-03-10 12:40:34"
-      // description: "Consequatur aut blanditiis impedit maiores distinctio incidunt."
-      // discount: 1
-      // id: 1
-      // images: []
-      // on_sale: true
-      // price: "0.01"
-      // quality: "布面油画"
-      // rating: 5
-      // review_count: 10
-      // size: "10cm X 10cm"
-      // sold_count: 10
-      // stock: 100
-      // style: "具象表现"
-      // theme: "风景"
-      // time: "2009-03-25"
-      // title: "Moriah Feest"
-      // type: "油画"
-      // updated_at: "2013-03-10 12:40:34"
-    },
+   
     getAdPictures() {
       let vm = this;
       ads()
@@ -417,6 +321,7 @@ export default {
 
           if (response.status == 200) {
             Vue.set(vm.productArr, vm.currentCategoryIndex, []); // 当前分类清空（只存一页！）
+            let noStockCount = 0;
             for (let i = 0; i < length; i++) {
               let image = require("@/assets/pic/product.png");
               try {
@@ -435,6 +340,9 @@ export default {
                 console.log(error);
                 images = [];
                 // images = [require("@/assets/pic/product.png")];
+              }
+              if (data[i].stock == 0) {
+                noStockCount++;
               }
               temp_productArr_child.push({
                 art: data[i].art, // 创作者  // ★★★首页数据
@@ -491,8 +399,8 @@ export default {
               temp_productArr_child
             );
             // vm.CurrentCategoryIdTotal = response.data.total; // 当前分类产品数量=》映射到分页上
-            vm.CurrentCategoryIdTotal = response.data.data.length; // ▲▲直接获取后台total =》 自己判定length
-
+            vm.CurrentCategoryIdTotal =
+              response.data.data.length - noStockCount; // ▲▲直接获取后台total =》 自己判定length
             // console.log(vm.productArr);
             // console.log(vm.productArr[0][0].ImgUrl);
           }

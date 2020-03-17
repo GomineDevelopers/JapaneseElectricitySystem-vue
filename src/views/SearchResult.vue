@@ -2,31 +2,21 @@
   <div class="SearchResult height_auto">
     <!-- 顶部输入框开始 -->
     <el-main class="common">
-      <TopSearchBox
-        :searchType="'SearchResult'"
-        :categories="categories"
-      ></TopSearchBox>
+      <TopSearchBox :searchType="'SearchResult'" :categories="categories"></TopSearchBox>
       <!-- 顶部输入框结束 -->
 
       <!-- 分类开始 -->
       <el-row class="home_page_content">
-        <el-tabs
-          type="border-card"
-          v-model="activeName"
-          @tab-click="handleClick"
-        >
+        <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick">
           <template v-for="(item, index) in categoriesDetails">
-            <el-tab-pane
-              :key="index + 'cd'"
-              :label="item.name"
-              :name="String(index)"
-            >
+            <el-tab-pane :key="index + 'cd'" :label="item.name" :name="String(index)">
               <div class="inlineBlock_verTopP">
                 <template v-for="(itemC, indexC) in productArr[index]">
                   <div
                     class="perPic"
                     :style="{ backgroundImage: 'url(' + itemC.ImgUrl + ')' }"
                     :key="indexC + 'pa'"
+                    v-show="itemC.stock != 0"
                   >
                     <div
                       class="product_intro"
@@ -34,15 +24,10 @@
                       @mouseout="showDetails(indexC, false)"
                       @click="detailsPageManage(index, indexC)"
                     >
-                      <div
-                        v-show="indexC == index_ShowPD"
-                        class="product_intro_details"
-                      >
+                      <div v-show="indexC == index_ShowPD" class="product_intro_details">
                         <div class="pid_child">
                           <div class="d_1">{{ itemC.art }}</div>
-                          <div class="d_2">
-                            {{ itemC.title }},{{ itemC.created_at }}
-                          </div>
+                          <div class="d_2">{{ itemC.title }},{{ itemC.created_at }}</div>
                           <div class="d_3">￥{{ itemC.price }}</div>
                         </div>
                       </div>
@@ -159,7 +144,8 @@ export default {
       CurrentCategoryIdTotal: 0,
       CurrentCategoryIdPageArr: [], // 分页-对应每个分类的当前（历史）页数
       // currentPage: 1,
-      ifSearch: false
+      ifSearch: false,
+  
     };
   },
   mounted() {
@@ -188,8 +174,12 @@ export default {
       let temp_productArr = JSON.parse(this.$route.query.productArr);
       let length = temp_productArr.length;
       let temp_PArr1 = [];
+      let noStockCount = 0;
       for (let i = 0; i < length; i++) {
         let obj = temp_productArr[i];
+        if(obj.stock == 0){
+          noStockCount++;
+        }
         let images_length = obj.images.length;
         obj.ImgUrl = "";
         obj.ImgUrls = [];
@@ -219,6 +209,7 @@ export default {
       }
       vm.productArr.push([]); // 搜索结果表只有1个分类！ length为1
       Vue.set(vm.productArr, 0, temp_PArr1);
+      vm.CurrentCategoryIdTotal = length - noStockCount;
       console.log(vm.productArr);
     },
 
@@ -332,6 +323,7 @@ export default {
 
           if (response.status == 200) {
             Vue.set(vm.productArr, vm.currentCategoryIndex, []); // 当前分类清空（只存一页！）
+            let noStockCount = 0;
             for (let i = 0; i < length; i++) {
               let image = require("@/assets/pic/product.png");
               try {
@@ -350,6 +342,9 @@ export default {
                 console.log(error);
                 images = [];
                 // images = [require("@/assets/pic/product.png")];
+              }
+              if (data[i].stock == 0) {
+                noStockCount++;
               }
               temp_productArr_child.push({
                 art: data[i].art, // 创作者  // ★★★首页数据
@@ -404,7 +399,7 @@ export default {
               vm.currentCategoryIndex,
               temp_productArr_child
             );
-            vm.CurrentCategoryIdTotal = response.data.total; // 当前分类产品数量=》映射到分页上
+            vm.CurrentCategoryIdTotal = response.data.total - noStockCount; // 当前分类产品数量=》映射到分页上
             // console.log(vm.productArr);
             // console.log(vm.productArr[0][0].ImgUrl);
           }

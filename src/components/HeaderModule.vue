@@ -22,6 +22,7 @@
           </span>
           <span @click="router_to('/shoppingtrolley')">
             <img src="../assets/pic/shopping_cart_icon.png" /> 购物车
+            <span id="div2"></span>
           </span>
         </el-col>
       </el-row>

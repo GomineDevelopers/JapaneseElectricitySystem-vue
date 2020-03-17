@@ -64,8 +64,10 @@ if (navigator.userAgent.indexOf('Mac OS X') !== -1) {
   $('body').addClass('pc');
 }
 
-
-
+// 跳转后滚动条初始化
+router.afterEach((to, from, next) => {
+  window.scrollTo(0, 0);
+});
 router.beforeEach((to, from, next) => {
 
   // // 登录后存Cookies 给 HeaderModule

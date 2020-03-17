@@ -4,19 +4,13 @@
     <el-header class="common">
       <HeaderModule id="navigation"></HeaderModule>
     </el-header>
+    <!-- <button @click="DoMoving">测试移动</button> -->
     <el-main class="common">
-      <TopSearchBox
-        :searchType="'ProductDetails'"
-        :categories="[]"
-      ></TopSearchBox>
+      <TopSearchBox :searchType="'ProductDetails'" :categories="[]"></TopSearchBox>
 
       <div class="pd_content">
         <!-- 页面流程 -->
-        <PageFlow
-          :Flow1="'首页'"
-          :Flow2="'油画'"
-          :Flow3="PData.title"
-        ></PageFlow>
+        <PageFlow :Flow1="'首页'" :Flow2="'油画'" :Flow3="PData.title"></PageFlow>
 
         <!-- 商品信息 -->
         <div class="inlineBlock_verTopP product_info">
@@ -33,7 +27,7 @@
                 </template>
               </div>
             </div>
-          </div> -->
+          </div>-->
           <div class="pi_left">
             <magnifier :imgList="smallPicArr"></magnifier>
           </div>
@@ -51,9 +45,7 @@
             </div>
             <div class="inlineBlock_verTopP pir_price">
               <div class="rmb">￥</div>
-              <div class="rmb rmb_value">
-                {{ PData.price * PData.discount }}
-              </div>
+              <div class="rmb rmb_value">{{ PData.price * PData.discount }}</div>
             </div>
             <div class="inlineBlock_verTopP pir_count">
               <div class="pir_count_Title">数量：</div>
@@ -70,14 +62,10 @@
             </div>
             <div class="pir_btns">
               <div class>
-                <button @click="Shopping('BuyNow')" class="i_btn">
-                  立即购买
-                </button>
-                <button
-                  @click="Shopping('ShoppingTrolley')"
-                  class="i_btn i_btn2"
-                >
+                <button @click="Shopping('BuyNow')" class="i_btn">立即购买</button>
+                <button @click="Shopping('ShoppingTrolley')" class="i_btn i_btn2">
                   加入购物车
+                  <!-- <span id="div1" v-show="ifMoving == true">{{productNum}}</span> -->
                 </button>
               </div>
             </div>
@@ -91,30 +79,22 @@
                 v-show="PIDType == 'introduction'"
                 class="PIDChoose0 PIDChoose1"
                 @click="PIDType = 'introduction'"
-              >
-                商品介绍
-              </div>
+              >商品介绍</div>
               <div
                 v-show="PIDType == 'evaluate'"
                 class="PIDChoose0 PIDChoose2"
                 @click="PIDType = 'introduction'"
-              >
-                商品介绍
-              </div>
+              >商品介绍</div>
               <div
                 v-show="PIDType == 'evaluate'"
                 class="PIDChoose0 PIDChoose1 PIDMargin"
                 @click="PIDType = 'evaluate'"
-              >
-                累计评价（{{ PData.review_count }}）
-              </div>
+              >累计评价（{{ PData.review_count }}）</div>
               <div
                 v-show="PIDType == 'introduction'"
                 class="PIDChoose0 PIDChoose2 PIDMargin"
                 @click="PIDType = 'evaluate'"
-              >
-                累计评价（{{ PData.review_count }}）
-              </div>
+              >累计评价（{{ PData.review_count }}）</div>
             </div>
           </div>
 
@@ -125,30 +105,27 @@
                 <div class="mi_title">产品详情</div>
                 <div class="mi_content">
                   <div class="inlineBlock_verTopP perMic">
-                    <template
-                      v-for="(item, index) in mi_contentArr.slice(0, 3)"
-                    >
-                      <div :key="index + 'mic1'" class="perMic_child">
-                        {{ item.name }}：{{ item.value }}
-                      </div>
+                    <template v-for="(item, index) in mi_contentArr.slice(0, 3)">
+                      <div
+                        :key="index + 'mic1'"
+                        class="perMic_child"
+                      >{{ item.name }}：{{ item.value }}</div>
                     </template>
                   </div>
                   <div class="inlineBlock_verTopP perMic">
-                    <template
-                      v-for="(item, index) in mi_contentArr.slice(3, 6)"
-                    >
-                      <div :key="index + 'mic2'" class="perMic_child">
-                        {{ item.name }}：{{ item.value }}
-                      </div>
+                    <template v-for="(item, index) in mi_contentArr.slice(3, 6)">
+                      <div
+                        :key="index + 'mic2'"
+                        class="perMic_child"
+                      >{{ item.name }}：{{ item.value }}</div>
                     </template>
                   </div>
                   <div class="inlineBlock_verTopP perMic">
-                    <template
-                      v-for="(item, index) in mi_contentArr.slice(6, 9)"
-                    >
-                      <div :key="index + 'mic3'" class="perMic_child">
-                        {{ item.name }}：{{ item.value }}
-                      </div>
+                    <template v-for="(item, index) in mi_contentArr.slice(6, 9)">
+                      <div
+                        :key="index + 'mic3'"
+                        class="perMic_child"
+                      >{{ item.name }}：{{ item.value }}</div>
                     </template>
                   </div>
                 </div>
@@ -413,11 +390,21 @@ export default {
         //   ],
         //   date: "2019-10-12"
         // }
-      ]
+      ],
+      // moving相关
+      elX: null,
+      elY: null,
+      diffX: null,
+      diffY: null,
+      ifMoving: false // 动态移动点
     };
   },
+
   mounted() {
     let vm = this;
+
+    // 初始化moving
+    this.InitMoving();
     // 标题title浮动初始化
     this.$Utils.TitleInit();
 
@@ -446,6 +433,87 @@ export default {
   },
 
   methods: {
+    InitMoving() {
+      // 抛物线计算公式 y = a*x*x + b*x + c
+      // 坐标点x、y是已知的，a、b、c是未知的
+
+      // 获取初始元素
+      let oDiv1 = document.getElementById("div1");
+
+      // 获取目标元素
+      let oDiv2 = document.getElementById("div2");
+
+      // 获取初始元素的位置
+      this.elX = oDiv1.getBoundingClientRect().left;
+      this.elY = oDiv1.getBoundingClientRect().top;
+
+      // 获取初始元素到目标元素的偏移总量
+      this.diffX =
+        oDiv2.getBoundingClientRect().left - oDiv1.getBoundingClientRect().left;
+      this.diffY =
+        oDiv2.getBoundingClientRect().top - oDiv1.getBoundingClientRect().top;
+    },
+    DoMoving() {
+      let vm = this;
+      console.log("开启！");
+      // vm.ifMoving = true;
+      setTimeout(function() {
+        let oDiv1 = document.getElementById("div1");
+        let oDiv2 = document.getElementById("div2");
+        let elX = vm.elX;
+        let elY = vm.elY;
+        let diffX = vm.diffX;
+        let diffY = vm.diffY;
+        // 假设(elX,elY)为(0,0),则c = 0，求a、b
+        // 设a=0.001 => 实际指焦点到准线的距离，可以抽象成曲率，这里模拟扔物体的抛物线，因此是开口向下的
+        let a = 0.001;
+
+        // 则 b = (y - a*x*x) / x
+        let b = (diffY - a * diffX * diffX) / diffX;
+
+        // 定义一个定时器，用来执行抛物线动画
+        let timer = null;
+
+        // 执行的时间
+        let duration = 750;
+        let beginTime;
+        let endTime;
+        function start() {
+          // 执行的开始时间
+          beginTime = new Date();
+          // 结束的时间
+          endTime = +beginTime + duration;
+          // 定时器，执行抛物线动画
+          timer = setInterval(() => {
+            let now = new Date();
+            step(now);
+          }, 13);
+        }
+
+        // 抛物线动画的方法
+        function step(now) {
+          let x, y;
+          if (now > endTime) {
+            // 运行结束
+            x = diffX;
+            y = diffY;
+            clearInterval(timer);
+          } else {
+            // 计算每一步的X轴的位置
+            x = diffX * ((now - beginTime) / duration);
+            // 则每一步的Y轴的位置y = a*x*x + b*x + c;   c==0;
+            y = a * x * x + b * x;
+          }
+          oDiv1.style.cssText = `position:absolute;left:${elX + x}px;top:${elY +
+            y}px`;
+        }
+        start();
+        setTimeout(function() {
+          // vm.ifMoving = false;
+          console.log("关闭！");
+        }, 750);
+      }, 100);
+    },
     InitData() {
       let vm = this;
       console.log("ProductDetails");
@@ -704,6 +772,25 @@ export default {
 /* ***** 评分Rate */
 .ProductDetails .el-rate__text {
   font-size: 18px;
+}
+
+/* ***** 移动 */
+#div1 {
+  /* background: red; */
+  color: #775563;
+  position: absolute;
+  font-size: 20px;
+  /* top: 10%; */
+  /* left: 10%; */
+  z-index: 30000;
+  margin-left: -3%;
+}
+
+#div2 {
+  color: #775563;
+  position: absolute;
+  font-size: 20px;
+  z-index: 30000;
 }
 </style>
 

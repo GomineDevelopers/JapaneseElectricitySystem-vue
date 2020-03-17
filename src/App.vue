@@ -17,6 +17,12 @@ export default {
       isRouterAlive: true
     };
   },
+  mounted() {
+
+  },
+  updated() {
+
+  },
   methods: {
     //为子页面刷新提供机制
     reload() {
