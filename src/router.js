@@ -9,10 +9,22 @@ Vue.use(Router);
 // 首页 - Home(/)
 // 登录（密码登录/验证码登录） - Login
 // 注册 - Register
+// 忘记密码 - ForgetPassword
 // 商品详情 - ProductDetails 
 // 购物车 - ShoppingTrolley 
 // 核对订单信息（+添加收货地址） - CheckOrderInformation
 
+// 我的订单-个人中心（全部订单/代付款/待收货/待评价/已取消） (用户资料/我的订单/收货地址) - PersonalCenter 
+// 订单详情-已完成 - OrderDetails
+// 评价详情 - EvaluationDetails
+// 发表评论 - MakeComments
+// 用户资料 - UserInfo  ---看个人中心
+// 收货地址（+ 添加编辑） - ShippingAddress   ---看个人中心
+
+// TransferPage - 中转页 用于相同页面路由跳转
+// SearchResult - 搜索结果页
+
+// FinanceApplyText  - 支付宝支付页面
 
 export default new Router({
   mode: "history",
@@ -31,6 +43,32 @@ export default new Router({
         }
       ]
     },
+    // search页结构大致同home页
+    { 
+      path: "/search", 
+      name: "search",
+      component: () => import("@/views/Search"),
+      redirect: "/Search",
+      children: [
+        {
+          path: "/searchresult",
+          name: "SearchResult",
+          component: () => import("@/views/SearchResult")
+        }
+      ]
+    },
+    // {
+    //   path: "/searchresult",
+    //   name: "SearchResult",
+    //   component: () => import("@/views/SearchResult")
+    // },
+    {
+      path: "/transferpage",
+      name: "TransferPage",
+      component: () => import("@/views/TransferPage")
+    },
+
+
     {
       path: "/test",
       name: "Test",
@@ -50,6 +88,12 @@ export default new Router({
       component: () => import("@/views/Register")
     },
     {
+      path: "/forgetpassword",
+      name: "ForgetPassword",
+      component: () => import("@/views/ForgetPassword")
+    },
+
+    {
       path: "/productdetails",
       name: "ProductDetails",
       component: () => import("@/views/ProductDetails")
@@ -64,5 +108,43 @@ export default new Router({
       name: "CheckOrderInformation",
       component: () => import("@/views/CheckOrderInformation")
     },
+
+    // ********* new
+    {
+      path: "/personalcenter",
+      name: "PersonalCenter",
+      component: () => import("@/views/PersonalCenter")
+    },
+    {
+      path: "/orderdetails",
+      name: "OrderDetails",
+      component: () => import("@/views/OrderDetails")
+    },
+    {
+      path: "/evaluationdetails",
+      name: "EvaluationDetails",
+      component: () => import("@/views/EvaluationDetails")
+    },
+    {
+      path: "/makecomments",
+      name: "MakeComments",
+      component: () => import("@/views/MakeComments")
+    },
+    // {
+    //   path: "/userinfo",
+    //   name: "UserInfo",
+    //   component: () => import("@/views/UserInfo")
+    // },
+    // {
+    //   path: "/shippingaddress",
+    //   name: "ShippingAddress",
+    //   component: () => import("@/views/ShippingAddress")
+    // },
+    {
+      path: "/financeapplytext",
+      name: "FinanceApplyText",
+      component: () => import("@/components/FinanceApplyText")
+    },
+    
   ]
 });

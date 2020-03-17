@@ -2,16 +2,16 @@
   <div class="CheckOrderInformation">
     <vue-headful title="核对订单信息"></vue-headful>
     <el-header class="common">
-      <HeaderModule></HeaderModule>
+      <HeaderModule id="navigation"></HeaderModule>
     </el-header>
-    <el-main>
-      <TopSearchBox></TopSearchBox>
+    <el-main class="common">
+      <TopSearchBox :searchType="'CheckOrderInformation'" :categories="[]"></TopSearchBox>
 
       <div class="textAlignCenter_w100p steps_settings">
         <el-steps :active="1" align-center>
           <el-step title="我的购物车" description></el-step>
           <el-step title="核对订单" description></el-step>
-          <el-step title="成功提交订单" description></el-step>
+          <el-step title="提交订单" description></el-step>
         </el-steps>
       </div>
 
@@ -20,7 +20,7 @@
         <div class="inlineBlock_verTopP address_all">
           <div class="inlineBlock_verTopP address_new_event">
             <div class="ade_left">收货人信息</div>
-            <div @click="dialogVisible = true" class="ade_right">
+            <div @click="addressEditDialog('new')" class="ade_right">
               <i class="el-icon-plus"></i> 新增收货地址
             </div>
           </div>
@@ -28,12 +28,15 @@
           <div class="inlineBlock_verTopP address_change">
             <div class="adc_left">
               <span class="adc_font1">寄送至</span>
-              <span class="adc_font2">上海上海市松江区人民胡同175号（荀美东）13336793998 默认地址</span>
+              <span class="adc_font2">
+                {{ CheckedAddress}}
+                <span v-show="default_radio == address_raido">默认地址</span>
+              </span>
             </div>
-            <div class="adc_right">修改地址</div>
+            <div class="adc_right" @click="addressEditDialog('edit')">修改地址</div>
           </div>
           <div class="all_address">
-            <el-radio-group v-model="address_raido">
+            <el-radio-group v-model="address_raido" @change="radioChange">
               <template v-for="(item,index) in ALL_Address">
                 <div class="perRadio" :key="index+ 'ad'">
                   <el-radio :label="index">
@@ -47,23 +50,15 @@
           </div>
         </div>
 
-        <div class="ms_title">选择支付方式</div>
-        <div style="height:32px;"></div>
-        <div class="payfor_btns">
-          <button class="m_btn1">在线支付</button>
-          <button class="m_btn1 m_btn2">货到付款</button>
-        </div>
         <div class="ms_title">确认订单信息</div>
         <div style="height:32px;"></div>
         <div class="ms_table">
           <el-table
-            ref="multipleTable"
             :data="tableData"
             tooltip-effect="dark"
             style="width: 100%"
             @selection-change="handleSelectionChange"
           >
-            <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column header-align="center" label="商品" width="500">
               <template slot-scope="scope">
                 <div class="inlineBlock_verTopP">
@@ -72,15 +67,9 @@
                   </div>
                   <div class="product_text">{{ scope.row.productInfo }}</div>
                 </div>
-                <div class="inlineBlock_verTopP">
-                  <div class="remark">订单备注：</div>
-                  <div>
-                    <textarea placeholder="给卖家留言" name id cols="30" rows="5"></textarea>
-                  </div>
-                </div>
               </template>
             </el-table-column>
-            <el-table-column header-align="center" label="单价" width="200">
+            <el-table-column header-align="center" label="单价" width="220">
               <template slot-scope="scope">
                 <div>
                   <div class="m_unitPriceHistory">￥{{ scope.row.unitPriceHistory }}</div>
@@ -89,69 +78,67 @@
               </template>
             </el-table-column>
 
-            <el-table-column header-align="center" label="数量" width="200">
+            <el-table-column header-align="center" label="数量" width="220">
               <template slot-scope="scope">
                 <div class="m_count">{{ scope.row.count }}</div>
               </template>
             </el-table-column>
-            <el-table-column header-align="center" label="总价" width="200">
+            <el-table-column header-align="center" label="总价" width="215">
               <template slot-scope="scope">
                 <div>{{ scope.row.totalPrices }}</div>
               </template>
             </el-table-column>
           </el-table>
         </div>
+        <div class="inlineBlock_verTopP remark_p">
+          <div class="remark">订单备注：</div>
+          <div>
+            <textarea v-model="OrderRemark" placeholder="给卖家留言" name id cols="50" rows="5"></textarea>
+          </div>
+        </div>
         <div class="shopping_over">
           <div class="soa1">
             <span>运费：</span>
             <span class="soa2">￥</span>
-            <span class="soa3">0</span>
+            <span class="soa3">{{Number(freight)}}</span>
           </div>
           <div class="soa1 sob1">
             <span>应付总金额（含运费）：</span>
             <span class="soa2">￥</span>
-            <span class="soa3">82,426</span>
+            <span class="soa3">{{Number(freight) + Number(totalValue)}}</span>
           </div>
           <div class>
-            <button class="m_btn1 m_btn1b">上一步</button>
-            <button class="m_btn1 m_btn2 m_btn1b m_btn2b">提交订单</button>
+            <button class="m_btn1 m_btn1b" @click="router_to('/shoppingtrolley')">上一步</button>
+            <button class="m_btn1 m_btn2 m_btn1b m_btn2b" @click="Settlement()">提交订单</button>
           </div>
         </div>
       </div>
 
       <!-- 对话框 -->
-      <el-dialog title="收货地址" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+      <el-dialog
+        :title="addressEditType+'收货地址'"
+        :visible.sync="dialogVisible"
+        width="30%"
+        :before-close="handleClose"
+      >
         <div class="textAlignCenter_w100p dialogContent">
           <div class="inlineBlock_verTopP dcPerRow">
             <div class="dc_sTtile">收货人姓名：</div>
             <div>
-              <input class="dc_input" placeholder="请输入" type="text" />
+              <input v-model="u_name" class="dc_input" placeholder="请输入" type="text" />
             </div>
           </div>
 
           <div class="inlineBlock_verTopP dcPerRow">
             <div class="dc_sTtile">电话号码：</div>
             <div>
-              <input class="dc_input" placeholder="请输入" type="text" />
+              <input v-model="u_phone" class="dc_input" placeholder="请输入" type="text" />
             </div>
           </div>
 
           <div class="inlineBlock_verTopP dcPerRow">
             <div class="dc_sTtile">收货地址：</div>
             <div>
-              <!-- <input class="dc_input" placeholder="请输入" type="text" /> -->
-              <!-- <select class="my_select" :value="province" onChange="this.provinceChange">
-                <option key="test-positionChange" defaultValue="selected">请选择</option>
-                <template v-for="(item,index) in provinceS">
-                  <option :key="'ps' + index" :value="item.label">{{item.label}}</option>
-                </template>
-              </select>
-              <select class="my_select" :value="city" @Change="cityChange">
-                <option key="test-positionChange2" defaultValue="selected">请选择</option>
-                <template v-for="(item,index) in cityS">
-                  <option :key="'cs' + index" :value="item">{{item}}</option>
-                </template>
-              </select>-->
               <div class="linkage">
                 <el-select v-model="sheng" @change="choseProvince" placeholder="省级地区">
                   <el-option
@@ -186,18 +173,17 @@
           <div class="inlineBlock_verTopP dcPerRow">
             <div class="dc_sTtile">详细地址：</div>
             <div>
-              <input class="dc_input" placeholder="请输入" type="text" />
+              <input v-model="u_address" class="dc_input" placeholder="请输入" type="text" />
             </div>
           </div>
-
-          <div class="buy_settings">
+          <!-- <div class="buy_settings">
             <el-checkbox v-model="ifChoosel_checkbox">
               <span class="checkBox_font">设为默认收货地址</span>
             </el-checkbox>
-          </div>
+          </div>-->
         </div>
         <span slot="footer">
-          <button class="btn_save" @click="dialogVisible = false">保存</button>
+          <button class="btn_save" @click="AddressSave()">保存</button>
         </span>
       </el-dialog>
       <!-- 对话框 -->
@@ -216,10 +202,15 @@ import TopSearchBox from "@/components/TopSearchBox";
 import FooterNav from "@/components/FooterNav";
 import FooterModule from "@/components/FooterModule";
 
-import { city, data_positionS, data_provinceS } from "@/utils/mydata.js";
-import axios from "axios";
-// import { m_city } from "@/static/json/map.js";
 import m_city from "@/static/json/map.json";
+import {
+  refresh_token,
+  orders,
+  getAddressDefault,
+  getAddressList,
+  add_address,
+  updateAddressById
+} from "@/api/api";
 
 export default {
   name: "CheckOrderInformation",
@@ -232,47 +223,81 @@ export default {
   data() {
     return {
       ALL_Address: [
-        {
-          raido: 1,
-          text: "上海上海市松江区人民胡同175号",
-          name: "荀美东",
-          phone: "13336793998"
-        },
-        {
-          raido: 2,
-          text: "福建省宁德市寿宁县自强大道141号",
-          name: "优乐美",
-          phone: "13666711172"
-        }
+        // {
+        //   raido: 1,
+        //   text: "上海上海市松江区人民胡同175号",
+        //   name: "荀美东",
+        //   phone: "13336793998"
+        // },
+        // {
+        //   raido: 2,
+        //   text: "福建省宁德市寿宁县自强大道141号",
+        //   name: "优乐美",
+        //   phone: "13666711172"
+        // },
+        // {
+        // raido: i,
+        // id: data[i].id, // 地址id  // 暂不用管 user_id
+        // chooseType: data[i].default_address, // 是否默认 1-默认 0-不默认
+        // // 省市区+详细地址
+        // text: text,
+        // province: data[i].province,
+        // city: data[i].city,
+        // district: data[i].district,
+        // address: data[i].address,
+        // name: data[i].contact_name,
+        // phone: data[i].contact_phone,
+        // zip: data[i].zip
+        // }
       ],
-      address_raido: 1,
+      // CheckedAddress: "上海上海市松江区人民胡同175号（荀美东）13336793998",
+      CheckedAddress: "",
+      default_radio: 0,
+      address_raido: 0,
       tableData: [
-        {
-          ImgUrl: require("@/assets/pic/product.png"),
-          productInfo: "李新建珠峰瑞祥, 2015布面油画",
-          unitPriceHistory: 45415,
-          unitPrice: 41213,
-          inventory: 12,
-          count: 1,
-          totalPrices: 41213
-        },
-        {
-          ImgUrl: require("@/assets/pic/product.png"),
-          productInfo: "李新建珠峰瑞祥, 2015布面油画",
-          unitPriceHistory: 45415,
-          unitPrice: 41213,
-          inventory: 12,
-          count: 1,
-          totalPrices: 41213
-        }
+        // {
+        //   ImgUrl: require("@/assets/pic/product.png"),
+        //   productInfo: "李新建珠峰瑞祥, 2015布面油画",
+        //   unitPriceHistory: 45415,
+        //   unitPrice: 41213,
+        //   inventory: 12,
+        //   count: 1,
+        //   totalPrices: 41213
+        // },
+        // {
+        //   ImgUrl: require("@/assets/pic/product.png"),
+        //   productInfo: "李新建珠峰瑞祥, 2015布面油画",
+        //   unitPriceHistory: 45415,
+        //   unitPrice: 41213,
+        //   inventory: 12,
+        //   count: 1,
+        //   totalPrices: 41213
+        // }
+        // ///// 实际数据 （by ShoppingTrolley页）
+        //  stock: good.stock,
+        //     id: data[i].good_id,
+        //     // id: data[i].id,
+        //     ImgUrl: require("@/assets/pic/product.png"),
+        //     productInfo:
+        //       good.art +
+        //       "," +
+        //       good.title +
+        //       "," +
+        //       good.created_at +
+        //       "," +
+        //       good.quality,
+        //     inventory: good.stock,
+        //     count: data[i].amount,
+        //     unitPriceHistory: good.price,
+        //     unitPrice: Number(good.price) * Number(good.discount),
+        //     totalPrices: data[i].amount * Number(good.price),
+        //     operation: "删除"
       ],
       dialogVisible: false,
+      ifNewAddress: true,
+      addressEditType: "新增",
+      assignAddressId: null,
       ifChoosel_checkbox: false,
-      // 省市区
-      // provinceS: data_provinceS,
-      // cityS: [],
-      // province: "请选择省",
-      // city: "请选择市"
       mapJson: "../static/json/map.json",
       province: "",
       sheng: "",
@@ -281,16 +306,431 @@ export default {
       qu: "",
       qu1: [],
       city: "",
-      block: ""
+      block: "",
+      u_name: "",
+      u_phone: "",
+      u_address: "",
+      zip: null, // 邮编 - 传入Number
+      zip_shengArr: [
+        // {
+        //      zip: item,
+        //     text: data[item]
+        // }
+      ], // 用于 省zip 找对应的省string
+      zip_shiArr: [],
+      zip_quArr: [],
+      ifFirst: true,
+      OrderRemark: "", // 订单备注
+      freight: 0, // 运费
+      totalValue: 82426 // 商品总价(不含运费)
     };
-  },
-  mounted() {
-    let vm = this;
   },
   created() {
     this.getCityData();
   },
+  mounted() {
+    let vm = this;
+    // 标题title浮动初始化
+    this.$Utils.TitleInit();
+    // 商品数据
+    let temp_tableData = JSON.parse(this.$route.query.tableData);
+    console.log(temp_tableData);
+    let length = temp_tableData.length;
+    for (let i = 0; i < length; i++) {
+      vm.tableData.push(temp_tableData[i]);
+    }
+    // 总费用 = 商品总价(不含运费)
+    vm.totalValue = this.$route.query.totalValue;
+    // 运费 --待后台返回 （freight）
+
+    setTimeout(function() {
+      let token = vm.$Utils.getCookie("user_token");
+      let newToken = token.replace('"', "").replace('"', "");
+      if (token != undefined && token != null && token != "") {
+        refresh_token(newToken)
+          .then(function(response) {
+            if (response.status == 200) {
+              vm.$Utils.setCookie(
+                "user_token",
+                JSON.stringify(response.data.access_token),
+                60
+              );
+              setTimeout(function() {
+                vm.getAddressDefault(); //获取默认地址
+                vm.getAddressList(); // 获取用户地址列表
+              }, 100);
+            }
+          })
+          .catch(function(error) {
+            console.info(error);
+          });
+      }
+    }, 100);
+  },
+
   methods: {
+    AddressSave() {
+      let vm = this;
+      let token = vm.$Utils.getCookie("user_token");
+      let newToken = token.replace('"', "").replace('"', "");
+
+      if (this.$UninputJudgment(vm.u_name, "请输入收货人姓名！")) {
+        return;
+      }
+      if (this.$UninputJudgment(vm.u_phone, "请输入电话号码！")) {
+        return;
+      }
+      if (this.$UninputJudgment(vm.sheng, "请选择省！")) {
+        return;
+      }
+      if (this.$UninputJudgment(vm.shi, "请选择市！")) {
+        return;
+      }
+      if (this.$UninputJudgment(vm.qu, "请选择区！")) {
+        return;
+      }
+
+      if (token != undefined && token != null && token != "") {
+        refresh_token(newToken)
+          .then(function(response) {
+            if (response.status == 200) {
+              // 刷新成功
+              vm.$Utils.setCookie(
+                "user_token",
+                JSON.stringify(response.data.access_token),
+                60
+              );
+              if (vm.ifNewAddress == true) {
+                // 新增地址
+                // "new"
+                vm.add_address();
+              } else if (vm.ifNewAddress == false) {
+                // 编辑地址
+                // "edit"
+                vm.updateAddressById();
+              }
+            }
+          })
+          .catch(function(error) {
+            console.info(error);
+          });
+      }
+      this.dialogVisible = false;
+    },
+    // 编辑地址
+    updateAddressById() {
+      let vm = this;
+      let token = vm.$Utils.getCookie("user_token");
+      let newToken = token.replace('"', "").replace('"', "");
+      // console.log(
+      //   vm.u_name,
+      //   vm.u_phone,
+      //   vm.sheng,
+      //   vm.shi,
+      //   vm.qu,
+      //   vm.u_address,
+      //   vm.zip
+      // );
+      // var formData = new FormData();
+      // var formData = new window.FormData();
+      // formData.append("contact_name", vm.u_name);
+      // formData.append("contact_phone", vm.u_phone);
+      // formData.append("province", vm.sheng);
+      // formData.append("city", vm.shi);
+      // formData.append("district", vm.qu);
+      // formData.append("address", vm.u_address);
+      // formData.append("zip", vm.zip);
+      // console.log(formData);
+
+      // let id = vm.assignAddressId;
+      let id = vm.ALL_Address[vm.address_raido].id;
+      let temp = {
+        contact_name: vm.u_name,
+        contact_phone: vm.u_phone,
+        province: vm.sheng,
+        city: vm.shi,
+        district: vm.qu,
+        address: vm.u_address,
+        zip: vm.zip
+      };
+      // updateAddressById(newToken, id, formData)
+      updateAddressById(newToken, id, temp)
+        .then(function(response) {
+          console.log("updateAddressById");
+          console.log(response);
+          if (response.status == 200) {
+            vm.getAddressDefault(); //获取默认地址
+            vm.getAddressList(); // 获取用户地址列表
+          }
+        })
+        .catch(function(error) {
+          console.info(error);
+        });
+    },
+    // 新增地址
+    add_address() {
+      let vm = this;
+      let token = vm.$Utils.getCookie("user_token");
+      let newToken = token.replace('"', "").replace('"', "");
+      var formData = new FormData();
+      var formData = new window.FormData();
+      formData.append("contact_name", vm.u_name);
+      formData.append("contact_phone", vm.u_phone);
+      formData.append("province", vm.sheng);
+      formData.append("city", vm.shi);
+      formData.append("district", vm.qu);
+      formData.append("address", vm.u_address);
+      formData.append("zip", vm.zip);
+      console.log(formData);
+      add_address(newToken, formData)
+        .then(function(response) {
+          console.log("add_address");
+          console.log(response);
+          if (response.status == 200) {
+            vm.getAddressDefault(); //获取默认地址
+            vm.getAddressList(); // 获取用户地址列表
+          }
+        })
+        .catch(function(error) {
+          console.info(error);
+        });
+    },
+    // 编辑地址 - 对话框初始化
+    addressEditDialog(addressType) {
+      let vm = this;
+      // addressType - 地址类型 "new"-新增  "edit"-编辑
+      if (addressType == "edit") {
+        let M_Data = vm.ALL_Address[vm.address_raido];
+        this.dialogVisible = true;
+        this.ifNewAddress = false;
+        this.addressEditType = "编辑";
+
+        this.u_name = M_Data.name;
+        this.u_phone = M_Data.phone;
+        this.sheng = M_Data.province;
+        this.shi = M_Data.city;
+        this.qu = M_Data.district;
+        this.u_address = M_Data.address;
+        // console.log(chooseType);
+        // this.ifChoosel_checkbox = chooseType;
+        this.zip = M_Data.zip;
+      } else if (addressType == "new") {
+        this.dialogVisible = true;
+        this.ifNewAddress = true;
+        this.addressEditType = "新增";
+        this.u_name = "";
+        this.u_phone = "";
+        this.sheng = "";
+        this.shi = "";
+        this.qu = "";
+        this.u_address = "";
+        this.ifChoosel_checkbox = false;
+        // this.add_address();
+        this.zip = null;
+      }
+    },
+    radioChange(e) {
+      console.log(e);
+      let vm = this;
+      vm.CheckedAddressManage(e);
+    },
+    getAddressList() {
+      let vm = this;
+      let token = vm.$Utils.getCookie("user_token");
+      let newToken = token.replace('"', "").replace('"', "");
+      getAddressList(newToken)
+        .then(function(response) {
+          console.log("getAddressList");
+          console.log(response);
+          // 数组编辑ing
+          if (response.status == 200) {
+            vm.ALL_Address = []; // 地址初始化
+            let data = response.data.data;
+            let currentDefault_i = 0;
+            for (let i = 0; i < data.length; i++) {
+              if (data[i].default_address == 1) {
+                // 默认地址 i
+                currentDefault_i = i;
+              }
+              let text =
+                data[i].province +
+                data[i].city +
+                data[i].district +
+                data[i].address;
+              vm.ALL_Address.push({
+                raido: i,
+                id: data[i].id, // 地址id  // 暂不用管 user_id
+                chooseType: data[i].default_address, // 是否默认 1-默认 0-不默认
+                // 省市区+详细地址
+                text: text,
+                province: data[i].province,
+                city: data[i].city,
+                district: data[i].district,
+                address: data[i].address,
+                name: data[i].contact_name,
+                phone: data[i].contact_phone,
+                zip: data[i].zip
+              });
+            }
+            // --只有第一次会添加！
+            if (vm.ifFirst == true) {
+              vm.CheckedAddressManage(currentDefault_i);
+              vm.default_radio = currentDefault_i; // 默认 radio （之后不变动）
+              vm.address_raido = currentDefault_i; // 显示 radio （之后会变动）
+              vm.ifFirst = false;
+            }
+            vm.CheckedAddressManage(vm.address_raido); // 修改当前显示的
+            // console.log(vm.AddressArr);
+            // 默认地址-置顶操作ing  --- 待优化
+          }
+        })
+        .catch(function(error) {
+          console.info(error);
+        });
+    },
+    // CheckedAddress 显示处理
+    CheckedAddressManage(currentDefault_i) {
+      let vm = this;
+      vm.CheckedAddress =
+        vm.ALL_Address[currentDefault_i].text +
+        "" +
+        "（" +
+        vm.ALL_Address[currentDefault_i].name +
+        "）" +
+        "" +
+        vm.ALL_Address[currentDefault_i].phone;
+    },
+    getAddressDefault() {
+      let vm = this;
+      let token = vm.$Utils.getCookie("user_token");
+      let newToken = token.replace('"', "").replace('"', "");
+      getAddressDefault(newToken)
+        .then(function(response) {
+          console.log("getAddressDefault");
+          console.log(response);
+          if (response.status == 200) {
+            vm.AddressDefaultId = response.data.id;
+          }
+        })
+        .catch(function(error) {
+          console.info(error);
+        });
+    },
+    router_to(str) {
+      let vm = this;
+      vm.$router.push({ path: str });
+    },
+    Settlement() {
+      let vm = this;
+
+      // 结算
+      let token = vm.$Utils.getCookie("user_token");
+      let newToken = token.replace('"', "").replace('"', "");
+      if (token != undefined && token != null && token != "") {
+        refresh_token(newToken)
+          .then(function(response) {
+            console.log(response);
+            if (response.status == 200) {
+              vm.$Utils.setCookie(
+                "user_token",
+                JSON.stringify(response.data.access_token),
+                60
+              );
+              setTimeout(function() {
+                let token = vm.$Utils.getCookie("user_token");
+                let newToken = token.replace('"', "").replace('"', "");
+                let temp_address_id = "";
+                try {
+                  temp_address_id = vm.ALL_Address[vm.address_raido].id;
+                } catch (error) {
+                  console.log(error);
+                  vm.$message("请新增地址！");
+                  return;
+                }
+                // let temp_good_ids = [[3, 29, 3, 1]]; // pass
+                // let temp_good_ids = "34,36";
+                let temp_good_ids = "";
+                let ProductData_length = vm.tableData.length;
+                for (let i = 0; i < ProductData_length; i++) {
+                  if (i < ProductData_length - 1) {
+                    temp_good_ids += String(vm.tableData[i].id) + ",";
+                  } else {
+                    temp_good_ids += String(vm.tableData[i].id);
+                  }
+                }
+                console.log("提交订单-参数");
+                console.log(temp_address_id);
+                console.log(temp_good_ids);
+                console.log(vm.OrderRemark);
+
+                if (
+                  temp_address_id == "" ||
+                  temp_address_id == undefined ||
+                  temp_address_id == null
+                ) {
+                  // vm.$message("请新增地址！");
+                  return;
+                }
+
+                var formData = new FormData();
+                var formData = new window.FormData();
+                formData.append("address_id", temp_address_id);
+                formData.append("good_ids", temp_good_ids);
+                formData.append("remark", vm.OrderRemark);
+                orders(newToken, formData)
+                  .then(function(response) {
+                    console.log("orders");
+                    console.log(response);
+                    if (response.status == 201) {
+                      vm.$message("提交订单成功,即将跳转支付页面");
+                      setTimeout(function() {
+                        // data:
+                        //   address: {address: "江苏省南京市玄武区南路12号", zip: "320102", contact_name: "willem", contact_phone: "147852777"}
+                        //   created_at: "2020-03-10 15:12:04"
+                        //   id: 3
+                        //   no: "20200310151203926273"
+                        //   remark: null
+                        //   total_amount: 0.03
+                        //   updated_at: "2020-03-10 15:12:04"
+                        //   user: {id: 1, name: "yiduang", phone: "18742257174", avatar: "https://cdn.learnku.com/uploads/images/201710/30/1/TrJS40Ey5k.png", created_at: "2009-05-18 15:02:08", …}
+                        //   user_id: 1
+                        let data = response.data;
+                        let temp_receiver =
+                          vm.ALL_Address[vm.address_raido].name;
+                        let temp_phone = vm.ALL_Address[vm.address_raido].phone;
+                        let temp_shippingAddress =
+                          vm.ALL_Address[vm.address_raido].text;
+
+                        vm.$router.push({
+                          path: "/OrderDetails",
+                          query: {
+                            ifShopping: true,
+                            OrderId: data.id,
+                            OrderNumber: data.no,
+                            OrderRemark: vm.OrderRemark,
+                            receiver: temp_receiver,
+                            shippingAddress: temp_shippingAddress,
+                            phone: temp_phone,
+                            totalValue: vm.totalValue,
+                            freight: vm.freight,
+                            tableData: JSON.stringify(vm.tableData)
+                          }
+                        });
+                      }, 1500);
+                    }
+                  })
+                  .catch(function(error) {
+                    vm.$message("提交订单失败,请重试");
+                    console.info(error);
+                  });
+              }, 500);
+            }
+          })
+          .catch(function(error) {
+            console.info(error);
+          });
+      }
+    },
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
@@ -301,67 +741,29 @@ export default {
         })
         .catch(_ => {});
     },
-    provinceChange(e) {
-      let value = e.target.value;
-      this.province = value;
-      console.log(e);
-
-      //////////////////处理 city
-      let tempData = city;
-      // 将Object的属性输出成Array
-      function objOfPropertyToArr(object) {
-        var arr = [];
-        var i = 0;
-        for (var item in object) {
-          arr[i] = item;
-          i++;
-        }
-        return arr;
-      }
-      // 将Object的属性值输出成Array
-      function objOfValueToArr(object) {
-        var arr = [];
-        var i = 0;
-        for (var item in object) {
-          arr[i] = object[item];
-          i++;
-        }
-        return arr;
-      }
-      let temp = objOfPropertyToArr(tempData);
-      let temp2 = objOfValueToArr(tempData);
-      let i;
-      let length = temp.length;
-      let tem;
-      let temp_data_cityS = [];
-      for (i = 0; i < length; i++) {
-        let jsonTest = JSON.stringify(temp2[i]);
-        if (jsonTest === "[]") {
-          continue;
-        } else {
-          try {
-            tem = {
-              provinceName: temp[i],
-              CityNameArr: temp2[i]
-            };
-            temp_data_cityS.push(tem);
-          } catch (error) {
-            console.log(error);
-          }
-        }
-      } //for
-      let k;
-      for (k = 0; k < length; k++) {
-        if (temp_data_cityS[k].provinceName === value) {
-          // this.setState({ cityS: temp_data_cityS[k].CityNameArr });
-          this.cityS = temp_data_cityS[k].CityNameArr;
+    return_zip_sheng(zip) {
+      let length = this.zip_shengArr.length;
+      for (let i = 0; i < length; i++) {
+        if (zip == this.zip_shengArr[i].zip) {
+          return this.zip_shengArr[i].text;
         }
       }
-      console.log(this.cityS);
     },
-    cityChange(e) {
-      let value = e.target.value;
-      this.city = value;
+    return_zip_shi(zip) {
+      let length = this.zip_shiArr.length;
+      for (let i = 0; i < length; i++) {
+        if (zip == this.zip_shiArr[i].zip) {
+          return this.zip_shiArr[i].text;
+        }
+      }
+    },
+    return_zip_qu(zip) {
+      let length = this.zip_quArr.length;
+      for (let i = 0; i < length; i++) {
+        if (zip == this.zip_quArr[i].zip) {
+          return this.zip_quArr[i].text;
+        }
+      }
     },
     // ///
     // 加载china地点数据，三级
@@ -383,17 +785,40 @@ export default {
           //省
           that.province.push({
             id: item,
+            // id: {
+            //   id: item,
+            //   value: data[item]
+            // },
             value: data[item],
+            // value: {
+            //   value: data[item],
+            //   id: item
+            // },
+
             children: []
+          });
+          this.zip_shengArr.push({
+            zip: item,
+            text: data[item]
           });
         } else if (item.match(/00$/)) {
           //市
           that.city.push({ id: item, value: data[item], children: [] });
+          this.zip_shiArr.push({
+            zip: item,
+            text: data[item]
+          });
         } else {
           //区
           that.block.push({ id: item, value: data[item] });
+          this.zip_quArr.push({
+            zip: item,
+            text: data[item]
+          });
         }
       }
+      console.log(that.province[0]);
+
       // 分类市级
       for (var index in that.province) {
         for (var index1 in that.city) {
@@ -403,6 +828,12 @@ export default {
           ) {
             that.province[index].children.push(that.city[index1]);
           }
+          // if (
+          //   that.province[index].id.id.slice(0, 2) ===
+          //   that.city[index1].id.slice(0, 2)
+          // ) {
+          //   that.province[index].children.push(that.city[index1]);
+          // }
         }
       }
       // 分类区级
@@ -425,6 +856,13 @@ export default {
     },
     // 选省
     choseProvince: function(e) {
+      // console.log(e);
+      // console.log(typeof e);
+      // console.log(e.value);
+      this.sheng = this.return_zip_sheng(e);
+      console.log(e);
+      console.log(this.sheng);
+
       for (var index2 in this.province) {
         if (e === this.province[index2].id) {
           this.shi1 = this.province[index2].children;
@@ -432,24 +870,35 @@ export default {
           this.qu1 = this.province[index2].children[0].children;
           this.qu = this.province[index2].children[0].children[0].value;
           this.E = this.qu1[0].id;
+          // console.log(this.E);
+          // console.log(typeof this.E);
+          this.zip = Number(this.E);
         }
       }
     },
     // 选市
     choseCity: function(e) {
+      this.shi = this.return_zip_shi(e);
+      console.log(e);
+      console.log(this.shi);
       for (var index3 in this.city) {
         if (e === this.city[index3].id) {
           this.qu1 = this.city[index3].children;
           this.qu = this.city[index3].children[0].value;
           this.E = this.qu1[0].id;
           // console.log(this.E)
+          this.zip = Number(this.E);
         }
       }
     },
     // 选区
     choseBlock: function(e) {
+      this.qu = this.return_zip_qu(e);
+      console.log(e);
+      console.log(this.qu);
       this.E = e;
-      // console.log(this.E)
+      // console.log(this.E);
+      this.zip = Number(this.E);
     }
   }
 };
@@ -501,7 +950,7 @@ export default {
   text-align: center;
 }
 
-/* ***** checkbox 全选 单独 */
+/* ***** checkbox 单独 */
 .CheckOrderInformation
   .buy_settings
   .el-checkbox__input.is-checked
@@ -552,14 +1001,6 @@ input::-ms-input-placeholder {
 
 <style scoped>
 .CheckOrderInformation {
-}
-
-.el-main {
-  width: 62.5%;
-  min-width: 1200px;
-  margin: 0 auto;
-  padding: 0;
-  overflow: inherit;
 }
 
 /* ***** 进度条 */
@@ -639,7 +1080,9 @@ input::-ms-input-placeholder {
   position: relative;
   left: 508px;
 }
-
+.CheckOrderInformation .adc_right:hover {
+  cursor: pointer;
+}
 .CheckOrderInformation .all_address {
   padding-left: 32px;
 }
@@ -731,6 +1174,9 @@ input::-ms-input-placeholder {
   font-weight: 600;
   color: rgba(17, 26, 52, 1);
   line-height: 20px;
+}
+.CheckOrderInformation .remark_p {
+  margin-top: 32px;
 }
 .CheckOrderInformation .remark {
   /* height: 20px; */

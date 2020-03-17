@@ -1,17 +1,17 @@
 <template>
   <div class="ShoppingTrolley">
     <vue-headful title="购物车"></vue-headful>
-    <el-header  class="common">
-      <HeaderModule></HeaderModule>
+    <el-header class="common">
+      <HeaderModule id="navigation"></HeaderModule>
     </el-header>
-    <el-main>
-      <TopSearchBox></TopSearchBox>
+    <el-main class="common">
+      <TopSearchBox :searchType="'ShoppingTrolley'" :categories="[]"></TopSearchBox>
 
       <div class="textAlignCenter_w100p steps_settings">
         <el-steps :active="0" align-center>
           <el-step title="我的购物车" description></el-step>
           <el-step title="核对订单" description></el-step>
-          <el-step title="成功提交订单" description></el-step>
+          <el-step title="提交订单" description></el-step>
         </el-steps>
       </div>
       <div class="textAlignCenter_w100p myShopping_settings">
@@ -54,9 +54,9 @@
                   <!-- {{ scope.row.count }} -->
                   <el-input-number
                     v-model="scope.row.count"
-                    @change="handleChange"
+                    @change="handleChange($event,scope.row.id)"
                     :min="1"
-                    :max="99"
+                    :max="Number(scope.row.stock)"
                     label="商品数量"
                   ></el-input-number>
                 </div>
@@ -69,7 +69,10 @@
             </el-table-column>
             <el-table-column header-align="center" label="操作" width="150">
               <template slot-scope="scope">
-                <div class="m_operation">{{ scope.row.operation }}</div>
+                <div
+                  @click="deleteProduct(scope.row.id)"
+                  class="m_operation"
+                >{{ scope.row.operation }}</div>
               </template>
             </el-table-column>
           </el-table>
@@ -77,25 +80,28 @@
       </div>
 
       <div class="textAlignCenter_w100p inlineBlock_verTopP buy_settings">
-        <div class="inlineBlock_verTopP bs_left">
+        <!-- <div class="inlineBlock_verTopP bs_left">
           <div class="bsl_1">
-            <el-checkbox v-model="ifChoosel_checkbox">全选</el-checkbox>
+            <el-checkbox
+              @change="ChooseCheckboxManage(ifChoosel_checkbox)"
+              v-model="ifChoosel_checkbox"
+            >全选</el-checkbox>
           </div>
           <div class="bsl_2">删除</div>
-        </div>
+        </div>-->
+
         <div class="inlineBlock_verTopP bs_right">
           <div class="bsr_1">
             应付总金额（不含运费）：
             <span class="bsr_1b">¥</span>
-            <span class="bsr_1c">41,213</span>
+            <span class="bsr_1c">{{totalValue}}</span>
           </div>
           <div class="bsr_2">
-            <button class="bs_btn">结算</button>
+            <button @click="Settlement()" class="bs_btn">结算</button>
           </div>
         </div>
       </div>
     </el-main>
-
     <FooterNav></FooterNav>
     <el-footer class="el-footer">
       <FooterModule></FooterModule>
@@ -108,6 +114,17 @@ import HeaderModule from "@/components/HeaderModule";
 import TopSearchBox from "@/components/TopSearchBox";
 import FooterNav from "@/components/FooterNav";
 import FooterModule from "@/components/FooterModule";
+import Vue from "vue";
+
+import {
+  refresh_token,
+  getCartList,
+  deleteProductById,
+  // updateProductById
+  addToCart,
+  orders,
+  getCartIndexArr
+} from "@/api/api";
 
 export default {
   name: "ShoppingTrolley",
@@ -120,38 +137,384 @@ export default {
   data() {
     return {
       tableData: [
-        {
-          ImgUrl: require("@/assets/pic/product.png"),
-          productInfo: "李新建珠峰瑞祥, 2015布面油画",
-          unitPriceHistory: 45415,
-          unitPrice: 41213,
-          inventory: 12,
-          count: 1,
-          totalPrices: 41213,
-          operation: "删除"
-        },
-        {
-          ImgUrl: require("@/assets/pic/product.png"),
-          productInfo: "李新建珠峰瑞祥, 2015布面油画",
-          unitPriceHistory: 45415,
-          unitPrice: 41213,
-          inventory: 12,
-          count: 1,
-          totalPrices: 41213,
-          operation: "删除"
-        }
+        // {
+        //   ImgUrl: require("@/assets/pic/product.png"),
+        //   productInfo: "李新建珠峰瑞祥, 2015布面油画",
+        //   unitPriceHistory: 45415,
+        //   unitPrice: 41213,
+        //   inventory: 12,
+        //   count: 1,
+        //   totalPrices: 41213,
+        //   operation: "删除"
+        // },
+        // {
+        //   ImgUrl: require("@/assets/pic/product.png"),
+        //   productInfo: "李新建珠峰瑞祥, 2015布面油画",
+        //   unitPriceHistory: 45415,
+        //   unitPrice: 41213,
+        //   inventory: 12,
+        //   count: 1,
+        //   totalPrices: 41213,
+        //   operation: "删除"
+        // }
+        // ///// 实际数据
+        //  stock: good.stock,
+        //     id: data[i].good_id,
+        //     // id: data[i].id,
+        //     ImgUrl: require("@/assets/pic/product.png"),
+        //     productInfo:
+        //       good.art +
+        //       "," +
+        //       good.title +
+        //       "," +
+        //       good.created_at +
+        //       "," +
+        //       good.quality,
+        //     inventory: good.stock,
+        //     count: data[i].amount,
+        //     unitPriceHistory: good.price,
+        //     unitPrice: Number(good.price) * Number(good.discount),
+        //     totalPrices: data[i].amount * Number(good.price),
+        //     operation: "删除"
       ],
       multipleSelection: [],
-      ifChoosel_checkbox: false
+      ifChoosel_checkbox: false,
+      totalValue: 0,
+      CurrentCartIndexArr: [],
+      // 定时Door
+      mInitTime: 3,
+      mTime: null,
+      mTimeDoor: true,
+      CurrentCount: null,
+      CurrentGid: null,
+      ifFirst: true
     };
   },
   mounted() {
     let vm = this;
+    // 标题title浮动初始化
+    this.$Utils.TitleInit();
+    // 初始化Door时间
+    vm.mTime = vm.mInitTime;
+    this.$nextTick(function() {
+      setInterval(this.timer, 1000);
+    });
+    // 初始化购物车
+    this.refresh_getCartList();
   },
   methods: {
-    handleChange(value) {
-      console.log(value);
+    timer() {
+      let vm = this;
+
+      try {
+        if (this.mTime > 0) {
+          let temp_countDown = this.mTime;
+          this.mTime--;
+          if (temp_countDown == 1) {
+            this.mTimeDoor = true;
+            if (vm.ifFirst == false) {
+              // vm.$message("非第一次，操作");
+              // console.log("~~~~~~!");
+              // console.log(vm.CurrentCount);
+              // console.log(vm.CurrentGid);
+              vm.addToCart(vm.CurrentCount, vm.CurrentGid);
+            } else {
+              // vm.$message("第一次，不操作");
+              vm.ifFirst = false;
+            }
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
+    handleChange(count, id) {
+      let vm = this;
+      console.log(count);
+      console.log(id);
+      // let index = this.returnIndex_ByCurrentGid(id);
+
+      // ▲▲▲▲▲防止数量使劲加使劲减 导致api疯狂请求！这里加个定时Door
+      vm.CurrentCount = count;
+      vm.CurrentGid = id;
+      if (vm.mTimeDoor == true) {
+        vm.mTimeDoor = false;
+        // vm.$message("关门");
+        vm.mTime = vm.mInitTime;
+        // vm.addToCart(count, id); // 提到开门后！
+      }
+    },
+    // returnIndex_ByCurrentGid(id) {
+    //   let vm = this;
+    //   let length = vm.tableData.length;
+    //   console.log(vm.tableData);
+    //   for (let i = 0; i < length; i++) {
+    //     if (vm.tableData[i].id == id) {
+    //       return i;
+    //     }
+    //   }
+    // },
+    addToCart(count, Cid) {
+      let vm = this;
+      let token = vm.$Utils.getCookie("user_token");
+      let newToken = token.replace('"', "").replace('"', "");
+      if (token != undefined && token != null && token != "") {
+        refresh_token(newToken)
+          .then(function(response) {
+            if (response.status == 200) {
+              vm.$Utils.setCookie(
+                "user_token",
+                JSON.stringify(response.data.access_token),
+                60
+              );
+              setTimeout(function() {
+                let token = vm.$Utils.getCookie("user_token");
+                let newToken = token.replace('"', "").replace('"', "");
+                // let temp = {
+                //   amount: count
+                // };
+                var formData = new FormData();
+                var formData = new window.FormData();
+                formData.append("good_id", Cid);
+                formData.append("amount", count);
+                formData.append("cartExist", 1);
+                // cartExist 0=>未在购物车页面，1=>在购物车页面 (0-自增 1-赋值)
+                addToCart(newToken, formData)
+                  .then(function(response) {
+                    console.log("addToCart");
+                    console.log(response);
+                    if (response.status == 201) {
+                      // vm.refresh_getCartList();
+                      console.log("商品数量修改成功！");
+                      // vm.$message("商品数量修改成功！");
+                      // vm.getCartList(); // 成功后不刷新！由于设置了TimeDoor
+                      // vm.getCartIndexArr();
+                    }
+                  })
+                  .catch(function(error) {
+                    console.info(error);
+                    // 如果数量改变失败 - 还原count计数！
+                    vm.$message("商品数量修改失败，请重试！");
+                    // 刷新列表...
+                    vm.getCartList();
+                  });
+              }, 200);
+            }
+          })
+          .catch(function(error) {
+            console.info(error);
+          });
+      }
+    },
+
+    deleteProduct(Cid) {
+      // console.log(Cid);
+      let vm = this;
+      let token = vm.$Utils.getCookie("user_token");
+      let newToken = token.replace('"', "").replace('"', "");
+      if (token != undefined && token != null && token != "") {
+        refresh_token(newToken)
+          .then(function(response) {
+            if (response.status == 200) {
+              vm.$Utils.setCookie(
+                "user_token",
+                JSON.stringify(response.data.access_token),
+                60
+              );
+              // 删除
+              setTimeout(function() {
+                let token = vm.$Utils.getCookie("user_token");
+                let newToken = token.replace('"', "").replace('"', "");
+                deleteProductById(newToken, Cid)
+                  .then(function(response) {
+                    console.log("deleteProductById");
+                    console.log(response);
+                    if (response.status == 204) {
+                      setTimeout(function() {
+                        vm.$message("商品删除成功！");
+                        vm.getCartList(); //  刷新购物车列表
+                        // vm.getCartIndexArr(); // 获取购物车“快捷信息”
+                      }, 500);
+                    }
+                  })
+                  .catch(function(error) {
+                    console.info(error);
+                  });
+              }, 500);
+            }
+          })
+          .catch(function(error) {
+            console.info(error);
+          });
+      }
+    },
+    // 获取购物车“快捷信息” --暂时没用到
+    getCartIndexArr() {
+      let vm = this;
+      let token = vm.$Utils.getCookie("user_token");
+      let newToken = token.replace('"', "").replace('"', "");
+      getCartIndexArr(newToken)
+        .then(function(response) {
+          console.log("getCartIndexArr");
+          console.log(response);
+          if (response.status == 200) {
+          }
+        })
+        .catch(function(error) {
+          console.info(error);
+        });
+    },
+    refresh_getCartList() {
+      let vm = this;
+      let token = vm.$Utils.getCookie("user_token");
+      let newToken = token.replace('"', "").replace('"', "");
+      if (token != undefined && token != null && token != "") {
+        refresh_token(newToken)
+          .then(function(response) {
+            if (response.status == 200) {
+              vm.$Utils.setCookie(
+                "user_token",
+                JSON.stringify(response.data.access_token),
+                60
+              );
+              // 获取购物车列表
+              setTimeout(function() {
+                vm.getCartList();
+                // vm.getCartIndexArr(); // 获取购物车“快捷信息”
+              }, 200);
+            }
+          })
+          .catch(function(error) {
+            console.info(error);
+          });
+      }
+    },
+    getCartList() {
+      let vm = this;
+      let token = vm.$Utils.getCookie("user_token");
+      let newToken = token.replace('"', "").replace('"', "");
+      getCartList(newToken)
+        .then(function(response) {
+          console.log("getCartList");
+          console.log(response);
+          let temp_totalValue = 0;
+          if (response.status == 200) {
+            vm.tableData = [];
+            vm.tableData.splice(0); // 改变长度
+            let data = response.data.data;
+            let length = data.length;
+            for (let i = 0; i < length; i++) {
+              // vm.OldCounArr.push(data[i].amount);
+              let good = data[i].good;
+              let image = require("@/assets/pic/product.png");
+              try {
+                image = global.IMGPrefix + data[i].good.images[0].image; // 待api添加
+              } catch (error) {
+                console.log(error);
+              }
+              // ******** 立即购买判断
+              function ManageTableData() {
+                vm.tableData.push({
+                  stock: good.stock,
+                  id: data[i].good_id,
+                  // id: data[i].id,
+                  ImgUrl: image,
+                  productInfo:
+                    good.art +
+                    "," +
+                    good.title +
+                    "," +
+                    // good.created_at +
+                    good.time +
+                    "," +
+                    good.quality,
+                  inventory: good.stock,
+                  count: data[i].amount,
+                  unitPriceHistory: good.price,
+                  unitPrice: Number(good.price) * Number(good.discount),
+                  totalPrices: data[i].amount * Number(good.price),
+                  operation: "删除"
+                });
+              }
+              console.log(vm.$route.query);
+              let ifBuyNow = 0;
+
+              if (
+                vm.$route.query.ifBuyNow != undefined &&
+                vm.$route.query.ifBuyNow != null &&
+                vm.$route.query.ifBuyNow != ""
+              ) {
+                if (vm.$route.query.ifBuyNow == "1") {
+                  console.log("ifBuyNow ~!");
+                  ifBuyNow = 1;
+                }
+              }
+              // ..
+              if (ifBuyNow == 1) {
+                console.log("ifBuyNow");
+                if (Number(data[i].good_id) == Number(vm.$route.query.id)) {
+                  // 只传入立即购买的商品id
+                  ManageTableData();
+                  temp_totalValue = data[i].amount * Number(good.price);
+                  vm.totalValue = temp_totalValue; // 总价
+                  // 进行普通跳转结算即可！
+                  console.log(vm.tableData);
+                  let temp_tableData = JSON.stringify(vm.tableData); // 只传入选中的！
+                  setTimeout(function() {
+                    vm.$router.push({
+                      path: "/checkorderinformation",
+                      query: {
+                        tableData: temp_tableData,
+                        totalValue: vm.totalValue
+                      }
+                    });
+                  }, 200);
+                  break;
+                }
+              } else if (ifBuyNow != 1) {
+                ManageTableData(); // 传入所有购物车商品id
+                temp_totalValue += vm.tableData[i].totalPrices;
+              }
+
+              // ******** 立即购买判断 （over）
+            }
+            console.log(vm.tableData);
+            // 计算总价格（不含运费）
+            vm.totalValue = temp_totalValue.toFixed(2);
+          }
+        })
+        .catch(function(error) {
+          console.info(error);
+        });
+    },
+    // 结算
+    Settlement() {
+      let vm = this;
+      // global.tableData = vm.tableData;
+      // let temp_tableData = JSON.stringify(vm.tableData);
+      // console.log(vm.tableData);
+      console.log(this.multipleSelection);
+      let temp_tableData = JSON.stringify(this.multipleSelection); // 只传入选中的！
+      if (this.multipleSelection.length == 0) {
+        this.$message("请选择商品！");
+      } else {
+        setTimeout(function() {
+          // vm.router_to("/checkorderinformation");
+          vm.$router.push({
+            path: "/checkorderinformation",
+            query: {
+              tableData: temp_tableData,
+              totalValue: vm.totalValue
+            }
+          });
+        }, 500);
+      }
+    },
+    router_to(str) {
+      let vm = this;
+      vm.$router.push({ path: str });
+    },
+
     toggleSelection(rows) {
       if (rows) {
         rows.forEach(row => {
@@ -162,12 +525,26 @@ export default {
       }
     },
     handleSelectionChange(val) {
+      console.log(val);
       this.multipleSelection = val;
+    },
+    ChooseCheckboxManage(ifChoosel_checkbox) {
+      console.log(ifChoosel_checkbox);
+      if (ifChoosel_checkbox) {
+        this.multipleSelection = this.tableData;
+      } else {
+        this.multipleSelection = [];
+      }
     }
   }
 };
 </script>
 <style >
+/* 每一页设置min-height不同 - .mac 指定页*/
+.mac .ShoppingTrolley .common.el-main {
+  min-height: 550px;
+}
+
 /* ***** 进度条 */
 .ShoppingTrolley .el-step__head.is-finish {
   color: #775563;
@@ -252,14 +629,6 @@ export default {
 .ShoppingTrolley {
 }
 
-.el-main {
-  width: 62.5%;
-  min-width: 1200px;
-  margin: 0 auto;
-  padding: 0;
-  overflow: inherit;
-}
-
 /* ***** 进度条 */
 .ShoppingTrolley .steps_settings {
   margin-top: 32px;
@@ -337,6 +706,7 @@ export default {
   line-height: 20px;
   height: 48px;
   line-height: 48px;
+  width: 120px;
 }
 .ShoppingTrolley .bs_right {
   height: 48px;

@@ -1,7 +1,19 @@
 .main_width_1200 {
   width: 62.5%;
   min-width: 1200px;
+  
   margin: 0 auto;
+}
+@media screen and (max-width: 1200px) {
+  .main_width_1200 {
+    width: 94vw;
+    min-width: 94vw;
+    margin: 0 auto;
+  }
+}
+
+.el-message{
+  z-index: 20000 !important;
 }
 .flex {
   display: -webkit-flex;
@@ -22,17 +34,38 @@
 .flex_justify_between {
   justify-content: space-between;
 }
-
+.common.el-header {
+  /* position: fixed; */
+  /* top:0; */
+}
 .common.el-header {
   height: 44px !important;
   background-color: #fff;
   line-height: 44px;
   padding: 0;
-  border-bottom: 1px solid #646464;
+  /* border-bottom: 1px solid #646464; */
 }
+.common.el-main {
+  width: 62.5%;
+  min-width: 1200px;
+  margin: 0 auto;
+  padding: 0;
+  overflow: inherit;
+}
+
+
+
 .el-footer {
   background-color: #2b2a2f;
-  height: 112px !important;
+  height: 138px !important;
   color: #fff8f8;
   min-width: 1200px;
 }
+
+
+/* ***** elementui - messige 图标大小 */
+.el-icon-info{
+  font-size: 16px;
+}
+
+

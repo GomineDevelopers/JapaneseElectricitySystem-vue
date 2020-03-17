@@ -1,6 +1,6 @@
 <template>
-  <div class="Register">
-    <vue-headful title="注册"></vue-headful>
+  <div class="ForgetPassword">
+    <vue-headful title="重置密码"></vue-headful>
     <el-container class="height_auto">
       <el-header>
         <el-row class="top_header">
@@ -37,17 +37,9 @@
               </div>
             </div>
           </div>
-          <div class="inlineBlock_verTopP perRow">
-            <div class="PR_left">用户名</div>
-            <div>
-              <div class="PR_right">
-                <input class="m_input" v-model="username" placeholder="请输入用户名" type="text" />
-              </div>
-            </div>
-          </div>
 
           <div class="inlineBlock_verTopP perRow">
-            <div class="PR_left">密码</div>
+            <div class="PR_left">新密码</div>
             <div>
               <div class="PR_right">
                 <input class="m_input" v-model="password" placeholder="0-16位字符" type="password" />
@@ -56,7 +48,7 @@
           </div>
 
           <div class="inlineBlock_verTopP perRow">
-            <div class="PR_left">确认密码</div>
+            <div class="PR_left">确认新密码</div>
             <div>
               <div class="PR_right">
                 <input class="m_input" v-model="password2" placeholder="0-16位字符" type="password" />
@@ -110,17 +102,8 @@
             </div>
           </div>
 
-          <div class="textAlignCenter_w100p m_checkbox">
-            <el-checkbox v-model="ifRead">
-              <span class="agreement_p">
-                我已阅读并同意
-                <span class="agreement">《用户注册协议》</span>
-              </span>
-            </el-checkbox>
-          </div>
-
           <div class="m_btn_p">
-            <button @click="RegisterManage()" class="m_btn">注册</button>
+            <button @click="RegisterManage()" class="m_btn">重置密码</button>
           </div>
         </div>
       </div>
@@ -133,22 +116,21 @@
 </template>
 <script>
 import FooterModule from "@/components/FooterModule";
-import { captchas, verificationCodes, users } from "@/api/api";
+import { captchas, verificationCodes, reset_password } from "@/api/api";
 
 export default {
-  name: "Register",
+  name: "ForgetPassword",
   components: {
     FooterModule
   },
   data() {
     return {
       phone: "",
-      username: "",
+
       password: "",
       password2: "",
       v_code_pic: "",
       v_code: "",
-      ifRead: false,
       ImgUrl: require("@/assets/pic/VCodeImg.png"),
       captcha_key: "",
       verification_key: "",
@@ -193,8 +175,7 @@ export default {
     },
     do_getVCode() {
       let vm = this;
-      if (this.v_code_pic == "") {
-        this.$message("请输入图片验证码");
+      if (this.$UninputJudgment(vm.v_code_pic, "请输入图片验证码！")) {
         return;
       }
       var formData = new FormData();
@@ -225,8 +206,7 @@ export default {
     },
     getVCodeImg() {
       let vm = this;
-      if (this.phone == "") {
-        this.$message("请输入手机号");
+      if (this.$UninputJudgment(vm.phone, "请输入手机号！")) {
         return;
       }
       var formData = new FormData();
@@ -256,36 +236,28 @@ export default {
     },
     RegisterManage() {
       let vm = this;
-      if (this.phone == "") {
-        this.$message("请输入手机号");
-        return;
-      }
-      if (this.username == "") {
-        this.$message("请输入用户名");
-        return;
-      }
-      if (this.password == "") {
-        this.$message("请输入密码");
-        return;
-      }
-      if (this.password2 == "") {
-        this.$message("请确认密码");
-        return;
-      }
       if (this.password2 != this.password) {
         this.$message("两次密码输入不一样！");
         return;
       }
-      if (this.v_code_pic == "") {
-        this.$message("请输入图片验证码");
-        return;
-      }
-      if (this.v_code == "") {
-        this.$message("请输入短信验证码");
-        return;
-      }
-      if (this.ifRead != true) {
-        this.$message("请勾选《用户注册协议》！");
+      if (
+        this.$UninputJudgment(
+          [
+            this.phone,
+            this.password,
+            this.password2,
+            this.v_code_pic,
+            this.v_code
+          ],
+          [
+            "请输入手机号！",
+            "请输入密码！",
+            "请确认密码！",
+            "请输入图片验证码！",
+            "请输入短信验证码！"
+          ]
+        )
+      ) {
         return;
       }
 
@@ -294,23 +266,14 @@ export default {
       formData.append("verification_key", this.verification_key);
       formData.append("verification_code", this.v_code);
       formData.append("password", this.password);
-      formData.append("name", this.username);
       formData.append("phone", this.phone);
 
-      users(formData)
+      reset_password(formData)
         .then(function(response) {
           console.log(response);
-          // response.data
-          // {
-          //     "name": "alex",
-          //     "phone": "13985001625",
-          //     "avatar": "https://cdn.learnku.com/uploads/images/201710/30/1/TrJS40Ey5k.png",
-          //     "updated_at": "2020-03-06 10:49:33",
-          //     "created_at": "2020-03-06 10:49:33",
-          //     "id": 1
-          // }
-          if (response.status == 201) {
-            vm.$message("注册成功！即将跳转登录页面！");
+
+          if (response.status == 200) {
+            vm.$message("重置密码成功！即将跳转登录页面！");
 
             setTimeout(function() {
               vm.router_to("/login");
@@ -319,7 +282,7 @@ export default {
         })
         .catch(function(error) {
           console.info(error);
-          // vm.$message("注册失败，请重试！");
+          // vm.$message("重置密码失败，请重试！");
           vm.getVCodeImg();
         });
     }
@@ -327,12 +290,12 @@ export default {
 };
 </script>
 <style >
-.Register .el-checkbox__input.is-checked .el-checkbox__inner,
-.Register .el-checkbox__input.is-indeterminate .el-checkbox__inner {
+.ForgetPassword .el-checkbox__input.is-checked .el-checkbox__inner,
+.ForgetPassword .el-checkbox__input.is-indeterminate .el-checkbox__inner {
   background-color: #775563;
   border-color: #775563;
 }
-.Register .el-checkbox__input.is-checked + .el-checkbox__label {
+.ForgetPassword .el-checkbox__input.is-checked + .el-checkbox__label {
   color: #775563;
 }
 </style>
@@ -340,95 +303,94 @@ export default {
 
 
 <style scoped>
-.Register {
+.ForgetPassword {
 }
 
-.Register .el-header {
+.ForgetPassword .el-header {
   height: 80px;
 }
-.Register .top_header {
+.ForgetPassword .top_header {
   height: 88px;
   line-height: 88px;
   box-shadow: 0px 1px 0px 0px rgba(100, 100, 100, 0.5);
   min-width: 1200px;
 }
-.Register .img_logo_p {
+.ForgetPassword .img_logo_p {
   padding-left: 210px;
   height: 88px;
   line-height: 88px;
 }
-.Register .img_logo {
+.ForgetPassword .img_logo {
   width: 157px;
   height: 44px;
   vertical-align: top;
   margin-top: 22px;
 }
-.Register .img_logo:hover {
+.ForgetPassword .img_logo:hover {
   cursor: pointer;
 }
-
-.Register .header_left {
+.ForgetPassword .header_left {
   height: 88px;
   line-height: 88px;
 }
 
-.Register .header_right {
+.ForgetPassword .header_right {
   /* margin-left: 775px; */
   margin-left: 50%;
   height: 88px;
   line-height: 88px;
 }
 @media screen and (max-width: 1400px) and (min-width: 1201px) {
-  .Register .img_logo_p {
+  .ForgetPassword .img_logo_p {
     padding-left: 170px;
   }
-  .Register .header_right {
+  .ForgetPassword .header_right {
     margin-left: 38%;
   }
 }
 @media screen and (max-width: 1200px) {
-  .Register .img_logo_p {
+  .ForgetPassword .img_logo_p {
     padding-left: 120px;
   }
-  .Register .header_right {
+  .ForgetPassword .header_right {
     margin-left: 450px;
   }
 }
 
-.Register .top_login:hover {
+.ForgetPassword .top_login:hover {
   cursor: pointer;
   text-decoration: underline;
   font-weight: bold;
 }
 
-.Register .hr_common {
+.ForgetPassword .hr_common {
   font-size: 18px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
   color: rgba(17, 26, 52, 1);
 }
-.Register .hr_left {
+.ForgetPassword .hr_left {
   color: #111a34;
 }
-.Register .hr_right {
+.ForgetPassword .hr_right {
   color: #775563;
 }
 
 /* ****内容部分 */
-.Register .R_content {
+.ForgetPassword .R_content {
   padding-top: 100px;
   min-width: 1200px;
   /* height: 700px; */
-  padding-bottom: 125px;
+  padding-bottom: 260px;
 }
-.Register .R_content_child {
+.ForgetPassword .R_content_child {
   min-width: 1200px;
 }
 
-.Register .perRow {
+.ForgetPassword .perRow {
   margin-bottom: 24px;
 }
-.Register .PR_left {
+.ForgetPassword .PR_left {
   width: 80px;
   text-align: right;
   font-size: 14px;
@@ -439,10 +401,10 @@ export default {
   line-height: 42px;
   margin-right: 13px;
 }
-.Register .PR_right {
+.ForgetPassword .PR_right {
   width: 360px;
 }
-.Register .m_input {
+.ForgetPassword .m_input {
   width: 360px;
   height: 40px;
   border: 1px solid rgba(204, 193, 198, 1);
@@ -454,11 +416,11 @@ export default {
   padding: 0;
   text-indent: 10px;
 }
-.Register .m_input2 {
+.ForgetPassword .m_input2 {
   width: 212px;
 }
 
-.Register .v_code_btnShow {
+.ForgetPassword .v_code_btnShow {
   background: rgba(119, 85, 99, 1);
   width: 146px;
   color: #fff;
@@ -468,30 +430,30 @@ export default {
   border: 0;
   height: 42px;
 }
-.Register .v_code_btnShow2 {
+.ForgetPassword .v_code_btnShow2 {
   width: 73px;
 }
-.Register .img_v_code_img {
+.ForgetPassword .img_v_code_img {
   height: 42px;
   /* width: 73px; */
   width: 146px;
   /* background-color: red; */
 }
-.Register .img_v_code_img:hover {
+.ForgetPassword .img_v_code_img:hover {
   cursor: pointer;
 }
 
-.Register .m_checkbox {
+.ForgetPassword .m_checkbox {
   margin-bottom: 36px;
 }
-.Register .agreement_p {
+.ForgetPassword .agreement_p {
   color: #111a34;
 }
-.Register .agreement {
+.ForgetPassword .agreement {
   color: #775563;
 }
 
-.Register .m_btn {
+.ForgetPassword .m_btn {
   font-size: 16px;
   font-family: PingFangSCSemibold-;
   color: rgba(254, 248, 255, 1);

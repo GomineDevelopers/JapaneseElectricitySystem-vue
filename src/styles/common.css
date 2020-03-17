@@ -76,3 +76,17 @@ body {
 button:hover {
   cursor: pointer;
 }
+
+.TextAlignRight{
+  text-align: right;
+}
+
+
+/* 去掉所有input 选中框 */
+input,
+button{
+  outline: none;
+}
+button:hover{
+  opacity: 0.9;
+}

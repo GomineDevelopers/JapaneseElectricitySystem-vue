@@ -1,5 +1,5 @@
 <template>
-  <div class="Home height_auto">
+  <div class="Search height_auto">
     <el-container class="height_auto">
       <el-header class="common">
         <HeaderModule id="navigation"></HeaderModule>
@@ -20,7 +20,7 @@
 import HeaderModule from "@/components/HeaderModule";
 import FooterModule from "@/components/FooterModule";
 export default {
-  name: "Home",
+  name: "Search",
   components: {
     HeaderModule,
     FooterModule
@@ -33,7 +33,6 @@ export default {
     let vm = this;
     // 标题title浮动初始化
     this.$Utils.TitleInit();
-   
   },
   methods: {}
 };

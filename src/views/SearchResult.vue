@@ -1,18 +1,9 @@
 <template>
-  <div class="HomePage">
+  <div class="SearchResult">
     <!-- 顶部输入框开始 -->
 
-    <TopSearchBox :searchType="'HomePage'" :categories="categories"></TopSearchBox>
+    <TopSearchBox :searchType="'SearchResult'" :categories="categories"></TopSearchBox>
     <!-- 顶部输入框结束 -->
-
-    <!-- 轮播开始 -->
-    <el-carousel v-if="ifSearch !=true " :interval="5000" arrow="always">
-      <el-carousel-item v-for="(imgItem, index2) in carouselList" :key="index2 + 'img'">
-        <img class="m_carouselList" @click="goHref(imgItem.HrefURL)" :src="imgItem.ImgURL" />
-        <!-- <img :v-lazy="imgItem" /> -->
-      </el-carousel-item>
-    </el-carousel>
-    <!-- 轮播结束 -->
 
     <!-- 分类开始 -->
     <el-row class="home_page_content">
@@ -73,10 +64,10 @@ import Vue from "vue";
 import TopSearchBox from "@/components/TopSearchBox";
 
 import FooterNav from "@/components/FooterNav";
-import { geCategories, getGoodsById, refresh_token, ads } from "@/api/api";
+import { geCategories, getGoodsById, refresh_token } from "@/api/api";
 
 export default {
-  name: "HomePage",
+  name: "SearchResult",
   components: {
     TopSearchBox,
     FooterNav
@@ -84,16 +75,6 @@ export default {
 
   data() {
     return {
-      carouselList: [
-        // {
-        //   ImgURL: require("../assets/pic/tree.png"),
-        //   HrefURL: "www.baidu.com"
-        // }
-        // require("../assets/pic/tree.png"),
-        // require("../assets/pic/tree2.jpeg"),
-        // require("../assets/pic/tree3.jpeg"),
-        // require("../assets/pic/tree4.jpeg")
-      ],
       activeName: "0", // Tabs 标签
       productArr: [
         // 分类1 - Arr
@@ -142,7 +123,7 @@ export default {
         //   type: data[i].type, // 作品类型
         //   theme: data[i].theme, // 题材
         //   updated_at: data[i].updated_at, // 更新时间
-        //   // ImgUrl: require("@/assets/pic/product.png") // 产品图（需要Arr）// ★★★首页数据  
+        //   // ImgUrl: require("@/assets/pic/product.png") // 产品图（需要Arr）// ★★★首页数据 
         //   ImgUrl: image, // 产品图（需要Arr）// ★★★首页数据
         //   ImgUrls: images
         // }
@@ -154,19 +135,13 @@ export default {
       defaultCategoryId: null, // 默认分类 - 第一个
       currentCategoryIndex: 0, // 当前分类Arr序数 - 0
       // 分页
-      // CurrentCategoryIdTotal: 0,
-      CurrentCategoryIdTotal: null,
-
+      CurrentCategoryIdTotal: 0,
       CurrentCategoryIdPageArr: [], // 分页-对应每个分类的当前（历史）页数
       // currentPage: 1,
       ifSearch: false
     };
   },
   mounted() {
-    console.log("~!!!!!!!!!!!!!!!!!!!!!!!!!");
-    console.log(this.$route);
-    console.log(this.$router);
-
     let vm = this;
     if (
       this.$route.query.IfSearch == true ||
@@ -179,17 +154,9 @@ export default {
     } else {
       // 普通显示分类
       vm.InitCategories();
-      vm.getAdPictures(); // 获取轮播图  // 后台图片-待处理
     }
   },
   methods: {
-    goHref(m_href) {
-      if (m_href == null || m_href == undefined || m_href == undefined) {
-        this.$message("暂无详情页。");
-      } else {
-        window.location.href = m_href;
-      }
-    },
     SearchResult() {
       console.log("SearchResult");
       let vm = this;
@@ -232,52 +199,8 @@ export default {
       vm.productArr.push([]); // 搜索结果表只有1个分类！ length为1
       Vue.set(vm.productArr, 0, temp_PArr1);
       console.log(vm.productArr);
+    },
 
-      // art: "tony.steuber"
-      // category_id: 3
-      // content: "Exercitationem sit et eos sint. Sit repellendus voluptas optio ratione omnis. Dolore quia quod numquam mollitia debitis nam."
-      // created_at: "2013-03-10 12:40:34"
-      // description: "Consequatur aut blanditiis impedit maiores distinctio incidunt."
-      // discount: 1
-      // id: 1
-      // images: []
-      // on_sale: true
-      // price: "0.01"
-      // quality: "布面油画"
-      // rating: 5
-      // review_count: 10
-      // size: "10cm X 10cm"
-      // sold_count: 10
-      // stock: 100
-      // style: "具象表现"
-      // theme: "风景"
-      // time: "2009-03-25"
-      // title: "Moriah Feest"
-      // type: "油画"
-      // updated_at: "2013-03-10 12:40:34"
-    },
-    getAdPictures() {
-      let vm = this;
-      ads()
-        .then(function(response) {
-          // console.log("ads");
-          console.log(response);
-          vm.carouselList = [];
-          let data = response.data;
-          let length = data.length;
-          for (let i = 0; i < length; i++) {
-            // vm.carouselList.push(data[i].image); // 实际
-            vm.carouselList.push({
-              ImgURL: global.IMGPrefix + data[i].image,
-              HrefURL: data[i].url
-            }); 
-          }
-          // console.log(vm.carouselList);
-        })
-        .catch(function(error) {
-          console.info(error);
-        });
-    },
     // 跳转产品细节页面 （写入Cookie）
     detailsPageManage(index, indexC) {
       console.log("detailsPageManage");
@@ -364,18 +287,17 @@ export default {
     // 参数： string Number
     getAssign_Goods(AssignType, AssignValue) {
       let vm = this;
-      // setTimeout(function() {
-      // AssignType
-      if (AssignType == "index") {
-        let id = vm.categoriesDetails[AssignValue].id;
-        vm.getGoodsById(id);
-      } else if (AssignType == "id") {
-      } else if (AssignType == "page") {
-        let id = vm.defaultCategoryId;
-        vm.getGoodsById(id, AssignValue);
-      }
-      // }, 100);
-      // }, 10);
+      setTimeout(function() {
+        // AssignType
+        if (AssignType == "index") {
+          let id = vm.categoriesDetails[AssignValue].id;
+          vm.getGoodsById(id);
+        } else if (AssignType == "id") {
+        } else if (AssignType == "page") {
+          let id = vm.defaultCategoryId;
+          vm.getGoodsById(id, AssignValue);
+        }
+      }, 100);
     },
     getGoodsById(id, page) {
       let vm = this;
@@ -412,8 +334,7 @@ export default {
                 art: data[i].art, // 创作者  // ★★★首页数据
                 category_id: data[i].category_id, // 分类id
                 content: data[i].content, // 产品介绍
-                // created_at: data[i].created_at, // 创作时间  // ★★★首页数据
-                created_at: data[i].time, // 创作时间  是time 不是 created_at
+                created_at: data[i].created_at, // 创建时间  // ★★★首页数据
                 description: data[i].description, // 产品描述（关键字）
                 discount: data[i].discount, // 折扣（最大为1）
                 id: data[i].id, // 产品id  // ★★★首页数据
@@ -462,9 +383,7 @@ export default {
               vm.currentCategoryIndex,
               temp_productArr_child
             );
-            // vm.CurrentCategoryIdTotal = response.data.total; // 当前分类产品数量=》映射到分页上
-            vm.CurrentCategoryIdTotal = response.data.data.length; // ▲▲直接获取后台total =》 自己判定length
-
+            vm.CurrentCategoryIdTotal = response.data.total; // 当前分类产品数量=》映射到分页上
             // console.log(vm.productArr);
             // console.log(vm.productArr[0][0].ImgUrl);
           }
@@ -507,60 +426,60 @@ export default {
 }
 
 /* 轮播 */
-.HomePage .el-carousel__container {
+.SearchResult .el-carousel__container {
   height: 500px;
 }
-.HomePage .el-carousel__item img {
+.SearchResult .el-carousel__item img {
   width: 100%;
 }
-.HomePage .el-carousel__arrow {
+.SearchResult .el-carousel__arrow {
   width: 42px;
   height: 80px;
 }
-.HomePage .el-carousel__arrow i {
+.SearchResult .el-carousel__arrow i {
   font-size: 28px;
   font-weight: bold;
 }
-.HomePage .el-carousel__arrow--left {
+.SearchResult .el-carousel__arrow--left {
   left: 0px;
   background: rgba(0, 0, 0, 1);
   border-radius: 0px 5px 5px 0px;
   opacity: 0.3;
 }
-.HomePage .el-carousel__arrow--right {
+.SearchResult .el-carousel__arrow--right {
   right: 0px;
   background: rgba(0, 0, 0, 1);
   border-radius: 5px 0px 0px 5px;
   opacity: 0.3;
 }
-.HomePage .el-tabs--border-card {
+.SearchResult .el-tabs--border-card {
   border: none;
 }
-.HomePage .el-tabs--border-card > .el-tabs__header {
+.SearchResult .el-tabs--border-card > .el-tabs__header {
   border-bottom: none;
 }
-.HomePage .el-tabs--border-card > .el-tabs__header .el-tabs__item {
+.SearchResult .el-tabs--border-card > .el-tabs__header .el-tabs__item {
   border: none;
 }
-.HomePage .el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active {
+.SearchResult
+  .el-tabs--border-card
+  > .el-tabs__header
+  .el-tabs__item.is-active {
   border-left: none;
   border-right: none;
 }
 
 /* **** Tab */
-.HomePage .el-tabs__content {
+.SearchResult .el-tabs__content {
   padding: 0;
 }
 /* ****  */
 
-.HomePage .el-pagination.is-background .el-pager li:not(.disabled).active {
+.SearchResult .el-pagination.is-background .el-pager li:not(.disabled).active {
   background-color: #775563;
 }
 </style>
 <style scoped>
-.HomePage .m_carouselList {
-  cursor: pointer;
-}
 .top_body {
   padding: 20px 0px;
 }
@@ -592,7 +511,7 @@ export default {
     rgba(228, 213, 229, 1)
   );
 }
-.HomePage .search_button {
+.SearchResult .search_button {
   width: 17%;
   height: 44px;
   margin-left: -1px;
@@ -624,7 +543,7 @@ export default {
 .home_page_content {
   margin-top: 42px;
 }
-.HomePage .perPic {
+.SearchResult .perPic {
   /* width: 392px; */
   /* height: 357px; */
   width: 386px;
@@ -634,32 +553,32 @@ export default {
   margin-right: 12px;
   margin-bottom: 13px;
 }
-.HomePage .perPic:nth-child(3n) {
+.SearchResult .perPic:nth-child(3n) {
   margin-right: 0px;
 }
 
-.HomePage .perProduct {
+.SearchResult .perProduct {
   /* width: 392px; */
   /* height: 357px; */
 }
-.HomePage .product_intro {
+.SearchResult .product_intro {
   height: 100%;
   width: 100%;
   text-align: center;
 }
-.HomePage .product_intro:hover {
+.SearchResult .product_intro:hover {
   cursor: pointer;
 }
-.HomePage .product_intro_details {
+.SearchResult .product_intro_details {
   background-color: rgba(0, 0, 0, 0.6);
   height: 100%;
   width: 100%;
 }
-.HomePage .pid_child {
+.SearchResult .pid_child {
   padding-top: 132px;
   padding-bottom: 134px;
 }
-.HomePage .d_1 {
+.SearchResult .d_1 {
   height: 20px;
   font-size: 14px;
   font-family: PingFangSC-Regular, PingFang SC;
@@ -668,7 +587,7 @@ export default {
   line-height: 20px;
   margin-bottom: 12px;
 }
-.HomePage .d_2 {
+.SearchResult .d_2 {
   height: 22px;
   font-size: 16px;
   font-family: PingFangSC-Medium, PingFang SC;
@@ -677,7 +596,7 @@ export default {
   line-height: 22px;
   margin-bottom: 13px;
 }
-.HomePage .d_3 {
+.SearchResult .d_3 {
   height: 25px;
   font-size: 18px;
   font-family: PingFangSC-Medium, PingFang SC;
@@ -686,7 +605,7 @@ export default {
   line-height: 25px;
 }
 
-.HomePage .pagination_settings {
+.SearchResult .pagination_settings {
   margin-top: 36px;
   padding-bottom: 40px;
 }

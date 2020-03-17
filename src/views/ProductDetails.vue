@@ -2,20 +2,15 @@
   <div class="ProductDetails">
     <vue-headful title="商品详情"></vue-headful>
     <el-header class="common">
-      <HeaderModule></HeaderModule>
+      <HeaderModule id="navigation"></HeaderModule>
     </el-header>
-    <el-main>
-      <TopSearchBox></TopSearchBox>
+    <el-main class="common">
+      <TopSearchBox :searchType="'ProductDetails'" :categories="[]"></TopSearchBox>
 
       <div class="pd_content">
         <!-- 页面流程 -->
-        <div class="pageFlow">
-          <span class="pageFlow_href">首页</span>
-          <span>></span>
-          <span class="pageFlow_href">油画</span>
-          <span>></span>
-          <span class="pageFlow_href pageFlow_href_current">珠峰瑞祥</span>
-        </div>
+        <PageFlow :Flow1="'首页'" :Flow2="'油画'" :Flow3="PData.title"></PageFlow>
+
         <!-- 商品信息 -->
         <div class="inlineBlock_verTopP product_info">
           <div class="pi_left">
@@ -23,30 +18,30 @@
               <img class="mainPic" :src="mainPicURL" alt />
             </div>
             <div class="pil_bottom">
-              <div class="inlineBlock_verTopP">
+              <div class="inlineBlock_verTopP perSPic_p">
                 <template v-for="(item,index) in smallPicArr ">
                   <div class="perSPic" :key="index+ 'psp'">
-                    <img :src="item.ImgUrl" class="img_smallPic" alt />
+                    <img @click="MainPicChange(index)" :src="item.ImgUrl" class="img_smallPic" alt />
                   </div>
                 </template>
               </div>
             </div>
           </div>
           <div class="pi_right">
-            <div class="pir_keywords">李新建珠峰瑞祥, 2015，布面油画李新建珠峰瑞祥, 2015，布面油画李新建珠峰瑞祥, 2015，布面油画李新建</div>
+            <div class="pir_keywords">{{PData.description}}</div>
             <div class="inlineBlock_verTopP pir_info">
               <div class="info_font">
                 市场价：
-                <span class="info2_font">￥45415</span>
+                <span class="info2_font">￥{{PData.price}}</span>
               </div>
               <div class="info_font">
                 月销量：
-                <span class="info2_font">20</span>
+                <span class="info2_font">{{PData.sold_count}}</span>
               </div>
             </div>
             <div class="inlineBlock_verTopP pir_price">
               <div class="rmb">￥</div>
-              <div class="rmb rmb_value">41213</div>
+              <div class="rmb rmb_value">{{PData.price * PData.discount }}</div>
             </div>
             <div class="inlineBlock_verTopP pir_count">
               <div class="pir_count_Title">数量：</div>
@@ -55,16 +50,16 @@
                   v-model="productNum"
                   @change="handleChange"
                   :min="1"
-                  :max="99"
+                  :max="Number(PData.stock)"
                   label="商品数量"
                 ></el-input-number>
               </div>
-              <div class="pir_count_Inventory">库存12件</div>
+              <div class="pir_count_Inventory">库存{{PData.stock}}件</div>
             </div>
             <div class="pir_btns">
               <div class>
-                <button class="i_btn">立即购买</button>
-                <button class="i_btn i_btn2">加入购物车</button>
+                <button @click="Shopping('BuyNow')" class="i_btn">立即购买</button>
+                <button @click="Shopping('ShoppingTrolley')" class="i_btn i_btn2">加入购物车</button>
               </div>
             </div>
           </div>
@@ -87,12 +82,12 @@
                 v-show="PIDType =='evaluate'"
                 class="PIDChoose0 PIDChoose1 PIDMargin"
                 @click="PIDType ='evaluate'"
-              >累计评价（2）</div>
+              >累计评价（{{PData.review_count}}）</div>
               <div
                 v-show="PIDType =='introduction'"
                 class="PIDChoose0 PIDChoose2 PIDMargin"
                 @click="PIDType ='evaluate'"
-              >累计评价（2）</div>
+              >累计评价（{{PData.review_count}}）</div>
             </div>
           </div>
 
@@ -123,11 +118,13 @@
               <div class="m_introduction2">
                 <div class="mi_title mi_title2">产品介绍</div>
                 <div class="mi_content2">
-                  <div
-                    class="mi_content2_font"
-                  >“圣山系列”是李新建近年创作的最新一组作品，一方面是艺术家对西藏内容的一个沉淀，另一方面也是自身内心想要表达的需求。“圣山系列”的创作更像是一种仪式，其创作的过程不仅仅是一种语言表达的方式或者艺术家个体感情的投射。感性、技术、经验在转化的过程中以不同寻常的方式融合，用深沉取代认识，艺术家对于所面对的对象的表达更像是一位谦卑的仆人，世界持静观状态，而不是激情状态，这种距离暗含了某种敬畏，对自然之物的点到为止。绘画在这里只是一个支点，作为整个过程的结果实际上也是某种开始。</div>
+                  <!-- <div class="mi_content2_font">{{PData.content}}</div> -->
+                  <!-- 产品介绍内容由后台返回HTML文本自动生成 -->
+                  <div class="mi_content2_font" v-html="PData.content"></div>
+                  <!-- <div class="mi_content2_font" >{{PData.content}}</div> -->
                 </div>
-                <div class="mi_content2_picIntro">
+
+                <!-- <div class="mi_content2_picIntro">
                   <template v-for="(item,index) in mi_picIntroArr">
                     <div class="inlineBlock_verTopP mipi" :key="index+ 'mipi'">
                       <div class="mipi_left">
@@ -138,20 +135,20 @@
                       </div>
                     </div>
                   </template>
-                </div>
+                </div>-->
               </div>
             </div>
 
             <!--  -->
             <div class="rate_orign">
-              <div class="mi_title">累计评价（2）</div>
+              <div class="mi_title">累计评价（{{PData.review_count}}）</div>
               <div style="height:16px;"></div>
               <div class="productContent">
                 <div class="inlineBlock_verTopP productGrade">
                   <div class="pg_left">商品评分</div>
                   <div class="pg_right">
                     <el-rate
-                      v-model="RateValue"
+                      v-model="PData.rating"
                       disabled
                       show-score
                       text-color="#775563"
@@ -185,7 +182,7 @@
                   <div class="pg_left">商品评分</div>
                   <div class="pg_right">
                     <el-rate
-                      v-model="RateValue"
+                      v-model="PData.rating"
                       disabled
                       show-score
                       text-color="#775563"
@@ -213,6 +210,12 @@
         </div>
       </div>
     </el-main>
+    <!-- 客服咨询按钮 -->
+    <div class="CustomerService_bg">
+      <div @click="CustomerServiceManage('none')" class="CustomerService">
+        <i class="el-icon-s-custom"></i> 客服咨询
+      </div>
+    </div>
 
     <FooterNav></FooterNav>
     <el-footer class="el-footer">
@@ -226,6 +229,8 @@ import HeaderModule from "@/components/HeaderModule";
 import TopSearchBox from "@/components/TopSearchBox";
 import FooterNav from "@/components/FooterNav";
 import FooterModule from "@/components/FooterModule";
+import PageFlow from "@/components/PageFlow";
+import { refresh_token, addToCart, GoodsReplies } from "@/api/api";
 
 export default {
   name: "ProductDetails",
@@ -233,25 +238,74 @@ export default {
     HeaderModule,
     TopSearchBox,
     FooterNav,
-    FooterModule
+    FooterModule,
+    PageFlow
   },
   data() {
     return {
-      mainPicURL: require("@/assets/pic/product.png"),
-      smallPicArr: [
-        {
-          ImgUrl: require("@/assets/pic/product.png")
-        },
-        {
-          ImgUrl: require("@/assets/pic/product.png")
-        },
-        {
-          ImgUrl: require("@/assets/pic/product.png")
-        },
-        {
-          ImgUrl: require("@/assets/pic/product.png")
-        }
-      ],
+      PData: {
+        // description:
+        //   "李新建珠峰瑞祥, 2015，布面油画李新建珠峰瑞祥, 2015，布面油画李新建珠峰瑞祥, 2015，布面油画李新建",
+        // title: "珠峰瑞祥",
+        // price: 45415,
+        // sold_count: 20,
+        // discount: 0.8, // 折扣 （现价=单价*折扣）
+        // stock: 12, // 库存
+        // review_count: 2, // 累计评价数
+        // art: "李新建",
+        // quality: "布面油画",
+        // size: "150.0x100.0cm",
+        // created_at: "2015",
+        // style: "具象表现",
+        // type: "油画",
+        // theme: "风景",
+        // // 产品介绍
+        // content:
+        //   "“圣山系列”是李新建近年创作的最新一组作品，一方面是艺术家对西藏内容的一个沉淀，另一方面也是自身内心想要表达的需求。“圣山系列”的创作更像是一种仪式，其创作的过程不仅仅是一种语言表达的方式或者艺术家个体感情的投射。感性、技术、经验在转化的过程中以不同寻常的方式融合，用深沉取代认识，艺术家对于所面对的对象的表达更像是一位谦卑的仆人，世界持静观状态，而不是激情状态，这种距离暗含了某种敬畏，对自然之物的点到为止。绘画在这里只是一个支点，作为整个过程的结果实际上也是某种开始。",
+        // rating: 4.8,
+        // id: null
+        description: "-",
+        title: "-",
+        price: 0,
+        sold_count: 0,
+        discount: 0, // 折扣 （现价=单价*折扣）
+        stock: 0, // 库存
+        review_count: 0, // 累计评价数
+        art: "-",
+        quality: "-",
+        size: "",
+        created_at: "-",
+        style: "-",
+        type: "-",
+        theme: "-",
+        // 产品介绍
+        content: "-",
+        rating: 0,
+        id: null
+      },
+      // mainPicURL: require("@/assets/pic/product.png"),
+      // smallPicArr: [
+      //   {
+      //     ImgUrl: require("@/assets/pic/product.png")
+      //   },
+      //   {
+      //     ImgUrl: require("@/assets/pic/product.png")
+      //   },
+      //   {
+      //     ImgUrl: require("@/assets/pic/product2.png")
+      //   },
+      //   {
+      //     ImgUrl: require("@/assets/pic/product.png")
+      //   },
+      //   {
+      //     ImgUrl: require("@/assets/pic/product.png")
+      //   },
+      //   {
+      //     ImgUrl: require("@/assets/pic/product.png")
+      //   }
+      // ],
+      mainPicURL: "",
+      smallPicArr: [],
       productNum: 1,
       PIDType: "introduction", // "introduction" - 商品介绍  "evaluate" - 累计评价
       mi_contentArr: [
@@ -299,34 +353,266 @@ export default {
           picIntro: "艺术细节展示。"
         }
       ],
-      RateValue: 4.8,
       colors: ["#775563", "#775563", "#775563"],
       RateDataArr: [
-        {
-          text:
-            "当你有一个傻瓜时，你会很痛苦；你有 50 个傻瓜是最幸福的，吃饭、睡觉、上厕所排着队去的；你有一个聪明人时很带劲，你有 50 个聪明人实际上是最痛苦的，谁都不服谁。我在公司里的作用就象水泥，把许多优秀的人才粘合起来，使他们力气往一个地方使",
-          imgs: [
-            require("@/assets/pic/product.png"),
-            require("@/assets/pic/product2.png")
-          ],
-          date: "2019-10-12"
-        },
-        {
-          text:
-            "当你有一个傻瓜时，你会很痛苦；你有 50 个傻瓜是最幸福的，吃饭、睡觉、上厕所排着队去的；你有一个聪明人时很带劲，你有 50 个聪明人实际上是最痛苦的，谁都不服谁。我在公司里的作用就象水泥，把许多优秀的人才粘合起来，使他们力气往一个地方使",
-          imgs: [
-            require("@/assets/pic/product.png"),
-            require("@/assets/pic/product2.png")
-          ],
-          date: "2019-10-12"
-        }
+        // {
+        //   text:
+        //     "当你有一个傻瓜时，你会很痛苦；你有 50 个傻瓜是最幸福的，吃饭、睡觉、上厕所排着队去的；你有一个聪明人时很带劲，你有 50 个聪明人实际上是最痛苦的，谁都不服谁。我在公司里的作用就象水泥，把许多优秀的人才粘合起来，使他们力气往一个地方使",
+        //   imgs: [
+        //     require("@/assets/pic/product.png"),
+        //     require("@/assets/pic/product2.png")
+        //   ],
+        //   date: "2019-10-12"
+        // },
+        // {
+        //   text:
+        //     "当你有一个傻瓜时，你会很痛苦；你有 50 个傻瓜是最幸福的，吃饭、睡觉、上厕所排着队去的；你有一个聪明人时很带劲，你有 50 个聪明人实际上是最痛苦的，谁都不服谁。我在公司里的作用就象水泥，把许多优秀的人才粘合起来，使他们力气往一个地方使",
+        //   imgs: [
+        //     require("@/assets/pic/product.png"),
+        //     require("@/assets/pic/product2.png")
+        //   ],
+        //   date: "2019-10-12"
+        // }
       ]
     };
   },
   mounted() {
     let vm = this;
+    // 标题title浮动初始化
+    this.$Utils.TitleInit();
+
+    vm.InitData(); // 一次初始化
+    // 跳转商品详情页，处理的延迟如果过小，会出现不稳定问题
+    // 这里添加一个后置验证吧！ 如果1S后还是 初始值，那就再初始化一遍！
+    setTimeout(function() {
+      // vm.PData.title = "-"; // 测试
+      if (vm.PData.title == "-") {
+        // 二次初始化（判断一次没成功的话）
+        vm.$message("商品信息重新加载中，请稍后！");
+        vm.InitData();
+      }
+    }, 1000);
+    setTimeout(function() {
+      // vm.PData.title = "-"; // 测试
+      if (vm.PData.title == "-") {
+        vm.$message("商品信息加载失败，将为您返回首页！");
+        setTimeout(function() {
+          vm.$router.push({
+            path: "/"
+          });
+        }, 1000);
+      }
+    }, 6000);
   },
+
   methods: {
+    InitData() {
+      let vm = this;
+      console.log("ProductDetails");
+      if (
+        this.$route.query.id != null &&
+        this.$route.query != undefined &&
+        this.$route.query != ""
+      ) {
+        setTimeout(function() {
+          vm.PdataInit(); // 数据初始化
+        }, 200);
+        console.log("ProductDetails2");
+        // 商品评论初始化
+        setTimeout(function() {
+          vm.GoodsReplies();
+        }, 600);
+        console.log("ProductDetails3");
+      }
+    },
+    CustomerServiceManage(CSType) {
+      let vm = this;
+      if (CSType == "none") {
+        this.$message("功能开发中，敬请期待。");
+        return;
+      }
+    },
+    GoodsReplies() {
+      let vm = this;
+      let id = vm.PData.id;
+      GoodsReplies(id)
+        .then(function(response) {
+          console.log("GoodsReplies");
+          console.log(response);
+          if (response.status == 200) {
+            let data = response.data.data;
+            let length = data.length;
+            console.log(length);
+            vm.PData.review_count = length; // ▲▲▲实际评论数！
+            for (let i = 0; i < length; i++) {
+              vm.RateDataArr.push({
+                text: data[i].content,
+                date: data[i].updated_at,
+                imgs: [
+                  // ▲▲▲临时-评论图片
+                  require("@/assets/pic/product.png"),
+                  require("@/assets/pic/product2.png")
+                  // "../assets/pic/product.png",
+                  // "../assets/pic/product2.png",
+                ]
+              });
+            }
+            // data: Array(3)
+            //      0:
+            //      content: "很好"
+            //      created_at: "2020-03-11 00:46:56"
+            //      good_id: 12
+            //      id: 1
+            //      updated_at: "2020-03-11 00:46:56"
+            //      user_id: 1
+            //      __proto__: Object
+            //      1: {id: 2, good_id: 12, user_id: 1, content: "good", created_at: "2020-03-11 00:47:38", …}
+            //      2: {id: 3, good_id: 12, user_id: 1, content: "hao!", created_at: "2020-03-11 00:48:42", …}
+          }
+        })
+        .catch(function(error) {
+          console.info(error);
+        });
+    },
+    // 购物  shoppingType： 'BuyNow' - 立即购买 'ShoppingTrolley' - 加入购物车
+    Shopping(shoppingType) {
+      // 购买前判定！先登录！
+      let vm = this;
+      let token = vm.$Utils.getCookie("user_token");
+      let newToken = token.replace('"', "").replace('"', "");
+      if (token != undefined && token != null && token != "") {
+        refresh_token(newToken)
+          .then(function(response) {
+            if (response.status == 200) {
+              vm.$Utils.setCookie(
+                "user_token",
+                JSON.stringify(response.data.access_token),
+                60
+              );
+              function temp_function(type) {
+                var formData = new FormData();
+                var formData = new window.FormData();
+                formData.append("good_id", vm.PData.id);
+                formData.append("amount", vm.productNum);
+                if (type != "BuyNow") {
+                  formData.append("cartExist", 0);
+                } else if (type == "BuyNow") {
+                  formData.append("cartExist", 1);
+                }
+                // cartExist 0=>未在购物车页面，1=>在购物车页面  (0-自增 1-赋值)
+                let token = vm.$Utils.getCookie("user_token");
+                let newToken = token.replace('"', "").replace('"', "");
+                addToCart(newToken, formData)
+                  .then(function(response) {
+                    console.log("addToCart");
+                    console.log(response);
+                    if (response.status == 201) {
+                      if (type != "BuyNow") {
+                        vm.$message("加入购物车成功！");
+                      } else {
+                        vm.$message("跳转处理中...");
+                      }
+                    }
+                  })
+                  .catch(function(error) {
+                    console.info(error);
+                  });
+              }
+              setTimeout(function() {
+                if (shoppingType == "BuyNow") {
+                  temp_function("BuyNow");
+                  setTimeout(function() {
+                    // ▲▲▲ temp跳购物车 -- 应该跳核查订单！！
+                    // vm.router_to("/shoppingtrolley");
+                    // 方便处理-中转购物车再跳核查订单！
+                    vm.$router.push({
+                      path: "/shoppingtrolley",
+                      query: {
+                        ifBuyNow: 1,
+                        id: vm.PData.id
+                      }
+                    });
+                  }, 500);
+                } else if (shoppingType == "ShoppingTrolley") {
+                  temp_function();
+                }
+              }, 500);
+            }
+          })
+          .catch(function(error) {
+            console.info(error);
+          });
+      } else {
+        // console.log("即将为您跳转登录页面！");
+        vm.$message("即将为您跳转登录页！");
+        setTimeout(function() {
+          vm.router_to("/login");
+          // global.historyPageURL = "/productdetails";
+        }, 2000);
+      }
+    },
+    router_to(str) {
+      let vm = this;
+      vm.$router.push({ path: str });
+    },
+    // 产品详情-数据格式赋值
+    PDetailsManage() {
+      this.mi_contentArr[0].value = this.PData.title;
+      this.mi_contentArr[1].value = this.PData.art;
+      this.mi_contentArr[2].value = this.PData.quality;
+      this.mi_contentArr[3].value = this.PData.size;
+      this.mi_contentArr[4].value = this.PData.created_at;
+      this.mi_contentArr[5].value = this.PData.type;
+      this.mi_contentArr[6].value = this.PData.style;
+      this.mi_contentArr[7].value = this.PData.theme;
+    },
+    MainPicChange(index) {
+      this.mainPicURL = this.smallPicArr[index].ImgUrl;
+    },
+    PdataInit() {
+      let Query = this.$route.query;
+      console.log("Query");
+      console.log(Query);
+
+      this.PData = {
+        ...this.ExampleCover(this.PData, Query)
+      };
+      this.PData.rating = Number(this.PData.rating); //rating前置： Number类型
+      console.log(this.PData);
+
+      // 主图
+      this.mainPicURL = Query.ImgUrl;
+      // 小图xn
+      if (typeof Query.ImgUrls == "string") {
+        this.smallPicArr = [];
+        console.log("~~!!1");
+        this.smallPicArr.push({
+          ImgUrl: Query.ImgUrls
+        });
+      } else {
+        this.smallPicArr = [];
+        let length = Query.ImgUrls.length;
+        console.log("~~!!2");
+        console.log(Query.ImgUrls);
+        for (let i = 0; i < length; i++) {
+          this.smallPicArr.push({
+            ImgUrl: Query.ImgUrls[i]
+          });
+        }
+      }
+      console.log(this.smallPicArr);
+
+      this.PDetailsManage(); // 产品详情-数据格式赋值
+    },
+    ExampleCover(ExampleParams, newParams) {
+      let temp_ExampleParams = Object.assign({}, ExampleParams);
+      let temp_newParams = Object.assign({}, newParams);
+      for (let OBJ in temp_newParams) {
+        temp_ExampleParams[OBJ] = temp_newParams[OBJ];
+      }
+      return temp_ExampleParams;
+    },
+
     handleChange(value) {
       console.log(value);
     }
@@ -385,35 +671,16 @@ export default {
 .ProductDetails {
 }
 
-.el-main {
-  width: 62.5%;
-  min-width: 1200px;
-  margin: 0 auto;
-  padding: 0;
-  overflow: inherit;
-}
-
-/* ***** 页面流程 */
-.ProductDetails .pageFlow {
-  margin-bottom: 38px;
-}
-.ProductDetails .pageFlow_href {
-  height: 20px;
-  font-size: 14px;
-  font-family: PingFangSC-Regular, PingFang SC;
-  font-weight: 400;
-  color: rgba(51, 51, 51, 1);
-  line-height: 20px;
-}
-.ProductDetails .pageFlow_href_current {
-  color: #775563;
-}
 /* ***** 商品信息 */
 .ProductDetails .product_info {
   margin-bottom: 54px;
 }
 .ProductDetails .pi_left {
   margin-right: 113px;
+  width: 392px;
+}
+.ProductDetails .pi_right {
+  width: 493px;
 }
 .ProductDetails .pil_top {
   margin-bottom: 20px;
@@ -424,6 +691,10 @@ export default {
   box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
 }
+.ProductDetails .perSPic_p {
+  white-space: nowrap;
+  overflow-y: hidden;
+}
 .ProductDetails .perSPic {
   margin-right: 12px;
 }
@@ -431,6 +702,9 @@ export default {
   width: 89px;
   height: 89px;
   border-radius: 10px;
+}
+.ProductDetails .img_smallPic:hover {
+  cursor: pointer;
 }
 
 .ProductDetails .pir_keywords {
@@ -593,8 +867,8 @@ export default {
   border-bottom: 1px solid #e2e2e2;
 }
 .ProductDetails .perMic_child {
-  width: 156px;
-  margin-right: 216px;
+  width: 356px;
+  margin-right: 16px;
   height: 20px;
   font-size: 14px;
   font-family: PingFangSC-Regular, PingFang SC;
@@ -655,14 +929,14 @@ export default {
   line-height: 20px;
   margin-right: 20px;
 }
-
+/* **** */
 .ProductDetails .productContent {
 }
 .ProductDetails .rd_text {
   margin-top: 16px;
   margin-bottom: 16px;
   width: 1136px;
-  height: 64px;
+  /* height: 64px; */
   font-size: 14px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
@@ -689,6 +963,26 @@ export default {
   color: rgba(197, 202, 213, 1);
   line-height: 17px;
   letter-spacing: 1px;
+}
+/* ******* 客服咨询-按钮 */
+.ProductDetails .CustomerService_bg {
+  position: fixed;
+  right: 0;
+  top: 45vh;
+}
+.ProductDetails .CustomerService {
+  width: 20px;
+  margin: 0 auto;
+  padding: 16px;
+  line-height: 24px;
+  font-size: 20px;
+  background-color: #775563;
+  color: #fff;
+  border-radius: 10px;
+}
+.ProductDetails .CustomerService:hover {
+  cursor: pointer;
+  opacity: 0.9;
 }
 </style>
 

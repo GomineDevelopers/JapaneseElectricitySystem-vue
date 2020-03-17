@@ -17,7 +17,7 @@
     <div class="textAlignCenter_w100p inlineBlock_verTopP href_settings">
       <div class="hs_left">
         <el-col class="img_logo_p">
-          <img class="img_logo" :src="require('@/assets/pic/logo.png')" alt />
+          <img @click="router_to('/')" class="img_logo" :src="require('@/assets/pic/logo.png')" alt />
         </el-col>
       </div>
       <div class="hs_middle">
@@ -27,10 +27,7 @@
               <div class="ha_title">{{item.title}}</div>
               <template v-for="(itemC,indexC) in item.content ">
                 <div class :key="indexC+ 'haC'">
-                  <div
-                    @click="window.location.href = itemC.URL"
-                    class="sTitleContent"
-                  >{{itemC.sTitle}}</div>
+                  <div @click="GoHref(itemC.URL)" class="sTitleContent">{{itemC.sTitle}}</div>
                 </div>
               </template>
             </div>
@@ -123,7 +120,7 @@ export default {
         {
           title: "关于我们",
           content: [
-            { sTitle: "联系我们", URL: "" },
+            { sTitle: "联系我们", URL: "http://www.gomine.cn/contact.html" },
             { sTitle: "CEO邮箱", URL: "" },
             { sTitle: "线下店", URL: "" }
           ]
@@ -134,7 +131,15 @@ export default {
   mounted() {
     let vm = this;
   },
-  methods: {}
+  methods: {
+    GoHref(href) {
+      window.location.href = href;
+    },
+    router_to(str) {
+      let vm = this;
+      vm.$router.push({ path: str });
+    }
+  }
 };
 </script>
 <style scoped>
@@ -204,6 +209,10 @@ export default {
   width: 157px;
   height: 44px;
 }
+.FooterNav .img_logo:hover {
+  cursor: pointer;
+}
+
 .FooterNav .perHref {
   /* margin-right: 40px; */
   margin-right: 30px;

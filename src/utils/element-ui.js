@@ -1,4 +1,6 @@
 import Vue from "vue";
+// import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
 import {
   Button,
   Input,
@@ -32,7 +34,9 @@ import {
   Rate,
   Radio,
   RadioGroup,
-  Dialog
+  Dialog,
+  Upload,
+  Tooltip
 } from "element-ui";
 Vue.use(Button);
 Vue.use(Input);
@@ -67,6 +71,54 @@ Vue.use(Rate);
 Vue.use(Radio);
 Vue.use(RadioGroup);
 Vue.use(Dialog);
-
+Vue.use(Upload);
+Vue.use(Tooltip);
 
 Vue.prototype.$confirm = MessageBox.confirm;
+
+function UninputJudgment(inputValue, MessageAlert) {
+  console.log(typeof MessageAlert);
+  if (typeof MessageAlert == "string") {
+    if (inputValue == "" || inputValue == " " || inputValue == null || inputValue == undefined) {
+      this.$message(MessageAlert);
+      return true;
+    } else {
+      return false
+    }
+  }
+  else if (typeof MessageAlert == "object") { // 数组
+    let length = MessageAlert.length;
+    for (let i = 0; i < length; i++) {
+      if (inputValue[i] == "" || inputValue[i] == " " || inputValue[i] == null || inputValue[i] == undefined) {
+        this.$message(MessageAlert[i]);
+        return true;
+      }
+    }
+    return false;
+  }
+}
+Vue.prototype.$UninputJudgment = UninputJudgment;
+// if (
+//   this.$UninputJudgment(
+//     [
+//       this.phone,
+//       this.password,
+//       this.password2,
+//       this.v_code_pic,
+//       this.v_code
+//     ],
+//     [
+//       "请输入手机号！",
+//       "请输入密码！",
+//       "请确认密码！",
+//       "请输入图片验证码！",
+//       "请输入短信验证码！"
+//     ]
+//   )
+// ) {
+//   return;
+// }
+
+// if (this.$UninputJudgment(this.phone, "请输入手机号！")) {
+//   return;
+// }
