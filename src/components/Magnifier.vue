@@ -314,7 +314,7 @@ export default {
 <style>
 .magnify {
   position: relative;
-  z-index: 20000;
+  z-index: 8888;
 }
 .left_contaner {
   width: 100%;
