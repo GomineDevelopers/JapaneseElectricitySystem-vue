@@ -328,6 +328,7 @@ export default {
 }
 .ForgetPassword .el-header {
   height: 88px !important;
+  padding: 0;
 }
 </style>
 
