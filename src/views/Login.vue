@@ -1,5 +1,5 @@
 <template>
-  <div class="Login">
+  <div class="Login height_auto">
     <vue-headful title="登录"></vue-headful>
     <el-container class="height_auto">
       <el-header class="common">
@@ -22,25 +22,33 @@
           <div class="inlineBlock_verTopP l_title">
             <div class="inlineBlock_verTopP lt_left">
               <div
-                v-show="LoginType =='account'"
+                v-show="LoginType == 'account'"
                 class="LoginChoose0 LoginChoose1"
-                @click="LoginType ='account'"
-              >账号登录</div>
+                @click="LoginType = 'account'"
+              >
+                账号登录
+              </div>
               <div
-                v-show="LoginType =='phone'"
+                v-show="LoginType == 'phone'"
                 class="LoginChoose0 LoginChoose2"
-                @click="LoginType ='account'"
-              >账号登录</div>
+                @click="LoginType = 'account'"
+              >
+                账号登录
+              </div>
               <div
-                v-show="LoginType =='phone'"
+                v-show="LoginType == 'phone'"
                 class="LoginChoose0 LoginChoose1 LCMargin"
-                @click="LoginType ='phone'"
-              >手机登录</div>
+                @click="LoginType = 'phone'"
+              >
+                手机登录
+              </div>
               <div
-                v-show="LoginType =='account'"
+                v-show="LoginType == 'account'"
                 class="LoginChoose0 LoginChoose2 LCMargin"
-                @click="LoginType ='phone'"
-              >手机登录</div>
+                @click="LoginType = 'phone'"
+              >
+                手机登录
+              </div>
             </div>
             <!-- <div class="inlineBlock_verTopP lt_right">
               <div class="ltr_text">立即注册</div>
@@ -53,23 +61,45 @@
           <div v-show="LoginType == 'account'">
             <div class="inlineBlock_verTopP l_box l_user">
               <div class="login_icon_p">
-                <img class="login_icon" :src="require('@/assets/pic/user.png')" alt />
+                <img
+                  class="login_icon"
+                  :src="require('@/assets/pic/user.png')"
+                  alt
+                />
               </div>
               <div class="inlineBlock_verTopP">
-                <input class="m_input" v-model="user_phone" placeholder="手机号/用户名" type="text" />
+                <input
+                  class="m_input"
+                  v-model="user_phone"
+                  placeholder="手机号/用户名"
+                  type="text"
+                />
               </div>
             </div>
             <div class="inlineBlock_verTopP l_box l_password">
               <div class="login_icon_p">
-                <img class="login_icon" :src="require('@/assets/pic/password.png')" alt />
+                <img
+                  class="login_icon"
+                  :src="require('@/assets/pic/password.png')"
+                  alt
+                />
               </div>
               <div class>
-                <input class="m_input" v-model="password" placeholder="密码" type="password" />
+                <input
+                  class="m_input"
+                  v-model="password"
+                  placeholder="密码"
+                  type="password"
+                />
               </div>
             </div>
             <div class="inlineBlock_verTopP l_box l_v_code">
               <div class="login_icon_p">
-                <img class="login_icon" :src="require('@/assets/pic/verificationCode.png')" alt />
+                <img
+                  class="login_icon"
+                  :src="require('@/assets/pic/verificationCode.png')"
+                  alt
+                />
               </div>
               <div class>
                 <input
@@ -81,7 +111,12 @@
               </div>
               <div class="img_v_code_img_p">
                 <!-- <button class="v_code_btnShow">{{btn_show}}</button> -->
-                <img @click="getVCodeImg('password')" class="img_v_code_img" :src="ImgUrl" alt />
+                <img
+                  @click="getVCodeImg('password')"
+                  class="img_v_code_img"
+                  :src="ImgUrl"
+                  alt
+                />
               </div>
             </div>
             <div class="inlineBlock_verTopP l_passwordinfo">
@@ -89,28 +124,49 @@
                 <el-checkbox v-model="ifRemPwd">记住密码</el-checkbox>
               </div>
               <div class="forget_password">
-                <span @click="router_to('/forgetpassword')" class="forget_password_c">忘记密码</span>
+                <span
+                  @click="router_to('/forgetpassword')"
+                  class="forget_password_c"
+                  >忘记密码</span
+                >
                 <span>&nbsp;|&nbsp;</span>
-                <span @click="router_to('/register')" class="forget_password_c">免费注册</span>
+                <span @click="router_to('/register')" class="forget_password_c"
+                  >免费注册</span
+                >
               </div>
             </div>
             <div class="l_btn">
-              <button @click="LoginManage('password')" class="login_btn">登录</button>
+              <button @click="LoginManage('password')" class="login_btn">
+                登录
+              </button>
             </div>
           </div>
 
           <div v-show="LoginType == 'phone'">
             <div class="inlineBlock_verTopP l_box l_user">
               <div class="login_icon_p">
-                <img class="login_icon" :src="require('@/assets/pic/user.png')" alt />
+                <img
+                  class="login_icon"
+                  :src="require('@/assets/pic/user.png')"
+                  alt
+                />
               </div>
               <div class="inlineBlock_verTopP">
-                <input class="m_input" v-model="phone" placeholder="手机号" type="text" />
+                <input
+                  class="m_input"
+                  v-model="phone"
+                  placeholder="手机号"
+                  type="text"
+                />
               </div>
             </div>
             <div class="inlineBlock_verTopP l_box l_v_code">
               <div class="login_icon_p">
-                <img class="login_icon" :src="require('@/assets/pic/verificationCode.png')" alt />
+                <img
+                  class="login_icon"
+                  :src="require('@/assets/pic/verificationCode.png')"
+                  alt
+                />
               </div>
               <div class>
                 <input
@@ -124,12 +180,21 @@
                 <button class="v_code_btnShow">{{btn_show}}</button>
               </div>-->
               <div class="img_v_code_img_p">
-                <img @click="getVCodeImg('message')" class="img_v_code_img" :src="ImgUrl2" alt />
+                <img
+                  @click="getVCodeImg('message')"
+                  class="img_v_code_img"
+                  :src="ImgUrl2"
+                  alt
+                />
               </div>
             </div>
             <div class="inlineBlock_verTopP l_box l_v_code">
               <div class="login_icon_p">
-                <img class="login_icon" :src="require('@/assets/pic/verificationCode.png')" alt />
+                <img
+                  class="login_icon"
+                  :src="require('@/assets/pic/verificationCode.png')"
+                  alt
+                />
               </div>
               <div class>
                 <input
@@ -144,24 +209,36 @@
                   v-if="ifGetAuthCode"
                   class="v_code_btnShow v_code_btnShow2"
                   @click="MessageAuthCode('get')"
-                >获取验证码</button>
+                >
+                  获取验证码
+                </button>
                 <button
                   v-if="!ifGetAuthCode"
                   class="v_code_btnShow v_code_btnShow2"
                   @click="MessageAuthCode('refuse')"
-                >{{countDown}}s后获取</button>
+                >
+                  {{ countDown }}s后获取
+                </button>
               </div>
             </div>
 
             <div class="inlineBlock_verTopP l_passwordinfo">
               <div class="forget_password forget_password2">
-                <span @click="router_to('/forgetpassword')" class="forget_password_c">忘记密码</span>
+                <span
+                  @click="router_to('/forgetpassword')"
+                  class="forget_password_c"
+                  >忘记密码</span
+                >
                 <span>&nbsp;|&nbsp;</span>
-                <span @click="router_to('/register')" class="forget_password_c">免费注册</span>
+                <span @click="router_to('/register')" class="forget_password_c"
+                  >免费注册</span
+                >
               </div>
             </div>
             <div class="l_btn">
-              <button @click="LoginManage('message')" class="login_btn">登录</button>
+              <button @click="LoginManage('message')" class="login_btn">
+                登录
+              </button>
             </div>
           </div>
         </div>
@@ -504,7 +581,7 @@ export default {
 };
 </script>
 
-<style >
+<style>
 .Login .el-checkbox__input.is-checked .el-checkbox__inner,
 .Login .el-checkbox__input.is-indeterminate .el-checkbox__inner {
   background-color: #775563;
@@ -552,7 +629,8 @@ export default {
   /* height: 880px; */
   /* width: 100vw; */
   width: 100%;
-  height: 45.8vw;
+  height: calc(100% - 182px);
+  /* height: 45.8vw; */
 }
 @media screen and (max-width: 1200px) {
   .Login .login_content {
@@ -734,4 +812,3 @@ export default {
   border: 0;
 }
 </style>
-
