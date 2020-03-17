@@ -13,7 +13,7 @@
 
         <!-- 商品信息 -->
         <div class="inlineBlock_verTopP product_info">
-          <div class="pi_left">
+          <!-- <div class="pi_left">
             <div class="pil_top">
               <img class="mainPic" :src="mainPicURL" alt />
             </div>
@@ -26,6 +26,9 @@
                 </template>
               </div>
             </div>
+          </div> -->
+          <div class="pi_left">
+            <magnifier :imgList="smallPicArr"></magnifier>
           </div>
           <div class="pi_right">
             <div class="pir_keywords">{{PData.description}}</div>
@@ -231,7 +234,7 @@ import FooterNav from "@/components/FooterNav";
 import FooterModule from "@/components/FooterModule";
 import PageFlow from "@/components/PageFlow";
 import { refresh_token, addToCart, GoodsReplies } from "@/api/api";
-
+import Magnifier from "@/components/Magnifier";
 export default {
   name: "ProductDetails",
   components: {
@@ -239,7 +242,8 @@ export default {
     TopSearchBox,
     FooterNav,
     FooterModule,
-    PageFlow
+    PageFlow,
+    Magnifier
   },
   data() {
     return {

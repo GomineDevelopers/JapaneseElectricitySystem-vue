@@ -15,14 +15,16 @@
         <div class="left_arrow arrow" @click="leftArrowClick"></div>
         <div class="show_box">
           <ul class="picture_container" ref="middlePicture">
+            <!-- <span class="picture_item picture_item2"></span> -->
             <span
               class="picture_item"
               @mouseover="tabPicture(item)"
               v-for="(item, index) in pictureList"
               :key="index"
             >
-              <img :src="item.url" class="small_img" alt />
+              <img :src="item.ImgUrl" class="small_img" alt />
             </span>
+            <!-- <span class="picture_item picture_item2"></span> -->
           </ul>
         </div>
         <div class="right_arrow arrow" @click="rightArrowClick"></div>
@@ -39,11 +41,11 @@ import $ from "jquery";
 export default {
   props: {
     middleImgWidth: {
-      default: 350,
+      default: 392,
       type: Number
     }, // 产品图片宽
     middleImgHeight: {
-      default: 400,
+      default: 388,
       type: Number
     }, // 产品图片高
     thumbnailHeight: {
@@ -55,34 +57,36 @@ export default {
       default: 2, // 缩略比例,放大比例
       type: Number
     }
+    // smallPicArr: Array
   },
   data() {
     return {
-      pictureList: [
-        {
-          url:
-            "http://mp.ofweek.com/Upload/News/Img/member645/201711/17170046839337.jpg"
-        },
-        {
-          url:
-            "http://image.buy.ccb.com/merchant/201703/904919627/1522929521661_4.jpg"
-        },
-        {
-          url:
-            "http://image5.suning.cn/uimg/b2c/newcatentries/0070130691-000000000826244625_5_800x800.jpg"
-        },
-        {
-          url:
-            "http://img12.360buyimg.com/n5/s450x450_jfs/t9952/98/2269407420/279171/6137fe2f/59f28b2bN6959e086.jpg"
-        },
-        {
-          url:
-            "http://d.ifengimg.com/w600/p0.ifengimg.com/pmop/2017/1213/A4037864F6728F006B67AAEC51EC8A485F320FD2_size93_w1024_h734.jpeg"
-        },
-        {
-          url:
-            "http://d.ifengimg.com/w600/p0.ifengimg.com/pmop/2017/1213/A4037864F6728F006B67AAEC51EC8A485F320FD2_size93_w1024_h734.jpeg"
-        }
+      pictureList: [],
+      pictureList2: [
+        // {
+        //   ImgUrl:
+        //     "http://mp.ofweek.com/Upload/News/Img/member645/201711/17170046839337.jpg"
+        // },
+        // {
+        //   ImgUrl:
+        //     "http://image.buy.ccb.com/merchant/201703/904919627/1522929521661_4.jpg"
+        // },
+        // {
+        //   ImgUrl:
+        //     "http://image5.suning.cn/uimg/b2c/newcatentries/0070130691-000000000826244625_5_800x800.jpg"
+        // },
+        // {
+        //   ImgUrl:
+        //     "http://img12.360buyimg.com/n5/s450x450_jfs/t9952/98/2269407420/279171/6137fe2f/59f28b2bN6959e086.jpg"
+        // },
+        // {
+        //   ImgUrl:
+        //     "http://d.ifengimg.com/w600/p0.ifengimg.com/pmop/2017/1213/A4037864F6728F006B67AAEC51EC8A485F320FD2_size93_w1024_h734.jpeg"
+        // },
+        // {
+        //   ImgUrl:
+        //     "http://d.ifengimg.com/w600/p0.ifengimg.com/pmop/2017/1213/A4037864F6728F006B67AAEC51EC8A485F320FD2_size93_w1024_h734.jpeg"
+        // }
       ],
       middleImg: "", // 中图图片地址
       bigImg: "", // 大图图片地址
@@ -93,56 +97,79 @@ export default {
       leftX: 0, // 初始定位left
       topY: 0, // 初始定位top
       middleLeft: 0, // 当前放置小图盒子的定位left值,
-      itemWidth: 80 // 缩略图每张的宽度
+      // itemWidth: 80, // 缩略图每张的宽度
+      // itemWidth2: 40 // 缩略图每张的宽度
+      itemWidth: 100, // 缩略图每张的宽度
+      itemWidth2: 50 // 缩略图每张的宽度
     };
   },
   created() {
-    if (this.imgList && this.imgList.length) {
-      this.pictureList = this.imgList;
-    }
-    this.middleImg = this.pictureList[0].url;
-    // 计算缩略图的宽度,默认是显示4张图片,两边箭头的宽度和为50
-    this.itemWidth = (this.middleImgWidth - 50) / 4;
+    // if (this.imgList && this.imgList.length) {
+    //   this.pictureList = this.imgList;
+    // }
+    // // this.middleImg = this.pictureList[0].url;
+    // console.log(this.pictureList);
+    // this.middleImg = this.pictureList[0].ImgUrl;
+    // // 计算缩略图的宽度,默认是显示4张图片,两边箭头的宽度和为50
+    // this.itemWidth = (this.middleImgWidth - 50) / 4;
   },
   mounted() {
-    this.$nextTick(() => {
-      // 容器的高
-      const imgWidth = this.middleImgHeight + this.thumbnailHeight + 20;
-      // 设置容器宽高
-      $(".magnify").css({
-        width: this.middleImgWidth,
-        height: imgWidth
+    let vm = this;
+    setTimeout(function() {
+      if (vm.imgList && vm.imgList.length) {
+        vm.pictureList = vm.imgList;
+      }
+      // vm.middleImg = vm.pictureList[0].url;
+      console.log(vm.pictureList);
+      vm.middleImg = vm.pictureList[0].ImgUrl;
+
+      // 计算缩略图的宽度,默认是显示4张图片,两边箭头的宽度和为50
+      vm.itemWidth = (vm.middleImgWidth - 50) / 4;
+
+      // vm.pictureList = vm.smallPicArr;
+      vm.$nextTick(() => {
+        // 容器的高
+        const imgWidth = vm.middleImgHeight + vm.thumbnailHeight + 20;
+        // 设置容器宽高
+        $(".magnify").css({
+          width: vm.middleImgWidth,
+          height: imgWidth
+        });
+        // 设置产品图宽高
+        $(".middle_img").css({
+          width: vm.middleImgWidth,
+          height: vm.middleImgHeight
+        });
+        // 设置移动阴影图宽高
+        $(".middle_img .shade").css({
+          width: vm.middleImgWidth / vm.zoom,
+          height: vm.middleImgHeight / vm.zoom
+        });
+        // 设置缩略图容器高
+        $(".carousel").css({
+          height: vm.thumbnailHeight
+        });
+        // 设置每个缩略图宽
+        $(".picture_item").css({
+          width: vm.itemWidth
+        });
+        // 设置每个缩略图宽
+        $(".picture_item2").css({
+          width: vm.itemWidth2
+        });
+        // 设置放大后图片容器的宽高,left
+        $(".right_contanier").css({
+          left: vm.middleImgWidth,
+          width: imgWidth,
+          height: imgWidth
+        });
+        // 设置放大图片的宽高(图片的放大倍数)
+        $(".right_contanier .big_img").css({
+          width: imgWidth * vm.zoom,
+          height: imgWidth * vm.zoom
+        });
       });
-      // 设置产品图宽高
-      $(".middle_img").css({
-        width: this.middleImgWidth,
-        height: this.middleImgHeight
-      });
-      // 设置移动阴影图宽高
-      $(".middle_img .shade").css({
-        width: this.middleImgWidth / this.zoom,
-        height: this.middleImgHeight / this.zoom
-      });
-      // 设置缩略图容器高
-      $(".carousel").css({
-        height: this.thumbnailHeight
-      });
-      // 设置每个缩略图宽
-      $(".picture_item").css({
-        width: this.itemWidth
-      });
-      // 设置放大后图片容器的宽高,left
-      $(".right_contanier").css({
-        left: this.middleImgWidth,
-        width: imgWidth,
-        height: imgWidth
-      });
-      // 设置放大图片的宽高(图片的放大倍数)
-      $(".right_contanier .big_img").css({
-        width: imgWidth * this.zoom,
-        height: imgWidth * this.zoom
-      });
-    });
+    }, 500);
   },
   methods: {
     // 产品图片鼠标移入事件,显示阴影,显示大图
@@ -220,7 +247,9 @@ export default {
     },
     // 切换图片
     tabPicture(item) {
-      this.middleImg = item.url;
+      console.log(item);
+      // this.middleImg = item.url;
+      this.middleImg = item.ImgUrl;
     },
     // 点击左边箭头
     leftArrowClick() {
@@ -285,13 +314,14 @@ export default {
 <style>
 .magnify {
   position: relative;
+  z-index: 20000;
 }
 .left_contaner {
   width: 100%;
   height: 100%;
 }
 .left_contaner .middle_img {
-  border: 1px solid #ccc;
+  /* border: 1px solid #ccc; */
   box-sizing: border-box;
   position: relative;
 }
@@ -301,10 +331,18 @@ export default {
   top: 0;
   left: 0;
   cursor: move;
+  -webkit-box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
 }
 .left_contaner .middle_img img {
-  width: 100%;
-  height: 100%;
+  /* width: 100%;
+  height: 100%; */
+  width: 392px;
+  height: 388px;
+  -webkit-box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
 }
 .left_contaner .carousel {
   width: 100%;
@@ -347,12 +385,16 @@ export default {
   top: 0;
   left: 0;
   margin: 0;
+  padding: 0;
+  padding-top: 10px;
 }
 .left_contaner .picture_container .picture_item {
-  height: 100%;
+  /* height: 100%; */
   float: left;
   padding: 5px;
   box-sizing: border-box;
+  width: 82px !important;
+  height: 82px !important;
 }
 .left_contaner .picture_container .picture_item:hover {
   border: 2px solid #f2019f;
@@ -366,6 +408,9 @@ export default {
   position: absolute;
   top: 0;
   border: 1px solid #ccc;
+  -webkit-box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
 }
 .right_contanier .big_img {
   position: absolute;
