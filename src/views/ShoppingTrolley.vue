@@ -5,10 +5,7 @@
       <HeaderModule id="navigation"></HeaderModule>
     </el-header>
     <el-main class="common">
-      <TopSearchBox
-        :searchType="'ShoppingTrolley'"
-        :categories="[]"
-      ></TopSearchBox>
+      <TopSearchBox :searchType="'ShoppingTrolley'" :categories="[]"></TopSearchBox>
 
       <div class="textAlignCenter_w100p steps_settings">
         <el-steps :active="0" align-center>
@@ -41,9 +38,7 @@
             <el-table-column header-align="center" label="单价" width="150">
               <template slot-scope="scope">
                 <div>
-                  <div class="m_unitPriceHistory">
-                    ￥{{ scope.row.unitPriceHistory }}
-                  </div>
+                  <div class="m_unitPriceHistory">￥{{ scope.row.unitPriceHistory }}</div>
                   <div class="m_unitPrice">￥{{ scope.row.unitPrice }}</div>
                 </div>
               </template>
@@ -69,14 +64,16 @@
             </el-table-column>
             <el-table-column header-align="center" label="总价" width="150">
               <template slot-scope="scope">
-                <div>{{ scope.row.totalPrices }}</div>
+                <!-- <div>{{ scope.row.totalPrices.toFixed(2) }}</div> -->
+                <div>{{ scope.row.count * scope.row.unitPrice }}</div>
               </template>
             </el-table-column>
             <el-table-column header-align="center" label="操作" width="150">
               <template slot-scope="scope">
-                <div @click="deleteProduct(scope.row.id)" class="m_operation">
-                  {{ scope.row.operation }}
-                </div>
+                <div
+                  @click="deleteProduct(scope.row.id)"
+                  class="m_operation"
+                >{{ scope.row.operation }}</div>
               </template>
             </el-table-column>
           </el-table>
@@ -101,7 +98,8 @@
             <span class="bsr_1c">{{ totalValue }}</span>
           </div>
           <div class="bsr_2">
-            <button @click="Settlement()" class="bs_btn">结算</button>
+            <button v-show="ifOk" @click="Settlement()" class="bs_btn">结算</button>
+            <button v-show="!ifOk" class="bs_btn bs_btn2">结算</button>
           </div>
         </div>
       </div>
@@ -186,14 +184,16 @@ export default {
       totalValue: 0,
       CurrentCartIndexArr: [],
       // 定时Door
-      mInitTime: 3,
+      mInitTime: 2,
       mTime: null,
       mTimeDoor: true,
       CurrentCount: null,
       CurrentGid: null,
-      ifFirst: true
+      ifFirst: true,
+      ifOk: true
     };
   },
+
   mounted() {
     let vm = this;
     // 标题title浮动初始化
@@ -241,12 +241,13 @@ export default {
       // ▲▲▲▲▲防止数量使劲加使劲减 导致api疯狂请求！这里加个定时Door
       vm.CurrentCount = count;
       vm.CurrentGid = id;
-      if (vm.mTimeDoor == true) {
-        vm.mTimeDoor = false;
-        // vm.$message("关门");
-        vm.mTime = vm.mInitTime;
-        // vm.addToCart(count, id); // 提到开门后！
-      }
+      // if (vm.mTimeDoor == true) {
+      vm.mTimeDoor = false;
+      // vm.$message("关门");
+      vm.mTime = vm.mInitTime;
+      vm.ifOk = false;
+      // vm.addToCart(count, id); // 提到开门后！
+      // }
     },
     // returnIndex_ByCurrentGid(id) {
     //   let vm = this;
@@ -291,8 +292,9 @@ export default {
                       // vm.refresh_getCartList();
                       console.log("商品数量修改成功！");
                       // vm.$message("商品数量修改成功！");
-                      // vm.getCartList(); // 成功后不刷新！由于设置了TimeDoor
+                      vm.getCartList(); // 成功后不刷新！由于设置了TimeDoor
                       // vm.getCartIndexArr();
+                      // vm.getCartList(); // 刷新购物车
                     }
                   })
                   .catch(function(error) {
@@ -440,15 +442,16 @@ export default {
                   operation: "删除"
                 });
               }
-              console.log(vm.$route.query);
               let ifBuyNow = 0;
-
+              // let routeValue = vm.$route.query;
+              let routeValue = vm.$route.params;
+              console.log(routeValue);
               if (
-                vm.$route.query.ifBuyNow != undefined &&
-                vm.$route.query.ifBuyNow != null &&
-                vm.$route.query.ifBuyNow != ""
+                routeValue.ifBuyNow != undefined &&
+                routeValue.ifBuyNow != null &&
+                routeValue.ifBuyNow != ""
               ) {
-                if (vm.$route.query.ifBuyNow == "1") {
+                if (routeValue.ifBuyNow == "1") {
                   console.log("ifBuyNow ~!");
                   ifBuyNow = 1;
                 }
@@ -456,7 +459,7 @@ export default {
               // ..
               if (ifBuyNow == 1) {
                 console.log("ifBuyNow");
-                if (Number(data[i].good_id) == Number(vm.$route.query.id)) {
+                if (Number(data[i].good_id) == Number(routeValue.id)) {
                   // 只传入立即购买的商品id
                   ManageTableData();
                   temp_totalValue = data[i].amount * Number(good.price);
@@ -478,6 +481,7 @@ export default {
               } else if (ifBuyNow != 1) {
                 ManageTableData(); // 传入所有购物车商品id
                 temp_totalValue += vm.tableData[i].totalPrices;
+                vm.ifOk = true;
               }
 
               // ******** 立即购买判断 （over）
@@ -760,5 +764,9 @@ export default {
   border-radius: 20px;
   border: 1px solid rgba(119, 85, 99, 1);
   color: #fff;
+}
+.ShoppingTrolley .bs_btn2 {
+  background: rgba(165, 165, 165, 1);
+  border: 1px solid rgba(165, 165, 165, 1);
 }
 </style>

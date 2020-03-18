@@ -68,3 +68,8 @@
 .el-icon-info {
   font-size: 16px;
 }
+
+.hoverOpacity:hover{
+  opacity: 0.8;
+  cursor: pointer;
+}

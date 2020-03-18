@@ -5,16 +5,9 @@
       <HeaderModule id="navigation"></HeaderModule>
     </el-header>
     <el-main class="common">
-      <TopSearchBox
-        :searchType="'MakeComments'"
-        :categories="[]"
-      ></TopSearchBox>
+      <TopSearchBox :searchType="'MakeComments'" :categories="[]"></TopSearchBox>
       <div class="pc_content">
-        <PageFlow
-          :Flow1="'首页'"
-          :Flow2="'我的订单'"
-          :Flow3="'商品评价'"
-        ></PageFlow>
+        <PageFlow :Flow1="'首页'" :Flow2="'我的订单'" :Flow3="'商品评价'"></PageFlow>
       </div>
 
       <div class="mc_content">
@@ -42,11 +35,7 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column
-              header-align="center"
-              label="商品/服务/时效评分"
-              width="180"
-            >
+            <el-table-column header-align="center" label="商品/服务/时效评分" width="180">
               <template slot-scope="scope">
                 <div>
                   <el-rate
@@ -79,6 +68,7 @@
                         action="alert"
                         list-type="picture-card"
                         :auto-upload="false"
+                        multiple
                         :before-upload="
                           value => beforeAvatarUpload(value, scope.row.index)
                         "
@@ -92,6 +82,22 @@
                         "
                         :on-remove="handleRemove"
                       >
+                        <!-- <el-upload
+                        action="alert"
+                        list-type="picture-card"
+                        :before-upload="
+                          value => beforeAvatarUpload(value, scope.row.index)
+                        "
+                        :on-change="
+                          (file, fileList) =>
+                            loadJsonFromFile(file, fileList, scope.row.index)
+                        "
+                        :on-preview="
+                          file =>
+                            handlePictureCardPreview(file, scope.row.index)
+                        "
+                        :on-remove="handleRemove"
+                        >-->
                         <i class="el-icon-plus"></i>
                       </el-upload>
                     </div>
@@ -122,11 +128,9 @@
                   <div class="shopping_over">
                     <div class>
                       <button
-                        @click="make_comments(scope.row.Gid, scope.row.index)"
+                        @click="make_comments(scope.row.Gid, scope.row.index,scope.row.OrderId)"
                         class="m_btn1 m_btn2 m_btn1b m_btn2b m_btn3"
-                      >
-                        发表评论
-                      </button>
+                      >发表评论</button>
                     </div>
                   </div>
                 </div>
@@ -176,7 +180,12 @@ import TopSearchBox from "@/components/TopSearchBox";
 import FooterNav from "@/components/FooterNav";
 import FooterModule from "@/components/FooterModule";
 import PageFlow from "@/components/PageFlow";
-import { refresh_token, ToReplies, patchReplied } from "@/api/api";
+import {
+  refresh_token,
+  ToReplies,
+  patchReplied,
+  ToRepliesImages
+} from "@/api/api";
 import Vue from "vue";
 
 export default {
@@ -246,6 +255,7 @@ export default {
         obj.ImgUrl = ImgUrl;
         obj.productInfo = productInfo;
         obj.Gid = GoodsArr[i].good_id;
+        obj.OrderId = temp_tableData.OrderId;
         obj.m_comments = "";
         vm.tableData.push(obj);
         vm.OrderNumber = temp_tableData.OrderNumber;
@@ -282,7 +292,11 @@ export default {
           console.info(error);
         });
     },
-    make_comments(Gid, index) {
+    make_comments(Gid, index, Oid) {
+      Gid = Number(Gid);
+      Oid = Number(Oid);
+      console.log(Gid);
+      console.log(Oid);
       let vm = this;
       let token = vm.$Utils.getCookie("user_token");
       let newToken = token.replace('"', "").replace('"', "");
@@ -298,27 +312,66 @@ export default {
               );
               let token = vm.$Utils.getCookie("user_token");
               let newToken = token.replace('"', "").replace('"', "");
-              let id = Gid;
-              let m_comments = vm.tableData[index].m_comments;
-              var formData = new FormData();
-              var formData = new window.FormData();
-              formData.append("good_id", id);
-              // formData.append("replyContent", vm.m_comments);
-              formData.append("replyContent", m_comments);
-
-              setTimeout(function() {
-                ToReplies(newToken, formData)
-                  .then(function(response) {
-                    console.log("ToReplies");
-                    console.log(response);
-                    if (response.status == 201) {
-                      vm.patchReplied(); // 评论后置订单评论状态为1
-                    }
-                  })
-                  .catch(function(error) {
-                    console.info(error);
-                  });
-              }, 500);
+              // 多图遍历上传
+              let imgs = vm.tableData[index].dialogImageUrls;
+              console.log(imgs);
+              let length = imgs.length;
+              let count = 0;
+              let imgsIdString = "";
+              callbackFunc(callbackFunc);
+              function callbackFunc(callback) {
+                if (count < length) {
+                  console.log(count);
+                  let m_img = imgs[count];
+                  console.log(m_img);
+                  var formData2 = new FormData();
+                  var formData2 = new window.FormData();
+                  formData2.append("good_id", Gid);
+                  formData2.append("order_id", Oid);
+                  formData2.append("image", m_img);
+                  ToRepliesImages(newToken, formData2)
+                    .then(function(response) {
+                      console.log(response);
+                      console.log("▲▲▲▲上传图片成功");
+                      if (count == length - 1) {
+                        imgsIdString = imgsIdString + String(response.data);
+                      } else {
+                        imgsIdString =
+                          imgsIdString + String(response.data) + ",";
+                      }
+                      count++;
+                      callback(callbackFunc);
+                    })
+                    .catch(function(error) {
+                      console.info(error);
+                    });
+                } else {
+                  // vm.patchReplied(); // 评论后置订单评论状态为1
+                  let m_comments = vm.tableData[index].m_comments;
+                  var formData = new FormData();
+                  var formData = new window.FormData();
+                  var formData = new window.FormData();
+                  formData.append("good_id", Gid);
+                  formData.append("order_id", Oid);
+                  // formData.append("replyContent", vm.m_comments);
+                  formData.append("replyContent", m_comments);
+                  formData.append("images", imgsIdString);
+                  console.log(imgsIdString);
+                  setTimeout(function() {
+                    ToReplies(newToken, formData)
+                      .then(function(response) {
+                        console.log("ToReplies");
+                        console.log(response);
+                        if (response.status == 201) {
+                          vm.patchReplied(); // 评论后置订单评论状态为1
+                        }
+                      })
+                      .catch(function(error) {
+                        console.info(error);
+                      });
+                  }, 500);
+                }
+              }
             }
           })
           .catch(function(error) {
@@ -334,10 +387,10 @@ export default {
     },
     handlePictureCardPreview(file, index) {
       // this.dialogImageUrl = file.url;
-      let obj = vm.tableData[index];
-      obj.dialogImageUrl = file.url;
-      Vue.set(vm.tableData, index, obj);
-      this.dialogVisible = true;
+      // let obj = vm.tableData[index];
+      // obj.dialogImageUrl = file.url;
+      // Vue.set(vm.tableData, index, obj);
+      // this.dialogVisible = true;
     },
     loadJsonFromFile(file, fileList, index) {
       let vm = this;
@@ -349,11 +402,36 @@ export default {
       // this.dialogImageUrl = URL.createObjectURL(file.raw);
       let obj = vm.tableData[index];
       obj.dialogImageUrl = URL.createObjectURL(file.raw);
+      if (obj.dialogImageUrls) {
+      } else {
+        obj.dialogImageUrls = [];
+      }
+      // obj.dialogImageUrls.push(URL.createObjectURL(file.raw));
+      // obj.dialogImageUrls.push(file);
+      obj.dialogImageUrls.push(file.raw);
       Vue.set(vm.tableData, index, obj);
+      console.log(vm.tableData);
+      // console.log(obj.dialogImageUrl);
+      // console.log(obj.dialogImageUrls);
     },
     beforeAvatarUpload(file, index) {
+      let vm = this;
       console.log(file);
       console.log(index);
+      // this.dialogImageUrl = URL.createObjectURL(file.raw);
+      let obj = vm.tableData[index];
+      // obj.dialogImageUrl = URL.createObjectURL(file.raw);
+      if (obj.dialogImageUrls) {
+      } else {
+        obj.dialogImageUrls = [];
+      }
+      // obj.dialogImageUrls.push(URL.createObjectURL(file.raw));
+      obj.dialogImageUrls.push(file);
+      Vue.set(vm.tableData, index, obj);
+      console.log(vm.tableData);
+      // console.log(obj.dialogImageUrl);
+      console.log(obj.dialogImageUrls);
+
       const isJPG = file.type === "image/jpeg";
       const isLt2M = file.size / 1024 / 1024 < 2;
       if (!isJPG) {

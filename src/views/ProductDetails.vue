@@ -65,7 +65,7 @@
                 <button @click="Shopping('BuyNow')" class="i_btn">立即购买</button>
                 <button @click="Shopping('ShoppingTrolley')" class="i_btn i_btn2">
                   加入购物车
-                  <!-- <span id="div1" v-show="ifMoving == true">{{productNum}}</span> -->
+                  <span id="div1">{{productNum}}</span>
                 </button>
               </div>
             </div>
@@ -395,8 +395,7 @@ export default {
       elX: null,
       elY: null,
       diffX: null,
-      diffY: null,
-      ifMoving: false // 动态移动点
+      diffY: null
     };
   },
 
@@ -404,7 +403,14 @@ export default {
     let vm = this;
 
     // 初始化moving
-    this.InitMoving();
+    setTimeout(function() {
+      vm.InitMoving();
+    }, 500);
+
+    window.onresize = function() {
+      console.log("窗口改变！");
+      vm.InitMoving();
+    };
     // 标题title浮动初始化
     this.$Utils.TitleInit();
 
@@ -452,11 +458,17 @@ export default {
         oDiv2.getBoundingClientRect().left - oDiv1.getBoundingClientRect().left;
       this.diffY =
         oDiv2.getBoundingClientRect().top - oDiv1.getBoundingClientRect().top;
+
+      oDiv1.style.cssText = `position:absolute;left:${this.elX}px;top:${this.elY}px`;
+      console.log(this.elX);
+      console.log(this.elY);
+      console.log(this.diffX);
+      console.log(this.diffY);
+      oDiv1.style.display = "none";
     },
     DoMoving() {
       let vm = this;
       console.log("开启！");
-      // vm.ifMoving = true;
       setTimeout(function() {
         let oDiv1 = document.getElementById("div1");
         let oDiv2 = document.getElementById("div2");
@@ -475,7 +487,8 @@ export default {
         let timer = null;
 
         // 执行的时间
-        let duration = 750;
+        // let duration = 750;
+        let duration = 600;
         let beginTime;
         let endTime;
         function start() {
@@ -493,12 +506,54 @@ export default {
         // 抛物线动画的方法
         function step(now) {
           let x, y;
-          if (now > endTime) {
+          // console.log(+now); // 变化的 -- 158449761 5289~158449761 6029
+          // console.log(endTime); // 局部时间内-不变 158449761 6024   // 6024-5289 =24+721 ≈ 750
+          let overRate = 0.9; // 结束时间比例（执行到0.8则消失）
+          // let overRate = 1;
+          let tem_endTime = endTime - duration * (1 - overRate);
+          // if (now > endTime) {
+          if (now > tem_endTime) {
             // 运行结束
             x = diffX;
             y = diffY;
             clearInterval(timer);
+            setTimeout(function() {
+              // console.log("结束？？？");
+              // 初始化 位置！
+              oDiv1.style.cssText = `position:absolute;left:${vm.elX}px;top:${vm.elY}px`;
+              oDiv1.style.display = "none";
+              setTimeout(function() {
+                // console.log("变化！");
+
+                setTimeout(function() {
+                  // console.log(oDiv2.style);
+                  oDiv2.style.height = "20px";
+                  oDiv2.style.width = "30px";
+                  oDiv2.style.transition = "all 0.2s ease-in 0s";
+                  // console.log(oDiv2.style);
+                }, 0);
+                setTimeout(function() {
+                  oDiv2.style.height = "30px";
+                  oDiv2.style.width = "20px";
+                  oDiv2.style.transition = "all 0.2s ease-in 0s";
+                }, 300);
+                setTimeout(function() {
+                  oDiv2.style.height = "20px";
+                  oDiv2.style.width = "30px";
+                  oDiv2.style.transition = "all 0.2s ease-in 0s";
+                }, 600);
+                setTimeout(function() {
+                  oDiv2.style.height = "20px";
+                  oDiv2.style.width = "20px";
+                  oDiv2.style.transition = "all 0.2s ease-in 0s";
+                }, 900);
+              }, 0);
+            }, 0);
           } else {
+            // console.log("执行？？？");
+
+            oDiv1.style.display = "inherit";
+
             // 计算每一步的X轴的位置
             x = diffX * ((now - beginTime) / duration);
             // 则每一步的Y轴的位置y = a*x*x + b*x + c;   c==0;
@@ -508,10 +563,9 @@ export default {
             y}px`;
         }
         start();
-        setTimeout(function() {
-          // vm.ifMoving = false;
-          console.log("关闭！");
-        }, 750);
+        // setTimeout(function() {
+        //   console.log("关闭！");
+        // }, 750);
       }, 100);
     },
     InitData() {
@@ -552,17 +606,22 @@ export default {
             let length = data.length;
             console.log(length);
             vm.PData.review_count = length; // ▲▲▲实际评论数！
+            let imgs = [
+              // require("@/assets/pic/product.png"),
+              // require("@/assets/pic/product2.png")
+            ];
+
             for (let i = 0; i < length; i++) {
+              try {
+                if (data[i].images != null && data[i].images != undefined)
+                  imgs = JSON.parse(data[i].images);
+              } catch (error) {
+                console.log(error);
+              }
               vm.RateDataArr.push({
                 text: data[i].content,
                 date: data[i].updated_at,
-                imgs: [
-                  // ▲▲▲临时-评论图片
-                  require("@/assets/pic/product.png"),
-                  require("@/assets/pic/product2.png")
-                  // "../assets/pic/product.png",
-                  // "../assets/pic/product2.png",
-                ]
+                imgs: imgs
               });
             }
             // data: Array(3)
@@ -633,15 +692,23 @@ export default {
                     // ▲▲▲ temp跳购物车 -- 应该跳核查订单！！
                     // vm.router_to("/shoppingtrolley");
                     // 方便处理-中转购物车再跳核查订单！
+                    // vm.$router.push({
+                    //   path: "/shoppingtrolley",
+                    //   query: {
+                    //     ifBuyNow: 1,
+                    //     id: vm.PData.id
+                    //   }
+                    // });
                     vm.$router.push({
-                      path: "/shoppingtrolley",
-                      query: {
+                      name: "ShoppingTrolley",
+                      params: {
                         ifBuyNow: 1,
                         id: vm.PData.id
                       }
                     });
                   }, 500);
                 } else if (shoppingType == "ShoppingTrolley") {
+                  vm.DoMoving(); // 加入动画
                   temp_function();
                 }
               }, 500);
@@ -779,17 +846,23 @@ export default {
   /* background: red; */
   color: #775563;
   position: absolute;
-  font-size: 20px;
+  font-size: 12px;
+  font-weight: bold;
   /* top: 10%; */
   /* left: 10%; */
   z-index: 30000;
-  margin-left: -3%;
+  margin-left: 0%;
+  border: 1px solid #775563;
+  border-radius: 50px;
+  /* width: 20px; */
+  height: 16px;
+  line-height: 16px;
 }
 
 #div2 {
-  color: #775563;
-  position: absolute;
-  font-size: 20px;
+  /* color: #775563; */
+  /* position: absolute; */
+  /* font-size: 20px; */
   z-index: 30000;
 }
 </style>

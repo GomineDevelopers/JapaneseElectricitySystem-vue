@@ -169,8 +169,6 @@ export default {
     };
   },
   mounted() {
-    
-
     console.log("~!!!!!!!!!!!!!!!!!!!!!!!!!");
     console.log(this.$route);
     console.log(this.$router);
@@ -187,7 +185,7 @@ export default {
         window.location.href = m_href;
       }
     },
-   
+
     getAdPictures() {
       let vm = this;
       ads()
@@ -485,6 +483,7 @@ export default {
 }
 
 /* **** Tab */
+
 .HomePage .el-tabs__content {
   padding: 0;
 }

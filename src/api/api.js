@@ -385,6 +385,16 @@ export function ToReplies(newToken, data) {
   })
 }
 
+// 3-2.登录用户对单个id商品评论图片
+export function ToRepliesImages(newToken, data) {
+  return request({
+    method: 'post',
+    url: '/replies/images',
+    headers: { 'Authorization': 'Bearer' + newToken },
+    data: data
+  })
+}
+
 // 4.单个订单信息 by Oid
 export function getOrderDetailsById(newToken, id) {
   return request({
@@ -401,12 +411,22 @@ export function getGoodDetailsById(id) {
     url: '/goods/' + id,
   })
 }
-// 6.登录用户订单列表评论
-export function AllReplies(newToken) {
+// 6.登录用户订单列表评论 -- 暂时404
+export function AllReplies(newToken) {  
   return request({
     method: 'get',
     url: '/orders/replies',
     headers: { 'Authorization': 'Bearer' + newToken },
+  })
+}
+
+// 7.订单搜索（暂时by 订单号-模糊）
+export function OrdersSearch(newToken, data) {
+  return request({
+    method: 'post',
+    url: '/orders/search',
+    headers: { 'Authorization': 'Bearer' + newToken },
+    data: data
   })
 }
 

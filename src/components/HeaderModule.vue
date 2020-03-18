@@ -5,25 +5,35 @@
         <el-col v-if="!ifLogin" :span="12" class="text_align_left">
           <span @click="router_to('/')" class="mainMenu">首页</span>
           {{HeaderInfo1}}
-          <span @click="router_to('/login')">{{HeaderInfo2}}</span>
-          <span @click="router_to('/register')">{{HeaderInfo3}}</span>
+          <span
+            class="hoverOpacity"
+            @click="router_to('/login')"
+          >{{HeaderInfo2}}</span>
+          <span>丨</span>
+          <span class="hoverOpacity" @click="router_to('/register')">{{HeaderInfo3}}</span>
         </el-col>
         <el-col v-if="ifLogin" :span="12" class="text_align_left text_align_left2">
           <span @click="router_to('/')" class="mainMenu">首页</span>
           {{HeaderInfo1}}
           <span
+            class="hoverOpacity"
             @click="router_toSpec('/personalcenter','1')"
           >{{HeaderInfo2}}</span>
-          <span class="LoginOut" @click="LoginOutManage()">（注销）</span>
+          <span class="hoverOpacity LoginOut" @click="LoginOutManage()">（注销）</span>
         </el-col>
-        <el-col :span="12" class="text_align_right">
-          <span @click="router_toSpec('/personalcenter','2')">
-            <img src="../assets/pic/order_icon.png" /> 我的订单
-          </span>
-          <span @click="router_to('/shoppingtrolley')">
-            <img src="../assets/pic/shopping_cart_icon.png" /> 购物车
-            <span id="div2"></span>
-          </span>
+        <el-col :span="12" class="inlineBlock_verTopP text_align_right">
+          <div class="hoverOpacity inlineBlock_verTopP" @click="router_toSpec('/personalcenter','2')">
+            <div class="m_header_div">
+              <img class="m_img" src="../assets/pic/order_icon.png" />
+            </div>
+            <div>我的订单</div>
+          </div>
+          <div class="hoverOpacity inlineBlock_verTopP" @click="router_to('/shoppingtrolley')">
+            <div class="m_header_div">
+              <img class="m_img" id="div2" src="../assets/pic/shopping_cart_icon.png" />
+            </div>
+            <div>购物车</div>
+          </div>
         </el-col>
       </el-row>
     </el-row>
@@ -83,6 +93,8 @@ export default {
       let newToken = token.replace('"', "").replace('"', "");
       vm.$Utils.delCookie("user_token");
       // vm.$Utils.setCookieCry("ifLogout", "true", 1); // 设置登出Cookie 登出配置-用于自动（登录关掉）
+      vm.$Utils.delCookieCry("H_ifLogin");
+      vm.$Utils.delCookieCry("H_Name");
 
       loginout(newToken)
         .then(function(response) {
@@ -182,27 +194,33 @@ export default {
 }
 .text_align_left span {
   color: #775563;
-  cursor: pointer;
+  /* cursor: pointer; */
   padding: 0 5px;
   display: inline-block;
   height: 20px;
   line-height: 20px;
 }
 .text_align_left span:nth-child(2) {
-  border-right: 1px solid #775563;
+  /* border-right: 1px solid #775563; */
 }
 .text_align_left2 span:nth-child(2) {
   border-right: 0;
+}
+.m_header_div {
+  width: 30px;
+  height: 30px;
+  text-align: center;
 }
 .text_align_right {
   text-align: right;
   color: #111a34;
 }
-.text_align_right span {
+.text_align_right > div {
   cursor: pointer;
-  margin-left: 32px;
+  /* margin-left: 32px; */
+  margin-left: 12px;
 }
-.text_align_right span img {
+.m_img {
   width: 20px;
   height: 20px;
   vertical-align: sub;

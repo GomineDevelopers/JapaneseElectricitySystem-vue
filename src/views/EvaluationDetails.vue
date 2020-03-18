@@ -5,16 +5,9 @@
       <HeaderModule id="navigation"></HeaderModule>
     </el-header>
     <el-main class="common">
-      <TopSearchBox
-        :searchType="'EvaluationDetails'"
-        :categories="[]"
-      ></TopSearchBox>
+      <TopSearchBox :searchType="'EvaluationDetails'" :categories="[]"></TopSearchBox>
       <div class="pc_content">
-        <PageFlow
-          :Flow1="'首页'"
-          :Flow2="'我的订单'"
-          :Flow3="'评价详情'"
-        ></PageFlow>
+        <PageFlow :Flow1="'首页'" :Flow2="'我的订单'" :Flow3="'评价详情'"></PageFlow>
       </div>
 
       <div class="mc_content">
@@ -83,11 +76,7 @@
                 </div>
               </template>
             </el-table-column>-->
-            <el-table-column
-              header-align="center"
-              label="商品/服务/时效评分"
-              width="200"
-            >
+            <el-table-column header-align="center" label="商品/服务/时效评分" width="200">
               <template slot-scope="scope">
                 <div>
                   <el-rate
@@ -117,11 +106,14 @@
             <el-table-column header-align="center" label="评论图片" width="250">
               <template slot-scope="scope">
                 <div class="inlineBlock_verTopP">
-                  <template v-for="(item, index) in scope.row.Comments_imgs">
-                    <div class="Shopping_img_p2" :key="index + 'ci'">
-                      <img class="Shopping_img" :src="item" alt />
-                    </div>
-                  </template>
+                  <div v-if=" scope.row.Comments_imgs.length == 0">暂无评论图片</div>
+                  <div class="inlineBlock_verTopP" v-if=" scope.row.Comments_imgs.length != 0">
+                    <template v-for="(item, index) in scope.row.Comments_imgs">
+                      <div class="Shopping_img_p2" :key="index + 'ci'">
+                        <img class="Shopping_img" :src="item" alt />
+                      </div>
+                    </template>
+                  </div>
                 </div>
               </template>
             </el-table-column>
@@ -251,7 +243,9 @@ export default {
     vm.users_comments();
   },
   methods: {
+    // 获取订单号-逻辑不对
     Manage_tableData() {
+      // 暂时没用
       let vm = this;
       vm.tableData = [];
       let count = 0;
@@ -315,7 +309,7 @@ export default {
                         RateValue2: 0.0, // api暂无
                         RateValue3: 0.0, // api暂无
                         Comments_imgs: [
-                          // 临时
+                          // temp - 搞定
                           require("@/assets/pic/product.png"),
                           require("@/assets/pic/product2.png")
                         ],
@@ -355,14 +349,14 @@ export default {
               let token = vm.$Utils.getCookie("user_token");
               let newToken = token.replace('"', "").replace('"', "");
               setTimeout(function() {
-                AllReplies(newToken)
-                  .then(function(response) {
-                    console.log("AllReplies");
-                    console.log(response);
-                  })
-                  .catch(function(error) {
-                    console.info(error);
-                  });
+                // AllReplies(newToken)
+                //   .then(function(response) {
+                //     console.log("AllReplies");
+                //     console.log(response);
+                //   })
+                //   .catch(function(error) {
+                //     console.info(error);
+                //   });
 
                 UserReplies(newToken)
                   .then(function(response) {
@@ -379,12 +373,10 @@ export default {
 
                       vm.Gid_A_Oid_common.Gid = [];
                       vm.Gid_A_Oid_common.Oid = [];
-
+                      vm.tableData = [];
                       for (let i = 0; i < length; i++) {
                         let Gid = data[i].good_id;
                         let Oid = data[i].id;
-                        let content = data[i].content;
-                        let created_at = data[i].created_at;
 
                         // if (vm.Gid_A_Oid_spec.Gid.indexOf(Gid) > -1) {
                         // do noting
@@ -399,12 +391,51 @@ export default {
                         // 通用
                         vm.Gid_A_Oid_common.Gid.push(Gid);
                         vm.Gid_A_Oid_common.Oid.push(Oid);
+                        // ▲▲▲ 处理实际显示数据
+                        let good = data[i].good;
+                        let order = data[i].order;
+                        let image = require("@/assets/pic/product.png");
+                        let content = data[i].content;
+                        let created_at = data[i].created_at;
+                        try {
+                          image = global.IMGPrefix + good.images[0].image;
+                        } catch (error) {
+                          console.log(error);
+                        }
+                        let Comments_imgs = [];
+                        try {
+                          if (
+                            data[i].images != null &&
+                            data[i].images != undefined
+                          )
+                            Comments_imgs = JSON.parse(data[i].images);
+                        } catch (error) {
+                          console.log(error);
+                        }
+                        vm.tableData.push({
+                          OrderNumber: order.no,
+                          ImgUrl: image,
+                          productInfo:
+                            good.art +
+                            "," +
+                            good.title +
+                            "," +
+                            good.time +
+                            "," +
+                            good.quality,
+                          RateValue1: 0.0, // api暂无 临时
+                          RateValue2: 0.0, // api暂无
+                          RateValue3: 0.0, // api暂无
+                          Comments_imgs: Comments_imgs,
+                          content: content,
+                          created_at: created_at
+                        });
                       }
                       console.log(vm.Gid_A_Oid_spec);
                       console.log(vm.Gid_A_Oid_common);
                       try {
                         // 根据 Gid_A_Oid_spec处理 tableData by Gid
-                        vm.Manage_tableData();
+                        // vm.Manage_tableData();// 暂时不需要
                       } catch (error) {
                         console.log(error);
                       }

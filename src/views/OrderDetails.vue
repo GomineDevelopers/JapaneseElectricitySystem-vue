@@ -775,6 +775,7 @@ export default {
                 vm.DialogQRCode = false;
                 // vm.$message("支付成功，即将为您跳转首页！");
                 vm.$message("支付成功！");
+                vm.shoppingCount = -1; // ▲防止支付完成关闭后-提示"支付超时"
                 vm.ifSuccess = true;
                 setTimeout(function() {
                   // vm.router_to("/");
@@ -785,6 +786,7 @@ export default {
                   //     OrderNumber: row.OrderNumber
                   //   }
                   // });
+
                   vm.ifOverShopping = true;
                   vm.$Utils.setCookieCry("ifOverShopping", "true", 1);
                   vm.$Utils.setCookieCry("MOrderId", String(vm.OrderId), 1);
@@ -794,9 +796,11 @@ export default {
                   let tem_MOrderId = vm.$Utils.getCookieCry("MOrderId");
                   console.log(tem_ifOverShopping);
                   console.log(tem_MOrderId);
-
                   // 状态改成 "待收货"
                   vm.TransactionStatus = "待收货";
+                  // 回到订单页
+                  vm.router_toSpec("/personalcenter", "2");
+
                 }, 2000);
               }
             }

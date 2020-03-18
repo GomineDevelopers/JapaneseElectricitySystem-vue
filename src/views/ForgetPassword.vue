@@ -9,7 +9,7 @@
               <div class="img_logo_p">
                 <img
                   @click="router_to('/')"
-                  class="img_logo"
+                  class="hoverOpacity img_logo"
                   :src="require('@/assets/pic/logo.png')"
                   alt
                 />
@@ -33,12 +33,7 @@
             <div class="PR_left">手机号</div>
             <div>
               <div class="PR_right">
-                <input
-                  class="m_input"
-                  v-model="phone"
-                  placeholder="请输入手机号"
-                  type="text"
-                />
+                <input class="m_input" v-model="phone" placeholder="请输入手机号" type="text" />
               </div>
             </div>
           </div>
@@ -47,12 +42,7 @@
             <div class="PR_left">新密码</div>
             <div>
               <div class="PR_right">
-                <input
-                  class="m_input"
-                  v-model="password"
-                  placeholder="0-16位字符"
-                  type="password"
-                />
+                <input class="m_input" v-model="password" placeholder="0-16位字符" type="password" />
               </div>
             </div>
           </div>
@@ -61,12 +51,7 @@
             <div class="PR_left">确认新密码</div>
             <div>
               <div class="PR_right">
-                <input
-                  class="m_input"
-                  v-model="password2"
-                  placeholder="0-16位字符"
-                  type="password"
-                />
+                <input class="m_input" v-model="password2" placeholder="0-16位字符" type="password" />
               </div>
             </div>
           </div>
@@ -90,7 +75,7 @@
                   <div>
                     <img
                       @click="getVCodeImg()"
-                      class="img_v_code_img"
+                      class="hoverOpacity img_v_code_img"
                       :src="ImgUrl"
                       alt
                     />
@@ -104,28 +89,19 @@
             <div>
               <div class="inlineBlock_verTopP PR_right">
                 <div>
-                  <input
-                    class="m_input m_input2"
-                    v-model="v_code"
-                    placeholder="短信验证码"
-                    type="text"
-                  />
+                  <input class="m_input m_input2" v-model="v_code" placeholder="短信验证码" type="text" />
                 </div>
                 <div>
                   <button
                     v-if="ifGetAuthCode"
                     @click="getVCode('get')"
                     class="v_code_btnShow"
-                  >
-                    获取短信验证码
-                  </button>
+                  >获取短信验证码</button>
                   <button
                     v-if="!ifGetAuthCode"
                     @click="getVCode('refuse')"
                     class="v_code_btnShow"
-                  >
-                    {{ countDown }}s后获取
-                  </button>
+                  >{{ countDown }}s后获取</button>
                 </div>
               </div>
             </div>
@@ -405,6 +381,7 @@ export default {
   padding-top: 100px;
   min-width: 1200px;
   height: calc(100% - 328px);
+  min-height: 600px;
 }
 .ForgetPassword .R_content_child {
   min-width: 1200px;

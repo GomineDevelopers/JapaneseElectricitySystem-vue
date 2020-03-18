@@ -5,24 +5,13 @@
       <HeaderModule id="navigation"></HeaderModule>
     </el-header>
     <el-main class="common">
-      <TopSearchBox
-        :searchType="'PersonalCenter'"
-        :categories="[]"
-      ></TopSearchBox>
+      <TopSearchBox :searchType="'PersonalCenter'" :categories="[]"></TopSearchBox>
       <div class="pc_content">
-        <PageFlow
-          :Flow1="'首页'"
-          :Flow2="'个人中心'"
-          :Flow3="Flow3_Setting"
-        ></PageFlow>
+        <PageFlow :Flow1="'首页'" :Flow2="'个人中心'" :Flow3="Flow3_Setting"></PageFlow>
       </div>
 
       <div class="mainTabs">
-        <el-tabs
-          :tab-position="tabPosition"
-          style="height: 200px;"
-          v-model="activeName1"
-        >
+        <el-tabs :tab-position="tabPosition" style="height: 200px;" v-model="activeName1">
           <el-tab-pane name="1">
             <span slot="label">
               <i class="el-icon-user-solid"></i>&nbsp;&nbsp;用户资料
@@ -42,29 +31,18 @@
                     "
                     :on-preview="handlePictureCardPreview"
                     :on-remove="handleRemove"
-                    >上传头像</el-upload
-                  >
+                  >上传头像</el-upload>
                 </div>
               </div>
 
               <div class="sTitle2">手机号：{{ user_phone }}</div>
               <div class="sTitle1">*昵称：</div>
               <div class="ui_input_p">
-                <input
-                  class="ui_input"
-                  placeholder="请输入"
-                  v-model="uiInput1"
-                  type="text"
-                />
+                <input class="ui_input" placeholder="请输入" v-model="uiInput1" type="text" />
               </div>
               <div class="sTitle1">真实姓名：</div>
               <div class="ui_input_p">
-                <input
-                  class="ui_input"
-                  placeholder="请输入"
-                  v-model="uiInput2"
-                  type="text"
-                />
+                <input class="ui_input" placeholder="请输入" v-model="uiInput2" type="text" />
               </div>
               <div class="sTitle1">*性别：</div>
               <div class="radio_box">
@@ -94,18 +72,12 @@
                   <div class="pane_content">
                     <el-row class="flex searchInput">
                       <el-row class="input_content flex_1">
-                        <el-input
-                          v-model="input1"
-                          placeholder="请输入"
-                        ></el-input>
+                        <el-input v-model="input1" placeholder="请输入订单号"></el-input>
                       </el-row>
-                      <el-button class="search_button">订单搜索</el-button>
+                      <el-button @click="orderSearch()" class="search_button">订单搜索</el-button>
                     </el-row>
                     <!-- *  -->
-                    <PersonalCenterTable
-                      @func="initOrderList"
-                      :tableData="tableData1"
-                    ></PersonalCenterTable>
+                    <PersonalCenterTable @func="initOrderList" :tableData="tableData1"></PersonalCenterTable>
                   </div>
                   <!-- *** -->
                 </el-tab-pane>
@@ -114,18 +86,12 @@
                   <div class="pane_content">
                     <el-row class="flex searchInput">
                       <el-row class="input_content flex_1">
-                        <el-input
-                          v-model="input1"
-                          placeholder="请输入"
-                        ></el-input>
+                        <el-input v-model="input1" placeholder="请输入订单号"></el-input>
                       </el-row>
-                      <el-button class="search_button">订单搜索</el-button>
+                      <el-button @click="orderSearch()" class="search_button">订单搜索</el-button>
                     </el-row>
                     <!-- *  -->
-                    <PersonalCenterTable
-                      @func="initOrderList"
-                      :tableData="tableData2"
-                    ></PersonalCenterTable>
+                    <PersonalCenterTable @func="initOrderList" :tableData="tableData2"></PersonalCenterTable>
                   </div>
                   <!-- *** -->
                 </el-tab-pane>
@@ -134,18 +100,12 @@
                   <div class="pane_content">
                     <el-row class="flex searchInput">
                       <el-row class="input_content flex_1">
-                        <el-input
-                          v-model="input1"
-                          placeholder="请输入"
-                        ></el-input>
+                        <el-input v-model="input1" placeholder="请输入订单号"></el-input>
                       </el-row>
-                      <el-button class="search_button">订单搜索</el-button>
+                      <el-button @click="orderSearch()" class="search_button">订单搜索</el-button>
                     </el-row>
                     <!-- *  -->
-                    <PersonalCenterTable
-                      @func="initOrderList"
-                      :tableData="tableData7"
-                    ></PersonalCenterTable>
+                    <PersonalCenterTable @func="initOrderList" :tableData="tableData7"></PersonalCenterTable>
                   </div>
                   <!-- *** -->
                 </el-tab-pane>
@@ -154,18 +114,12 @@
                   <div class="pane_content">
                     <el-row class="flex searchInput">
                       <el-row class="input_content flex_1">
-                        <el-input
-                          v-model="input1"
-                          placeholder="请输入"
-                        ></el-input>
+                        <el-input v-model="input1" placeholder="请输入订单号"></el-input>
                       </el-row>
-                      <el-button class="search_button">订单搜索</el-button>
+                      <el-button @click="orderSearch()" class="search_button">订单搜索</el-button>
                     </el-row>
                     <!-- *  -->
-                    <PersonalCenterTable
-                      @func="initOrderList"
-                      :tableData="tableData3"
-                    ></PersonalCenterTable>
+                    <PersonalCenterTable @func="initOrderList" :tableData="tableData3"></PersonalCenterTable>
                   </div>
                   <!-- *** -->
                 </el-tab-pane>
@@ -174,18 +128,12 @@
                   <div class="pane_content">
                     <el-row class="flex searchInput">
                       <el-row class="input_content flex_1">
-                        <el-input
-                          v-model="input1"
-                          placeholder="请输入"
-                        ></el-input>
+                        <el-input v-model="input1" placeholder="请输入订单号"></el-input>
                       </el-row>
-                      <el-button class="search_button">订单搜索</el-button>
+                      <el-button @click="orderSearch()" class="search_button">订单搜索</el-button>
                     </el-row>
                     <!-- *  -->
-                    <PersonalCenterTable
-                      @func="initOrderList"
-                      :tableData="tableData4"
-                    ></PersonalCenterTable>
+                    <PersonalCenterTable @func="initOrderList" :tableData="tableData4"></PersonalCenterTable>
                   </div>
                   <!-- *** -->
                 </el-tab-pane>
@@ -194,18 +142,12 @@
                   <div class="pane_content">
                     <el-row class="flex searchInput">
                       <el-row class="input_content flex_1">
-                        <el-input
-                          v-model="input1"
-                          placeholder="请输入"
-                        ></el-input>
+                        <el-input v-model="input1" placeholder="请输入订单号"></el-input>
                       </el-row>
-                      <el-button class="search_button">订单搜索</el-button>
+                      <el-button @click="orderSearch()" class="search_button">订单搜索</el-button>
                     </el-row>
                     <!-- *  -->
-                    <PersonalCenterTable
-                      @func="initOrderList"
-                      :tableData="tableData5"
-                    ></PersonalCenterTable>
+                    <PersonalCenterTable @func="initOrderList" :tableData="tableData5"></PersonalCenterTable>
                   </div>
                   <!-- *** -->
                 </el-tab-pane>
@@ -214,18 +156,12 @@
                   <div class="pane_content">
                     <el-row class="flex searchInput">
                       <el-row class="input_content flex_1">
-                        <el-input
-                          v-model="input1"
-                          placeholder="请输入"
-                        ></el-input>
+                        <el-input v-model="input1" placeholder="请输入订单号"></el-input>
                       </el-row>
-                      <el-button class="search_button">订单搜索</el-button>
+                      <el-button @click="orderSearch()" class="search_button">订单搜索</el-button>
                     </el-row>
                     <!-- *  -->
-                    <PersonalCenterTable
-                      @func="initOrderList"
-                      :tableData="tableData6"
-                    ></PersonalCenterTable>
+                    <PersonalCenterTable @func="initOrderList" :tableData="tableData6"></PersonalCenterTable>
                   </div>
                   <!-- *** -->
                 </el-tab-pane>
@@ -243,18 +179,13 @@
               <div class="address_title">收货地址</div>
               <!-- 遍历 -->
               <template v-for="(item, index) in AddressArr">
-                <div
-                  class="inlineBlock_verTopP aa_commonFont"
-                  :key="index + 'aa'"
-                >
+                <div class="inlineBlock_verTopP aa_commonFont" :key="index + 'aa'">
                   <div>
-                    <span v-if="item.chooseType == true" class="default_font"
-                      >默认</span
-                    >
-                    <span
-                      >{{ item.province }}{{ item.city }}{{ item.district
-                      }}{{ item.address }}</span
-                    >
+                    <span v-if="item.chooseType == true" class="default_font">默认</span>
+                    <span>
+                      {{ item.province }}{{ item.city }}{{ item.district
+                      }}{{ item.address }}
+                    </span>
                     <span>（{{ item.name }}）</span>
                     <span>{{ item.phone }}</span>
                   </div>
@@ -276,29 +207,21 @@
                           item.zip
                         )
                       "
-                      >编辑</span
-                    >
+                    >编辑</span>
                     <span
                       @click="deleteAssignAddress(item.id)"
                       class="operation_font operation_font2"
-                      >删除</span
-                    >
+                    >删除</span>
                     <span
                       @click="defaultAssignAddress(item.id)"
                       class="operation_font operation_font3"
-                      >设为默认地址</span
-                    >
+                    >设为默认地址</span>
                   </div>
                 </div>
               </template>
 
               <div class="add_new_address">
-                <button
-                  class="btn_add_address"
-                  @click="addressEditDialog('new')"
-                >
-                  新增地址
-                </button>
+                <button class="btn_add_address" @click="addressEditDialog('new')">新增地址</button>
               </div>
             </div>
             <!-- **** 收货地址 收尾 -->
@@ -317,24 +240,14 @@
           <div class="inlineBlock_verTopP dcPerRow">
             <div class="dc_sTtile">收货人姓名：</div>
             <div>
-              <input
-                v-model="u_name"
-                class="dc_input"
-                placeholder="请输入"
-                type="text"
-              />
+              <input v-model="u_name" class="dc_input" placeholder="请输入" type="text" />
             </div>
           </div>
 
           <div class="inlineBlock_verTopP dcPerRow">
             <div class="dc_sTtile">电话号码：</div>
             <div>
-              <input
-                v-model="u_phone"
-                class="dc_input"
-                placeholder="请输入"
-                type="text"
-              />
+              <input v-model="u_phone" class="dc_input" placeholder="请输入" type="text" />
             </div>
           </div>
 
@@ -342,11 +255,7 @@
             <div class="dc_sTtile">收货地址：</div>
             <div>
               <div class="linkage">
-                <el-select
-                  v-model="sheng"
-                  @change="choseProvince"
-                  placeholder="省级地区"
-                >
+                <el-select v-model="sheng" @change="choseProvince" placeholder="省级地区">
                   <el-option
                     v-for="item in province"
                     :key="item.id"
@@ -355,11 +264,7 @@
                   ></el-option>
                 </el-select>
                 <br />
-                <el-select
-                  v-model="shi"
-                  @change="choseCity"
-                  placeholder="市级地区"
-                >
+                <el-select v-model="shi" @change="choseCity" placeholder="市级地区">
                   <el-option
                     v-for="item in shi1"
                     :key="item.id"
@@ -368,11 +273,7 @@
                   ></el-option>
                 </el-select>
                 <br />
-                <el-select
-                  v-model="qu"
-                  @change="choseBlock"
-                  placeholder="区级地区"
-                >
+                <el-select v-model="qu" @change="choseBlock" placeholder="区级地区">
                   <el-option
                     v-for="item in qu1"
                     :key="item.id"
@@ -387,12 +288,7 @@
           <div class="inlineBlock_verTopP dcPerRow">
             <div class="dc_sTtile">详细地址：</div>
             <div>
-              <input
-                v-model="u_address"
-                class="dc_input"
-                placeholder="请输入"
-                type="text"
-              />
+              <input v-model="u_address" class="dc_input" placeholder="请输入" type="text" />
             </div>
           </div>
 
@@ -437,7 +333,8 @@ import {
   updateAddressById,
   deleteAddressById,
   set_addressDefault,
-  getOrderList
+  getOrderList,
+  OrdersSearch
 } from "@/api/api";
 
 export default {
@@ -467,10 +364,10 @@ export default {
       // 我的订单
 
       input1: "",
-      input2: "",
-      input3: "",
-      input4: "",
-      input5: "",
+      // input2: "",
+      // input3: "",
+      // input4: "",
+      // input5: "",
 
       tableData1: [
         // {
@@ -708,11 +605,25 @@ export default {
     }
   },
   methods: {
+    orderSearch() {
+      let vm = this;
+      let key = vm.input1;
+      if (key == "" || key == " " || key == null || key == undefined) {
+        vm.$message("请输入订单号！");
+        return;
+      } else {
+        vm.getOrderList(key); // 获取订单列表
+        setTimeout(function() {
+          // 初始化订单列表（by search）
+          vm.manageTransactionStatus();
+        }, 2000);
+      }
+    },
     initOrderList() {
       let vm = this;
       vm.initUserInfo(); // 获取用户信息
       vm.getAddressList(); // 获取用户地址列表
-      vm.getOrderList(); // 获取订单列表表
+      vm.getOrderList(); // 获取订单列表
       setTimeout(function() {
         vm.manageTransactionStatus();
       }, 2000);
@@ -746,80 +657,82 @@ export default {
         }
       }
     },
-    getOrderList() {
+    getOrderList(key) {
       let vm = this;
       let token = vm.$Utils.getCookie("user_token");
       let newToken = token.replace('"', "").replace('"', "");
-      getOrderList(newToken)
-        .then(function(response) {
-          console.log("getOrderList");
-          console.log(response);
-          if (response.status == 200) {
-            let data = response.data.data;
-            let length = data.length;
-            vm.tableData1 = []; // 初始化
-            for (let i = 0; i < length; i++) {
-              let productInfoArr = [];
-              let imageArr = [];
-              let amountArr = [];
-              let priceArr = [];
-              let discountArr = [];
-              let unitPriceArr = [];
-              let totalValueArr = [];
-              let good_idArr = [];
-              // ******** 商品Arr化 （good1）
-              let good_length = data[i].items.length;
-              for (let k = 0; k < good_length; k++) {
-                let item = data[i].items[k];
-                let good1 = data[i].items[k].good;
-                // ▲▲▲ 个人中心-我的订单--暂只展示一个商品
-                let productInfo;
-                productInfo =
-                  good1.art +
-                  "," +
-                  good1.title +
-                  "," +
-                  // good1.created_at +
-                  good1.time +
-                  "," +
-                  good1.quality;
+      function InitOrderListData(response) {
+        if (response.status == 200) {
+          let data = response.data.data;
+          let length = data.length;
+          vm.tableData1 = []; // 初始化
+          for (let i = 0; i < length; i++) {
+            let productInfoArr = [];
+            let imageArr = [];
+            let amountArr = [];
+            let priceArr = [];
+            let discountArr = [];
+            let unitPriceArr = [];
+            let totalValueArr = [];
+            let good_idArr = [];
+            // ******** 商品Arr化 （good1）
+            let good_length = data[i].items.length;
+            for (let k = 0; k < good_length; k++) {
+              let item = data[i].items[k];
+              let good1 = data[i].items[k].good;
+              // ▲▲▲ 个人中心-我的订单--暂只展示一个商品
+              let productInfo;
+              productInfo =
+                good1.art +
+                "," +
+                good1.title +
+                "," +
+                // good1.created_at +
+                good1.time +
+                "," +
+                good1.quality;
 
-                productInfoArr.push(productInfo);
+              productInfoArr.push(productInfo);
 
-                let image = require("@/assets/pic/product.png");
-                try {
-                  image = global.IMGPrefix + good1.images[0].image;
-                } catch (error) {
-                  console.log(error);
-                }
-                imageArr.push(image);
-
-                let amount = item.amount;
-                amountArr.push(amount);
-                let price = good1.price;
-                priceArr.push(price);
-                let discount = good1.discount;
-                discountArr.push(price);
-                unitPriceArr.push(Number(price) * Number(discount));
-                totalValueArr.push(Number(price) * Number(discount) * amount);
-                let good_id = item.good_id;
-                good_idArr.push(good_id);
+              let image = require("@/assets/pic/product.png");
+              try {
+                image = global.IMGPrefix + good1.images[0].image;
+              } catch (error) {
+                console.log(error);
               }
-              // ******** 商品Arr化 （收）
+              imageArr.push(image);
 
-              // ●●●●●●●●●●●●● 支付状态
-              let payment_method;
-              if (data[i].payment_method == "wechat") {
-                payment_method = "微信支付";
-              } else if (data[i].payment_method == null) {
-                payment_method = "无";
-              } else {
-                payment_method = "其他";
-              }
-              // ●●●●●●●●●●●●● 交易状态
-              let TransactionStatus = "状态异常";
-              // cancel 是否取消订单 -- 针对待付款
-              console.log("~~~~~~~~~~~~~");
+              let amount = item.amount;
+              amountArr.push(amount);
+              let price = good1.price;
+              priceArr.push(price);
+              let discount = good1.discount;
+              discountArr.push(price);
+              unitPriceArr.push(Number(price) * Number(discount));
+              totalValueArr.push(Number(price) * Number(discount) * amount);
+              let good_id = item.good_id;
+              good_idArr.push(good_id);
+            }
+            // ******** 商品Arr化 （收）
+
+            // ●●●●●●●●●●●●● 支付状态
+            let payment_method;
+            if (data[i].payment_method == "wechat") {
+              payment_method = "微信支付";
+            } else if (data[i].payment_method == "alipay") {
+              payment_method = "支付宝支付";
+            } else if (data[i].payment_method == null) {
+              payment_method = "无";
+            } else {
+              payment_method = "其他";
+            }
+            // ●●●●●●●●●●●●● 交易状态
+            let TransactionStatus = "状态异常";
+            // cancel 是否取消订单 -- 针对待付款
+            console.log("~~~~~~~~~~~~~");
+            if (data[i].closed == true) {
+              TransactionStatus = "已关闭";
+            } else {
               if (data[i].cancel == 1) {
                 console.log("已取消");
                 TransactionStatus = "已取消";
@@ -848,111 +761,134 @@ export default {
                   TransactionStatus = "待付款"; // 暂时
                 }
               }
-              //  ●●●●●●●●●●●●● 操作（对应交易状态）
-              let operation1 = "";
-              switch (TransactionStatus) {
-                case "待付款":
-                  operation1 = "立即支付";
-                  break;
-                case "待收货":
-                  operation1 = "确认收货";
-                  break;
-                case "待评价":
-                  operation1 = "前往评价";
-                  break;
-                case "已完成":
-                  operation1 = "查看订单";
-                  break;
-                case "已取消":
-                  operation1 = "查看订单";
-                  break;
-                case "状态异常":
-                  operation1 = "查看订单";
-                  break;
-                default:
-                  console.log("***");
-              }
-
-              // console.log("~~~~~~~~~~~~~~~~~~~1");
-              // console.log(data[i]);
-              let GoodsArr = [];
-              let length = data[i].items.length;
-              for (let k = 0; k < length; k++) {
-                // console.log("~~~~~~~~~~~~~~~~~~~2");
-                // console.log(data[i].items[k]);
-                // console.log(...data[i].items);
-                GoodsArr.push(data[i].items[k]);
-              }
-              // console.log("■■■■■■■■■■■");
-              // console.log(length);
-              // console.log(GoodsArr);
-
-              vm.tableData1.push({
-                OrderId: data[i].id,
-                OrderNumber: data[i].no,
-
-                // ImgUrl: require("@/assets/pic/product.png"), // 暂时 // 待完善 Arr[]
-                // ImgUrl: image, // 待完善 Arr[]
-                // productInfo: productInfo, // 待完善 Arr[]
-                // count: 1, // 待完善 Arr[]
-                // unitPriceHistory: "0",
-                // unitPrice: "41213", // 待完善 Arr[]
-                // totalValue: "41213", // 待完善 Arr[]
-
-                ImgUrl: imageArr,
-                productInfo: productInfoArr,
-                count: amountArr,
-                unitPriceHistory: priceArr,
-                unitPrice: unitPriceArr,
-                totalValue: totalValueArr,
-
-                Payment: payment_method,
-                freight: 0, // 差运费 // ▲▲ 临时
-                TransactionStatus: TransactionStatus, // ★★★ 待后台添加监听器！
-                operation1: operation1,
-                operation2: "订单详情",
-                OrderRemark: data[i].remark,
-                receiver: data[i].address.contact_name,
-                shippingAddress: data[i].address.address,
-                phone: data[i].address.contact_phone,
-                zip: data[i].address.zip,
-                GoodsArr: GoodsArr,
-                total_amount: data[i].total_amount,
-                ProductPrice: data[i].total_amount,
-                good_id: good_idArr
-              });
-              console.log("~~~~~:" + TransactionStatus);
             }
-            console.log(vm.tableData1);
 
-            // items: 订单 - 商品（分 good_id 如  29,28 情况）
-            // data
-            //   data [0]
-            //       address: {address: "北京市北京市东城区22hao", zip: "110101", contact_name: "yy", contact_phone: "123456789"}
-            //       closed: false
-            //       created_at: "2020-03-10 21:01:53"
-            //       extra: null
-            //       id: 32
-            //       items: [{…}]
-            //       no: "20200310210153591848"
-            //       paid_at: "2020-03-10 21:02:16"   // ★★★ 支付状态 有时间-已支付 没时间-未支付
-            //       payment_method: "wechat"
-            //       payment_no: "4200000501202003107854430649"
-            //       refund_no: null    // 是否退款
-            //       refund_status: "pending"  // 退款状态 --'pending' 未执行退款
-            //       remark: null    // 评论内容
-            //       reviewed: false      // ★ 是否评论
-            //       ship_data: null
-            //       ship_status: "pending"
-            //       total_amount: "0.01"
-            //       updated_at: "2020-03-10 21:02:16"
-            //       user: {id: 1, name: "yiduang", phone: "18742257174", avatar: "https://cdn.learnku.com/uploads/images/201710/30/1/TrJS40Ey5k.png", created_at: "2009-05-18 15:02:08", …}
-            //       user_id: 1
+            //  ●●●●●●●●●●●●● 操作（对应交易状态）
+            let operation1 = "";
+            switch (TransactionStatus) {
+              case "待付款":
+                operation1 = "立即支付";
+                break;
+              case "待收货":
+                operation1 = "确认收货";
+                break;
+              case "待评价":
+                operation1 = "前往评价";
+                break;
+              case "已完成":
+                operation1 = "查看订单";
+                break;
+              case "已取消":
+                operation1 = "查看订单";
+                break;
+              case "状态异常":
+                operation1 = "查看订单";
+                break;
+              default:
+                console.log("***");
+            }
+
+            // console.log("~~~~~~~~~~~~~~~~~~~1");
+            // console.log(data[i]);
+            let GoodsArr = [];
+            let length = data[i].items.length;
+            for (let k = 0; k < length; k++) {
+              // console.log("~~~~~~~~~~~~~~~~~~~2");
+              // console.log(data[i].items[k]);
+              // console.log(...data[i].items);
+              GoodsArr.push(data[i].items[k]);
+            }
+            // console.log("■■■■■■■■■■■");
+            // console.log(length);
+            // console.log(GoodsArr);
+
+            vm.tableData1.push({
+              OrderId: data[i].id,
+              OrderNumber: data[i].no,
+
+              // ImgUrl: require("@/assets/pic/product.png"), // 暂时 // 待完善 Arr[]
+              // ImgUrl: image, // 待完善 Arr[]
+              // productInfo: productInfo, // 待完善 Arr[]
+              // count: 1, // 待完善 Arr[]
+              // unitPriceHistory: "0",
+              // unitPrice: "41213", // 待完善 Arr[]
+              // totalValue: "41213", // 待完善 Arr[]
+
+              ImgUrl: imageArr,
+              productInfo: productInfoArr,
+              count: amountArr,
+              unitPriceHistory: priceArr,
+              unitPrice: unitPriceArr,
+              totalValue: totalValueArr,
+
+              Payment: payment_method,
+              freight: 0, // 差运费 // ▲▲ 临时
+              TransactionStatus: TransactionStatus, // ★★★ 待后台添加监听器！
+              operation1: operation1,
+              operation2: "订单详情",
+              OrderRemark: data[i].remark,
+              receiver: data[i].address.contact_name,
+              shippingAddress: data[i].address.address,
+              phone: data[i].address.contact_phone,
+              zip: data[i].address.zip,
+              GoodsArr: GoodsArr,
+              total_amount: data[i].total_amount,
+              ProductPrice: data[i].total_amount,
+              good_id: good_idArr
+            });
+            console.log("~~~~~:" + TransactionStatus);
           }
-        })
-        .catch(function(error) {
-          console.info(error);
-        });
+          console.log(vm.tableData1);
+
+          // items: 订单 - 商品（分 good_id 如  29,28 情况）
+          // data
+          //   data [0]
+          //       address: {address: "北京市北京市东城区22hao", zip: "110101", contact_name: "yy", contact_phone: "123456789"}
+          //       closed: false
+          //       created_at: "2020-03-10 21:01:53"
+          //       extra: null
+          //       id: 32
+          //       items: [{…}]
+          //       no: "20200310210153591848"
+          //       paid_at: "2020-03-10 21:02:16"   // ★★★ 支付状态 有时间-已支付 没时间-未支付
+          //       payment_method: "wechat"
+          //       payment_no: "4200000501202003107854430649"
+          //       refund_no: null    // 是否退款
+          //       refund_status: "pending"  // 退款状态 --'pending' 未执行退款
+          //       remark: null    // 评论内容
+          //       reviewed: false      // ★ 是否评论
+          //       ship_data: null
+          //       ship_status: "pending"
+          //       total_amount: "0.01"
+          //       updated_at: "2020-03-10 21:02:16"
+          //       user: {id: 1, name: "yiduang", phone: "18742257174", avatar: "https://cdn.learnku.com/uploads/images/201710/30/1/TrJS40Ey5k.png", created_at: "2009-05-18 15:02:08", …}
+          //       user_id: 1
+        }
+      }
+      if (key != undefined && key != null) {
+        var formData = new FormData();
+        var formData = new window.FormData();
+        formData.append("search", vm.input1);
+        OrdersSearch(newToken, formData)
+          .then(function(response) {
+            console.log("OrdersSearch");
+            console.log(response);
+            InitOrderListData(response);
+          })
+          .catch(function(error) {
+            console.info(error);
+          });
+      } else {
+        getOrderList(newToken)
+          .then(function(response) {
+            console.log("getOrderList");
+            console.log(response);
+            InitOrderListData(response);
+          })
+          .catch(function(error) {
+            console.info(error);
+          });
+      }
     },
     router_to(str) {
       let vm = this;

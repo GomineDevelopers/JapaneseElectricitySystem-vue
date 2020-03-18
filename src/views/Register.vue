@@ -9,7 +9,7 @@
               <div class="img_logo_p">
                 <img
                   @click="router_to('/')"
-                  class="img_logo"
+                  class="hoverOpacity img_logo"
                   :src="require('@/assets/pic/logo.png')"
                   alt
                 />
@@ -33,12 +33,7 @@
             <div class="PR_left">手机号</div>
             <div>
               <div class="PR_right">
-                <input
-                  class="m_input"
-                  v-model="phone"
-                  placeholder="请输入手机号"
-                  type="text"
-                />
+                <input class="m_input" v-model="phone" placeholder="请输入手机号" type="text" />
               </div>
             </div>
           </div>
@@ -46,12 +41,7 @@
             <div class="PR_left">用户名</div>
             <div>
               <div class="PR_right">
-                <input
-                  class="m_input"
-                  v-model="username"
-                  placeholder="请输入用户名"
-                  type="text"
-                />
+                <input class="m_input" v-model="username" placeholder="请输入用户名" type="text" />
               </div>
             </div>
           </div>
@@ -60,12 +50,7 @@
             <div class="PR_left">密码</div>
             <div>
               <div class="PR_right">
-                <input
-                  class="m_input"
-                  v-model="password"
-                  placeholder="0-16位字符"
-                  type="password"
-                />
+                <input class="m_input" v-model="password" placeholder="0-16位字符" type="password" />
               </div>
             </div>
           </div>
@@ -74,12 +59,7 @@
             <div class="PR_left">确认密码</div>
             <div>
               <div class="PR_right">
-                <input
-                  class="m_input"
-                  v-model="password2"
-                  placeholder="0-16位字符"
-                  type="password"
-                />
+                <input class="m_input" v-model="password2" placeholder="0-16位字符" type="password" />
               </div>
             </div>
           </div>
@@ -101,12 +81,7 @@
                     <button @click="getVCodeImg()" class="v_code_btnShow v_code_btnShow2">获取图片验证码</button>
                   </div>-->
                   <div>
-                    <img
-                      @click="getVCodeImg()"
-                      class="img_v_code_img"
-                      :src="ImgUrl"
-                      alt
-                    />
+                    <img @click="getVCodeImg()" class="hoverOpacity img_v_code_img" :src="ImgUrl" alt />
                   </div>
                 </div>
               </div>
@@ -117,35 +92,26 @@
             <div>
               <div class="inlineBlock_verTopP PR_right">
                 <div>
-                  <input
-                    class="m_input m_input2"
-                    v-model="v_code"
-                    placeholder="短信验证码"
-                    type="text"
-                  />
+                  <input class="m_input m_input2" v-model="v_code" placeholder="短信验证码" type="text" />
                 </div>
                 <div>
                   <button
                     v-if="ifGetAuthCode"
                     @click="getVCode('get')"
                     class="v_code_btnShow"
-                  >
-                    获取短信验证码
-                  </button>
+                  >获取短信验证码</button>
                   <button
                     v-if="!ifGetAuthCode"
                     @click="getVCode('refuse')"
                     class="v_code_btnShow"
-                  >
-                    {{ countDown }}s后获取
-                  </button>
+                  >{{ countDown }}s后获取</button>
                 </div>
               </div>
             </div>
           </div>
 
           <div class="textAlignCenter_w100p m_checkbox">
-            <el-checkbox v-model="ifRead">
+            <el-checkbox class="hoverOpacity" v-model="ifRead">
               <span class="agreement_p">
                 我已阅读并同意
                 <span class="agreement">《用户注册协议》</span>
@@ -454,6 +420,7 @@ export default {
   padding-top: 100px;
   min-width: 1200px;
   height: calc(100% - 328px);
+  min-height: 600px;
 }
 .Register .R_content_child {
   min-width: 1200px;

@@ -94,40 +94,47 @@
               v-show="scope.row.TransactionStatus == '状态异常'"
               class="m_TransactionStatus m_TransactionStatus6"
             >{{ scope.row.TransactionStatus }}</div>
+            <div
+              v-show="scope.row.TransactionStatus == '已关闭'"
+              class="m_TransactionStatus m_TransactionStatus4"
+            >{{ scope.row.TransactionStatus }}</div>
           </template>
         </el-table-column>
 
         <el-table-column header-align="center" label="操作" width="120">
           <template slot-scope="scope">
-            <div
-              class="operationColor0 operationColor00"
-              @click="CustomerServiceManage('none')"
-            >联系客服</div>
-            <!-- 已完成不显示操作1 -->
-            <div
-              v-show="scope.row.operation1 != '查看订单'"
-              @click="operationManage(scope.row,scope.row.operation1)"
-              class="operationColor0 operationColor1"
-            >{{ scope.row.operation1 }}</div>
-            <!-- <div
+            <div v-show="scope.row.TransactionStatus =='已关闭'"></div>
+            <div v-show="scope.row.TransactionStatus !='已关闭'">
+              <div
+                class="operationColor0 operationColor00"
+                @click="CustomerServiceManage('none')"
+              >联系客服</div>
+              <!-- 已完成不显示操作1 -->
+              <div
+                v-show="scope.row.operation1 != '查看订单'"
+                @click="operationManage(scope.row,scope.row.operation1)"
+                class="operationColor0 operationColor1"
+              >{{ scope.row.operation1 }}</div>
+              <!-- <div
               v-show="scope.row.TransactionStatus == '已完成'"
               @click="operationManage(scope.row,scope.row.operation1)"
               class="operationColor0 operationColor1 operationColor1b"
-            >{{ scope.row.operation1 }}</div>-->
-            <div
-              @click="detailsRouter(scope.row)"
-              class="operationColor0 operationColor2"
-            >{{ scope.row.operation2 }}</div>
-            <div
-              v-show="scope.row.TransactionStatus == '待付款'"
-              class="operationColor0 operationColor2 operationColor2b"
-              @click="patchCancelManage(scope.row)"
-            >取消订单</div>
-            <div
-              v-show="scope.row.TransactionStatus == '待收货'"
-              class="operationColor0 operationColor2 operationColor3b"
-              @click="checkTheLogistics(scope.row)"
-            >查看物流</div>
+              >{{ scope.row.operation1 }}</div>-->
+              <div
+                @click="detailsRouter(scope.row)"
+                class="operationColor0 operationColor2"
+              >{{ scope.row.operation2 }}</div>
+              <div
+                v-show="scope.row.TransactionStatus == '待付款'"
+                class="operationColor0 operationColor2 operationColor2b"
+                @click="patchCancelManage(scope.row)"
+              >取消订单</div>
+              <div
+                v-show="scope.row.TransactionStatus == '待收货'"
+                class="operationColor0 operationColor2 operationColor3b"
+                @click="checkTheLogistics(scope.row)"
+              >查看物流</div>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -250,7 +257,7 @@ export default {
               type: initObj.type, // 作品类型
               theme: initObj.theme, // 题材
               updated_at: initObj.updated_at, // 更新时间
-              // ImgUrl: require("@/assets/pic/product.png") // 产品图（需要Arr）// ★★★首页数据 
+              // ImgUrl: require("@/assets/pic/product.png") // 产品图（需要Arr）// ★★★首页数据
               ImgUrl: image, // 产品图（需要Arr）// ★★★首页数据
               ImgUrls: images
             };

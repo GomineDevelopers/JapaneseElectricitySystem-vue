@@ -1,7 +1,7 @@
 <template>
   <div class="TopSearchBox">
     <el-row class="top_body flex">
-      <img class="img_logo" @click="router_to('/')" src="../assets/pic/logo.png" />
+      <img class="hoverOpacity img_logo" @click="router_to('/')" src="../assets/pic/logo.png" />
       <el-row class="top_search_input">
         <!-- 输入框 -->
         <el-row class="flex">

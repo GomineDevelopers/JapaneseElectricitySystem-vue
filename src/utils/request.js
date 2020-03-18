@@ -131,6 +131,13 @@ service.interceptors.response.use(
                         }, 1500);
 
                     }
+                    // else if (error.response.config.url == global.baseURL + '/replies') {
+                    //     Message("身份失效，请重新登录！");
+                    //     setTimeout(() => {
+                    //         Utils.delCookie("user_token");
+                    //         router.push({ path: "/login" });
+                    //     }, 2000);
+                    // }
                     else {
                         try {
                             Message(error.response.data.errors.verification_key[0]);

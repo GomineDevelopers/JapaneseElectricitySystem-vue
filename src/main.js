@@ -47,7 +47,7 @@ Vue.prototype.$message = Message;
 global.IMGPrefix = "http://shop.zidata.cn/storage/"
 // 处理方式搜  .image
 
-global.MVersion = "0.8.1.5"; // 页面版本号（实时更新）
+global.MVersion = "0.9.1.1"; // 页面版本号（实时更新）
 // 页面版本号处理 --以防测试出现缓存问题！
 let local_Version = Utils.getCookieCry("MVersion");
 // console.log(local_Version);
