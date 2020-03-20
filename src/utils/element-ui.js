@@ -76,8 +76,9 @@ Vue.use(Tooltip);
 
 Vue.prototype.$confirm = MessageBox.confirm;
 
+
 function UninputJudgment(inputValue, MessageAlert) {
-  console.log(typeof MessageAlert);
+  // console.log(typeof MessageAlert);
   if (typeof MessageAlert == "string") {
     if (inputValue == "" || inputValue == " " || inputValue == null || inputValue == undefined) {
       this.$message(MessageAlert);
@@ -97,7 +98,41 @@ function UninputJudgment(inputValue, MessageAlert) {
     return false;
   }
 }
+function PhoneJudgment(inputValue, MessageAlert) {
+  // console.log(typeof MessageAlert);
+  // if (!/^1[34578]\d{9}$/.test(inputValue)) {
+  if (!/^1[3456789]\d{9}$/.test(inputValue)) {  // 现在除了2 好像都能注册
+
+    this.$message(MessageAlert);
+    return true;
+  } else {
+    return false
+  }
+}
+function TokenJudgment(token) {
+  if (token != undefined && token != null && token != "") {
+    return true
+  } else {
+    return false
+  }
+}
+function PasswordJudgment(inputValue, MessageAlert) { // 判断6~16位！// 只有注册和忘记密码时候用到
+  // var str = 'abcdefg'
+  // console.log(inputValue.length)
+  if (inputValue.length < 6 || inputValue.length > 16) {
+    console.log("false");
+    this.$message(MessageAlert);
+    return true
+  } else {
+    console.log("true");
+    return false
+  }
+}
 Vue.prototype.$UninputJudgment = UninputJudgment;
+Vue.prototype.$PhoneJudgment = PhoneJudgment;
+Vue.prototype.$TokenJudgment = TokenJudgment;
+Vue.prototype.$PasswordJudgment = PasswordJudgment;
+
 // if (
 //   this.$UninputJudgment(
 //     [

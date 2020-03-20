@@ -23,11 +23,30 @@
       <div class="hs_middle">
         <div class="inlineBlock_verTopP">
           <template v-for="(item,index) in hrefArr ">
-            <div class="inlineBlock_verTopP perHref" :key="index+ 'ha'">
+            <div class="perHref" :key="index+ 'ha'">
               <div class="ha_title">{{item.title}}</div>
               <template v-for="(itemC,indexC) in item.content ">
                 <div class :key="indexC+ 'haC'">
-                  <div @click="GoHref(itemC.URL)" class="sTitleContent">{{itemC.sTitle}}</div>
+                  <div
+                    v-if="itemC.sTitle !='CEO邮箱' && itemC.sTitle !='线下店' && itemC.sTitle !='联系我们'"
+                    @click="GoHref(itemC.URL)"
+                    class="sTitleContent"
+                  >{{itemC.sTitle}}</div>
+                  <div
+                    v-if="itemC.sTitle =='联系我们'"
+                    @click="ConnectUs()"
+                    class="sTitleContent"
+                  >{{itemC.sTitle}}</div>
+                  <div
+                    v-if="itemC.sTitle =='CEO邮箱'"
+                    @click="CEOMail()"
+                    class="sTitleContent"
+                  >{{itemC.sTitle}}</div>
+                  <div
+                    v-if="itemC.sTitle =='线下店'"
+                    @click="router_to(itemC.URL)"
+                    class="sTitleContent"
+                  >{{itemC.sTitle}}</div>
                 </div>
               </template>
             </div>
@@ -52,12 +71,69 @@
         </div>
       </div>
     </div>
+
+    <!-- 二维码弹窗 -->
+    <div v-show="Dialog1 == true" class="Dialog1">
+      <div class="Dialog1_bg">
+        <h2>联系我们</h2>
+        <div class="inlineBlock_verTopP cu_text">
+          <div class="cu_t0">GOMINE-北京总部</div>
+        </div>
+        <div class="inlineBlock_verTopP">
+          <!-- <div>
+            <img class="img_Dialog" :src="img_Dialog" alt />
+          </div>-->
+          <div>
+            <com-mymap></com-mymap>
+          </div>
+        </div>
+        <div class="inlineBlock_verTopP cu_text">
+          <div class="cu_t1">
+            <i class="el-icon-location"></i>&nbsp;地址：
+          </div>
+          <div class="cu_t2">北京市朝阳区东四环中路58号远洋国际中心D座2202</div>
+        </div>
+        <div class="inlineBlock_verTopP cu_text">
+          <div class="cu_t1">
+            <i class="el-icon-phone"></i>&nbsp;电话：
+          </div>
+          <div class="cu_t2">010-59648158</div>
+        </div>
+        <div class="inlineBlock_verTopP cu_text">
+          <div class="cu_t1">
+            <i class="el-icon-eleme"></i>&nbsp;官网：
+          </div>
+          <div @click="GoHref(OfficialWebsite)" class="cu_t2 cu_t3">{{OfficialWebsite}}</div>
+        </div>
+        <el-button class="closeBtn" @click="Cancel1()">关闭</el-button>
+      </div>
+    </div>
+    <!-- 二维码弹窗2 -->
+
+    <div v-show="Dialog2 == true" class="Dialog1 Dialog2">
+      <div class="Dialog1_bg Dialog2_bg">
+        <h2>CEO邮箱</h2>
+        <div class="inlineBlock_verTopP cu_text cu_text2">尊敬的xxx海购合作伙伴：</div>
+        <div
+          class="inlineBlock_verTopP cu_text cu_text2 indent"
+        >为了加强xxx海购与商户之间的密切交流与合作，我们特别开通了xxx海购CEO邮箱，希望能够与大家更直接有效的进行沟通交流。当您在xxx海购的交易合作过程中遇到问题，或您对我们的发展有更多的建议及意见反馈。请您通过此邮箱联系我们！</div>
+        <div class="inlineBlock_verTopP cu_text cu_text2">
+          邮箱地址：
+          <a href="mailto:marketing@gomine.cn">marketing@gomine.cn</a>
+        </div>
+        <div class="inlineBlock_verTopP cu_text cu_text2">感谢您对我们的支持与配合！</div>
+        <el-button class="closeBtn" @click="Cancel2()">关闭</el-button>
+      </div>
+    </div>
   </div>
 </template>
 <script>
+import mymap from "@/components/mymap";
 export default {
   name: "FooterNav",
-
+  components: {
+    "com-mymap": mymap
+  },
   data() {
     return {
       tagsArr: [
@@ -121,17 +197,35 @@ export default {
           title: "关于我们",
           content: [
             { sTitle: "联系我们", URL: "http://www.gomine.cn/contact.html" },
-            { sTitle: "CEO邮箱", URL: "" },
-            { sTitle: "线下店", URL: "" }
+            { sTitle: "CEO邮箱", URL: "/" },
+            { sTitle: "线下店", URL: "/" }
           ]
         }
-      ]
+      ],
+      img_Dialog: require("@/assets/pic/about.png"),
+      OfficialWebsite: "http://www.gomine.cn/index.html",
+      Dialog1: false,
+      Dialog2: false
     };
   },
   mounted() {
     let vm = this;
   },
   methods: {
+    Cancel2() {
+      let vm = this;
+      vm.Dialog2 = false;
+    },
+    CEOMail() {
+      this.Dialog2 = true;
+    },
+    Cancel1() {
+      let vm = this;
+      vm.Dialog1 = false;
+    },
+    ConnectUs() {
+      this.Dialog1 = true;
+    },
     GoHref(href) {
       window.location.href = href;
     },
@@ -256,6 +350,72 @@ export default {
   font-weight: 500;
   color: rgba(119, 85, 99, 1);
   line-height: 20px;
+}
+/* ***** 弹出框 */
+.FooterNav .Dialog1 {
+  top: 0;
+  padding-top: 90px;
+  position: fixed;
+  text-align: center;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+.FooterNav .Dialog2 {
+  padding-top: 180px;
+}
+
+.FooterNav .Dialog1_bg {
+  height: 660px;
+  width: 800px;
+  text-align: center;
+  padding: 32px 68px;
+  background-color: #ffffff;
+  margin: 0 auto;
+  border-radius: 10px;
+}
+.FooterNav .Dialog2_bg {
+  height: 400px;
+  width: 800px;
+}
+
+.FooterNav .closeBtn {
+  margin-top: 16px;
+}
+.FooterNav .img_Dialog {
+  height: 398px;
+  width: 398px;
+}
+.FooterNav .cu_text {
+  text-align: left;
+  margin-top: 10px;
+  margin-bottom: 8px;
+}
+.FooterNav .cu_text2 {
+  margin-top: 32px;
+  margin-bottom: 32px;
+}
+.FooterNav .cu_t0 {
+  font-weight: bold;
+}
+.FooterNav .cu_t1 {
+  width: 9%;
+}
+.FooterNav .cu_t2 {
+  width: 89%;
+}
+.FooterNav .cu_t3 {
+  text-decoration: underline;
+  color: rgb(0, 0, 238);
+}
+.FooterNav .cu_t3:hover {
+  cursor: pointer;
+}
+
+.FooterNav .indent {
+  text-indent: 16px;
+  line-height: 24px;
 }
 </style>
 

@@ -300,7 +300,7 @@ export default {
       let vm = this;
       let token = vm.$Utils.getCookie("user_token");
       let newToken = token.replace('"', "").replace('"', "");
-      if (token != undefined && token != null && token != "") {
+      if (vm.$TokenJudgment(token)) {
         refresh_token(newToken)
           .then(function(response) {
             if (response.status == 200) {
@@ -315,62 +315,80 @@ export default {
               // 多图遍历上传
               let imgs = vm.tableData[index].dialogImageUrls;
               console.log(imgs);
-              let length = imgs.length;
-              let count = 0;
+              let length;
+              if (imgs == undefined) {
+                length = 0;
+              } else {
+                length = imgs.length;
+              }
               let imgsIdString = "";
-              callbackFunc(callbackFunc);
-              function callbackFunc(callback) {
-                if (count < length) {
-                  console.log(count);
-                  let m_img = imgs[count];
-                  console.log(m_img);
-                  var formData2 = new FormData();
-                  var formData2 = new window.FormData();
-                  formData2.append("good_id", Gid);
-                  formData2.append("order_id", Oid);
-                  formData2.append("image", m_img);
-                  ToRepliesImages(newToken, formData2)
+              function DoMakingComments() {
+                // vm.patchReplied(); // 评论后置订单评论状态为1
+                let m_comments = vm.tableData[index].m_comments;
+                var formData = new FormData();
+                var formData = new window.FormData();
+                var formData = new window.FormData();
+                formData.append("good_id", Gid);
+                formData.append("order_id", Oid);
+                // formData.append("replyContent", vm.m_comments);
+                formData.append("replyContent", m_comments);
+                if (imgsIdString != "") {  // 没有图则不传"images"字段
+                  formData.append("images", imgsIdString);
+                }
+                console.log(imgsIdString);
+                setTimeout(function() {
+                  ToReplies(newToken, formData)
                     .then(function(response) {
+                      console.log("ToReplies");
                       console.log(response);
-                      console.log("▲▲▲▲上传图片成功");
-                      if (count == length - 1) {
-                        imgsIdString = imgsIdString + String(response.data);
-                      } else {
-                        imgsIdString =
-                          imgsIdString + String(response.data) + ",";
+                      if (response.status == 201) {
+                        vm.patchReplied(); // 评论后置订单评论状态为1
                       }
-                      count++;
-                      callback(callbackFunc);
                     })
                     .catch(function(error) {
                       console.info(error);
                     });
-                } else {
-                  // vm.patchReplied(); // 评论后置订单评论状态为1
-                  let m_comments = vm.tableData[index].m_comments;
-                  var formData = new FormData();
-                  var formData = new window.FormData();
-                  var formData = new window.FormData();
-                  formData.append("good_id", Gid);
-                  formData.append("order_id", Oid);
-                  // formData.append("replyContent", vm.m_comments);
-                  formData.append("replyContent", m_comments);
-                  formData.append("images", imgsIdString);
-                  console.log(imgsIdString);
-                  setTimeout(function() {
-                    ToReplies(newToken, formData)
+                }, 500);
+              }
+              // 存在不上传图的情况！
+
+              if (length != 0) {
+                // 有图评论
+                let count = 0;
+                callbackFunc(callbackFunc);
+                function callbackFunc(callback) {
+                  if (count < length) {
+                    console.log(count);
+                    let m_img = imgs[count];
+                    console.log(m_img);
+                    var formData2 = new FormData();
+                    var formData2 = new window.FormData();
+                    formData2.append("good_id", Gid);
+                    formData2.append("order_id", Oid);
+                    formData2.append("image", m_img);
+                    ToRepliesImages(newToken, formData2)
                       .then(function(response) {
-                        console.log("ToReplies");
                         console.log(response);
-                        if (response.status == 201) {
-                          vm.patchReplied(); // 评论后置订单评论状态为1
+                        console.log("▲▲▲▲上传图片成功");
+                        if (count == length - 1) {
+                          imgsIdString = imgsIdString + String(response.data);
+                        } else {
+                          imgsIdString =
+                            imgsIdString + String(response.data) + ",";
                         }
+                        count++;
+                        callback(callbackFunc);
                       })
                       .catch(function(error) {
                         console.info(error);
                       });
-                  }, 500);
+                  } else {
+                    DoMakingComments();
+                  }
                 }
+              } else {
+                // 无图评论
+                DoMakingComments();
               }
             }
           })

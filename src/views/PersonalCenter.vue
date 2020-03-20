@@ -245,7 +245,7 @@
           </div>
 
           <div class="inlineBlock_verTopP dcPerRow">
-            <div class="dc_sTtile">电话号码：</div>
+            <div class="dc_sTtile">手机号码：</div>
             <div>
               <input v-model="u_phone" class="dc_input" placeholder="请输入" type="text" />
             </div>
@@ -586,7 +586,7 @@ export default {
     // 获取个人信息-用户资料-信息填充
     let token = vm.$Utils.getCookie("user_token");
     let newToken = token.replace('"', "").replace('"', "");
-    if (token != undefined && token != null && token != "") {
+    if (vm.$TokenJudgment(token)) {
       refresh_token(newToken)
         .then(function(response) {
           if (response.status == 200) {
@@ -900,7 +900,7 @@ export default {
       this.assignAddressId = id;
       let token = vm.$Utils.getCookie("user_token");
       let newToken = token.replace('"', "").replace('"', "");
-      if (token != undefined && token != null && token != "") {
+      if (vm.$TokenJudgment(token)) {
         refresh_token(newToken)
           .then(function(response) {
             if (response.status == 200) {
@@ -936,7 +936,7 @@ export default {
       this.assignAddressId = id;
       let token = vm.$Utils.getCookie("user_token");
       let newToken = token.replace('"', "").replace('"', "");
-      if (token != undefined && token != null && token != "") {
+      if (vm.$TokenJudgment(token)) {
         refresh_token(newToken)
           .then(function(response) {
             if (response.status == 200) {
@@ -975,7 +975,7 @@ export default {
       if (this.$UninputJudgment(vm.u_name, "请输入收货人姓名！")) {
         return;
       }
-      if (this.$UninputJudgment(vm.u_phone, "请输入电话号码！")) {
+      if (this.$PhoneJudgment(vm.u_phone, "请输入正确的手机号码！")) {
         return;
       }
       if (this.$UninputJudgment(vm.sheng, "请选择省！")) {
@@ -987,8 +987,10 @@ export default {
       if (this.$UninputJudgment(vm.qu, "请选择区！")) {
         return;
       }
-
-      if (token != undefined && token != null && token != "") {
+      if (this.$UninputJudgment(vm.u_address, "请输入详细地址！")) {
+        return;
+      }
+      if (vm.$TokenJudgment(token)) {
         refresh_token(newToken)
           .then(function(response) {
             if (response.status == 200) {
@@ -1173,7 +1175,7 @@ export default {
       let vm = this;
       let token = vm.$Utils.getCookie("user_token");
       let newToken = token.replace('"', "").replace('"', "");
-      if (token != undefined && token != null && token != "") {
+      if (vm.$TokenJudgment(token)) {
         refresh_token(newToken)
           .then(function(response) {
             // console.log(response);
@@ -1195,6 +1197,24 @@ export default {
                 vm.$message("请输入昵称！");
                 return;
               }
+              // let temp = {};
+              // if (
+              //   vm.uiInput2 == "" ||
+              //   vm.uiInput2 == " " ||
+              //   vm.uiInput2 == null ||
+              //   vm.uiInput2 == undefined
+              // ) {
+              //   temp = {
+              //     name: vm.uiInput1,
+              //     gender: vm.sex
+              //   };
+              // } else {
+              //   temp = {
+              //     name: vm.uiInput1,
+              //     real_name: vm.uiInput2,
+              //     gender: vm.sex
+              //   };
+              // }
               let temp = {
                 name: vm.uiInput1,
                 real_name: vm.uiInput2,
@@ -1227,7 +1247,7 @@ export default {
       let token = vm.$Utils.getCookie("user_token");
       let newToken = token.replace('"', "").replace('"', "");
 
-      if (token != undefined && token != null && token != "") {
+      if (vm.$TokenJudgment(token)) {
         refresh_token(newToken)
           .then(function(response) {
             console.log(response);

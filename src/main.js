@@ -31,6 +31,12 @@ import "@/utils/rem.js";
 import "@/styles/common.css";
 import "@/styles/common2.css";
 
+import NProgress from 'nprogress' // Progress 进度条
+import 'nprogress/nprogress.css'// Progress 进度条样式
+NProgress.configure({
+  showSpinner: false
+}) // NProgress Configuration
+
 import vueHeadful from "vue-headful";
 Vue.component("vue-headful", vueHeadful);
 
@@ -67,8 +73,10 @@ if (navigator.userAgent.indexOf('Mac OS X') !== -1) {
 // 跳转后滚动条初始化
 router.afterEach((to, from, next) => {
   window.scrollTo(0, 0);
+  NProgress.done() // 结束Progress
 });
 router.beforeEach((to, from, next) => {
+  NProgress.start()
 
   // // 登录后存Cookies 给 HeaderModule
   // console.log(from.path);
@@ -121,6 +129,7 @@ router.beforeEach((to, from, next) => {
   }
 
   if (NoAuthPages.indexOf(to.path) > -1) {
+    NProgress.done();
     next();
   } else {
 
@@ -131,9 +140,11 @@ router.beforeEach((to, from, next) => {
         next()
       } else {
         next('/login')
+        NProgress.done();
       }
     }
     else if (token) {
+      NProgress.done();
       next()
     }
   }

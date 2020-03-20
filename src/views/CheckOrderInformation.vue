@@ -5,10 +5,7 @@
       <HeaderModule id="navigation"></HeaderModule>
     </el-header>
     <el-main class="common">
-      <TopSearchBox
-        :searchType="'CheckOrderInformation'"
-        :categories="[]"
-      ></TopSearchBox>
+      <TopSearchBox :searchType="'CheckOrderInformation'" :categories="[]"></TopSearchBox>
 
       <div class="textAlignCenter_w100p steps_settings">
         <el-steps :active="1" align-center>
@@ -36,20 +33,18 @@
                 <span v-show="default_radio == address_raido">默认地址</span>
               </span>
             </div>
-            <div class="adc_right" @click="addressEditDialog('edit')">
-              修改地址
-            </div>
+            <div class="adc_right" @click="addressEditDialog('edit')">修改地址</div>
           </div>
           <div class="all_address">
             <el-radio-group v-model="address_raido" @change="radioChange">
               <template v-for="(item, index) in ALL_Address">
                 <div class="perRadio" :key="index + 'ad'">
                   <el-radio :label="index">
-                    <span class="address_detail"
-                      >{{ item.text }}&nbsp;({{ item.name }})&nbsp;{{
-                        item.phone
-                      }}</span
-                    >
+                    <span class="address_detail">
+                      {{ item.text }}&nbsp;({{ item.name }})&nbsp;{{
+                      item.phone
+                      }}
+                    </span>
                   </el-radio>
                 </div>
               </template>
@@ -79,9 +74,7 @@
             <el-table-column header-align="center" label="单价" width="220">
               <template slot-scope="scope">
                 <div>
-                  <div class="m_unitPriceHistory">
-                    ￥{{ scope.row.unitPriceHistory }}
-                  </div>
+                  <div class="m_unitPriceHistory">￥{{ scope.row.unitPriceHistory }}</div>
                   <div class="m_unitPrice">￥{{ scope.row.unitPrice }}</div>
                 </div>
               </template>
@@ -102,14 +95,7 @@
         <div class="inlineBlock_verTopP remark_p">
           <div class="remark">订单备注：</div>
           <div>
-            <textarea
-              v-model="OrderRemark"
-              placeholder="给卖家留言"
-              name
-              id
-              cols="50"
-              rows="5"
-            ></textarea>
+            <textarea v-model="OrderRemark" placeholder="给卖家留言" name id cols="50" rows="5"></textarea>
           </div>
         </div>
         <div class="shopping_over">
@@ -124,15 +110,8 @@
             <span class="soa3">{{ Number(freight) + Number(totalValue) }}</span>
           </div>
           <div class>
-            <button
-              class="m_btn1 m_btn1b"
-              @click="router_to('/shoppingtrolley')"
-            >
-              上一步
-            </button>
-            <button class="m_btn1 m_btn2 m_btn1b m_btn2b" @click="Settlement()">
-              提交订单
-            </button>
+            <button class="m_btn1 m_btn1b" @click="router_to('/shoppingtrolley')">上一步</button>
+            <button class="m_btn1 m_btn2 m_btn1b m_btn2b" @click="Settlement()">提交订单</button>
           </div>
         </div>
       </div>
@@ -148,24 +127,14 @@
           <div class="inlineBlock_verTopP dcPerRow">
             <div class="dc_sTtile">收货人姓名：</div>
             <div>
-              <input
-                v-model="u_name"
-                class="dc_input"
-                placeholder="请输入"
-                type="text"
-              />
+              <input v-model="u_name" class="dc_input" placeholder="请输入" type="text" />
             </div>
           </div>
 
           <div class="inlineBlock_verTopP dcPerRow">
-            <div class="dc_sTtile">电话号码：</div>
+            <div class="dc_sTtile">手机号码：</div>
             <div>
-              <input
-                v-model="u_phone"
-                class="dc_input"
-                placeholder="请输入"
-                type="text"
-              />
+              <input v-model="u_phone" class="dc_input" placeholder="请输入" type="text" />
             </div>
           </div>
 
@@ -173,11 +142,7 @@
             <div class="dc_sTtile">收货地址：</div>
             <div>
               <div class="linkage">
-                <el-select
-                  v-model="sheng"
-                  @change="choseProvince"
-                  placeholder="省级地区"
-                >
+                <el-select v-model="sheng" @change="choseProvince" placeholder="省级地区">
                   <el-option
                     v-for="item in province"
                     :key="item.id"
@@ -186,11 +151,7 @@
                   ></el-option>
                 </el-select>
                 <br />
-                <el-select
-                  v-model="shi"
-                  @change="choseCity"
-                  placeholder="市级地区"
-                >
+                <el-select v-model="shi" @change="choseCity" placeholder="市级地区">
                   <el-option
                     v-for="item in shi1"
                     :key="item.id"
@@ -199,11 +160,7 @@
                   ></el-option>
                 </el-select>
                 <br />
-                <el-select
-                  v-model="qu"
-                  @change="choseBlock"
-                  placeholder="区级地区"
-                >
+                <el-select v-model="qu" @change="choseBlock" placeholder="区级地区">
                   <el-option
                     v-for="item in qu1"
                     :key="item.id"
@@ -218,12 +175,7 @@
           <div class="inlineBlock_verTopP dcPerRow">
             <div class="dc_sTtile">详细地址：</div>
             <div>
-              <input
-                v-model="u_address"
-                class="dc_input"
-                placeholder="请输入"
-                type="text"
-              />
+              <input v-model="u_address" class="dc_input" placeholder="请输入" type="text" />
             </div>
           </div>
           <!-- <div class="buy_settings">
@@ -396,7 +348,7 @@ export default {
     setTimeout(function() {
       let token = vm.$Utils.getCookie("user_token");
       let newToken = token.replace('"', "").replace('"', "");
-      if (token != undefined && token != null && token != "") {
+      if (vm.$TokenJudgment(token)) {
         refresh_token(newToken)
           .then(function(response) {
             if (response.status == 200) {
@@ -427,7 +379,7 @@ export default {
       if (this.$UninputJudgment(vm.u_name, "请输入收货人姓名！")) {
         return;
       }
-      if (this.$UninputJudgment(vm.u_phone, "请输入电话号码！")) {
+      if (this.$PhoneJudgment(vm.u_phone, "请输入正确的手机号码！")) {
         return;
       }
       if (this.$UninputJudgment(vm.sheng, "请选择省！")) {
@@ -439,8 +391,10 @@ export default {
       if (this.$UninputJudgment(vm.qu, "请选择区！")) {
         return;
       }
-
-      if (token != undefined && token != null && token != "") {
+      if (this.$UninputJudgment(vm.u_address, "请输入详细地址")) {
+        return;
+      }
+      if (vm.$TokenJudgment(token)) {
         refresh_token(newToken)
           .then(function(response) {
             if (response.status == 200) {
@@ -676,7 +630,7 @@ export default {
       // 结算
       let token = vm.$Utils.getCookie("user_token");
       let newToken = token.replace('"', "").replace('"', "");
-      if (token != undefined && token != null && token != "") {
+      if (vm.$TokenJudgment(token)) {
         refresh_token(newToken)
           .then(function(response) {
             console.log(response);

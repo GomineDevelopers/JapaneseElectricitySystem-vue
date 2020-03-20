@@ -60,6 +60,9 @@ export default {
   },
   methods: {
     m_search() {
+      if (this.$UninputJudgment(this.SearchValue, "请输入搜索关键字")) {
+        return;
+      }
       let vm = this;
       var formData = new FormData();
       var formData = new window.FormData();

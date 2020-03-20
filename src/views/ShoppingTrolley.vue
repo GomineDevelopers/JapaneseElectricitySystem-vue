@@ -65,7 +65,8 @@
             <el-table-column header-align="center" label="总价" width="150">
               <template slot-scope="scope">
                 <!-- <div>{{ scope.row.totalPrices.toFixed(2) }}</div> -->
-                <div>{{ scope.row.count * scope.row.unitPrice }}</div>
+                <!-- <div>{{ scope.row.count * scope.row.unitPrice }}</div> -->
+                <div>{{ (scope.row.count * scope.row.unitPrice).toFixed(2) }}</div>
               </template>
             </el-table-column>
             <el-table-column header-align="center" label="操作" width="150">
@@ -98,8 +99,8 @@
             <span class="bsr_1c">{{ totalValue }}</span>
           </div>
           <div class="bsr_2">
-            <button v-show="ifOk" @click="Settlement()" class="bs_btn">结算</button>
-            <button v-show="!ifOk" class="bs_btn bs_btn2">结算</button>
+            <button v-show="ifOk" @click="Settlement()" class="bs_btn">下一步</button>
+            <button v-show="!ifOk" class="bs_btn bs_btn2">下一步</button>
           </div>
         </div>
       </div>
@@ -184,13 +185,19 @@ export default {
       totalValue: 0,
       CurrentCartIndexArr: [],
       // 定时Door
-      mInitTime: 2,
+      // 时间优化 2~3s 定时1s 自减1 => 300ms 定时100ms  自减100s
+      timing: 100, // 定时器间隔 1000ms => 100ms
+      mInitTime: 300, // 3=》  300（ms）
+      differ: 100, // 1 =》 100（ms）
+      criticalValue: 100, // 临界值 1 => 100(ms)
       mTime: null,
       mTimeDoor: true,
       CurrentCount: null,
       CurrentGid: null,
       ifFirst: true,
-      ifOk: true
+      ifOk: true,
+      // 购物车勾选框重置-（由于重置了tableData数据导致的）
+      historyChooseGId: []
     };
   },
 
@@ -201,29 +208,72 @@ export default {
     // 初始化Door时间
     vm.mTime = vm.mInitTime;
     this.$nextTick(function() {
-      setInterval(this.timer, 1000);
+      setInterval(this.timer, vm.timing);
     });
     // 初始化购物车
     this.refresh_getCartList();
   },
+  watch: {
+    // 支持异步
+    multipleSelection: {
+      deep: true, //深度监听设置为 true
+      handler: function(newValue, OldValue) {
+        let vm = this;
+        setTimeout(function() {
+          console.log(newValue);
+          let length = newValue.length;
+          if (length > 0) {
+            let t_totalValue = 0;
+            for (let i = 0; i < length; i++) {
+              t_totalValue += newValue[i].totalPrices;
+            }
+            vm.totalValue = t_totalValue.toFixed(2);
+          } else {
+            // vm.totalValue = 0; // 关掉-防闪烁至0
+          }
+        }, 500);
+      }
+    }
+    // tableData: {
+    //   deep: true, //深度监听设置为 true
+    //   handler: function(newValue, OldValue) {
+    //     let vm = this;
+    //     setTimeout(function() {
+    //       console.log(newValue);
+    //       // let length = newValue.length;
+    //       // if (length > 0) {
+    //       //   let t_totalValue = 0;
+    //       //   for (let i = 0; i < length; i++) {
+    //       //     t_totalValue += newValue[i].totalPrices;
+    //       //   }
+    //       //   vm.totalValue = t_totalValue.toFixed(2);
+    //       // } else {
+    //       //   vm.totalValue = 0;
+    //       // }
+    //     }, 200);
+    //   }
+    // }
+  },
+  // computed: { // 不支持异步
+  //   multipleSelection: function() {
+  //     return this.message
+  //       .split("")
+  //       .reverse()
+  //       .join("");
+  //   }
+  // },
   methods: {
     timer() {
       let vm = this;
-
       try {
         if (this.mTime > 0) {
           let temp_countDown = this.mTime;
-          this.mTime--;
-          if (temp_countDown == 1) {
+          this.mTime -= vm.differ;
+          if (temp_countDown == vm.criticalValue) {
             this.mTimeDoor = true;
             if (vm.ifFirst == false) {
-              // vm.$message("非第一次，操作");
-              // console.log("~~~~~~!");
-              // console.log(vm.CurrentCount);
-              // console.log(vm.CurrentGid);
               vm.addToCart(vm.CurrentCount, vm.CurrentGid);
             } else {
-              // vm.$message("第一次，不操作");
               vm.ifFirst = false;
             }
           }
@@ -232,10 +282,42 @@ export default {
         console.log(error);
       }
     },
+    // timer() {
+    //   let vm = this;
+    //   try {
+    //     if (this.mTime > 0) {
+    //       let temp_countDown = this.mTime;
+    //       this.mTime--;
+    //       if (temp_countDown == 1) {
+    //         this.mTimeDoor = true;
+    //         if (vm.ifFirst == false) {
+    //           // vm.$message("非第一次，操作");
+    //           // console.log("~~~~~~!");
+    //           // console.log(vm.CurrentCount);
+    //           // console.log(vm.CurrentGid);
+    //           vm.addToCart(vm.CurrentCount, vm.CurrentGid);
+    //         } else {
+    //           // vm.$message("第一次，不操作");
+    //           vm.ifFirst = false;
+    //         }
+    //       }
+    //     }
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // },
     handleChange(count, id) {
       let vm = this;
-      console.log(count);
-      console.log(id);
+
+      // 记录历史勾选状态（by Gid）
+      vm.historyChooseGId = [];
+      let length = vm.multipleSelection.length;
+      for (let i = 0; i < length; i++) {
+        vm.historyChooseGId.push(vm.multipleSelection[i].id);
+      }
+      console.log(vm.historyChooseGId);
+      // console.log(count);
+      // console.log(id);
       // let index = this.returnIndex_ByCurrentGid(id);
 
       // ▲▲▲▲▲防止数量使劲加使劲减 导致api疯狂请求！这里加个定时Door
@@ -263,7 +345,7 @@ export default {
       let vm = this;
       let token = vm.$Utils.getCookie("user_token");
       let newToken = token.replace('"', "").replace('"', "");
-      if (token != undefined && token != null && token != "") {
+      if (vm.$TokenJudgment(token)) {
         refresh_token(newToken)
           .then(function(response) {
             if (response.status == 200) {
@@ -304,7 +386,8 @@ export default {
                     // 刷新列表...
                     vm.getCartList();
                   });
-              }, 200);
+                // }, 200);
+              }, 0); // 购物车数量增减优化
             }
           })
           .catch(function(error) {
@@ -318,7 +401,7 @@ export default {
       let vm = this;
       let token = vm.$Utils.getCookie("user_token");
       let newToken = token.replace('"', "").replace('"', "");
-      if (token != undefined && token != null && token != "") {
+      if (vm.$TokenJudgment(token)) {
         refresh_token(newToken)
           .then(function(response) {
             if (response.status == 200) {
@@ -374,7 +457,7 @@ export default {
       let vm = this;
       let token = vm.$Utils.getCookie("user_token");
       let newToken = token.replace('"', "").replace('"', "");
-      if (token != undefined && token != null && token != "") {
+      if (vm.$TokenJudgment(token)) {
         refresh_token(newToken)
           .then(function(response) {
             if (response.status == 200) {
@@ -403,10 +486,13 @@ export default {
         .then(function(response) {
           console.log("getCartList");
           console.log(response);
+
           let temp_totalValue = 0;
           if (response.status == 200) {
             vm.tableData = [];
-            vm.tableData.splice(0); // 改变长度
+            vm.multipleSelection = []; // 初始化历史选中
+            // vm.tableData.splice(0); // 改变长度
+            let temp_multipleSelection = [];
             let data = response.data.data;
             let length = data.length;
             for (let i = 0; i < length; i++) {
@@ -419,8 +505,8 @@ export default {
                 console.log(error);
               }
               // ******** 立即购买判断
-              function ManageTableData() {
-                vm.tableData.push({
+              function ManageTableData(t_ifBuyNow) {
+                let obj = {
                   stock: good.stock,
                   id: data[i].good_id,
                   // id: data[i].id,
@@ -440,7 +526,26 @@ export default {
                   unitPrice: Number(good.price) * Number(good.discount),
                   totalPrices: data[i].amount * Number(good.price),
                   operation: "删除"
-                });
+                };
+                if (t_ifBuyNow == 1) {
+                  vm.tableData.push(obj);
+                }
+                if (t_ifBuyNow != 1) {
+                  // 历史选中状态 - 还原
+                  // console.log("★★★★★★★★★★★");
+                  // console.log(vm.historyChooseGId);
+
+                  vm.tableData.push(obj);
+                  if (vm.historyChooseGId.indexOf(obj.id) > -1) {
+                    // console.log("★★★★");
+                    // console.log(obj.id);
+                    // console.log("★★★★");
+
+                    vm.multipleSelection.push(obj);
+                  }
+                  console.log(vm.multipleSelection);
+                  temp_multipleSelection = vm.multipleSelection;
+                }
               }
               let ifBuyNow = 0;
               // let routeValue = vm.$route.query;
@@ -461,9 +566,9 @@ export default {
                 console.log("ifBuyNow");
                 if (Number(data[i].good_id) == Number(routeValue.id)) {
                   // 只传入立即购买的商品id
-                  ManageTableData();
+                  ManageTableData(ifBuyNow);
                   temp_totalValue = data[i].amount * Number(good.price);
-                  vm.totalValue = temp_totalValue; // 总价
+                  // vm.totalValue = temp_totalValue; // 总价 // =》勾选才计算！
                   // 进行普通跳转结算即可！
                   console.log(vm.tableData);
                   let temp_tableData = JSON.stringify(vm.tableData); // 只传入选中的！
@@ -479,7 +584,7 @@ export default {
                   break;
                 }
               } else if (ifBuyNow != 1) {
-                ManageTableData(); // 传入所有购物车商品id
+                ManageTableData(ifBuyNow); // 传入所有购物车商品id
                 temp_totalValue += vm.tableData[i].totalPrices;
                 vm.ifOk = true;
               }
@@ -487,8 +592,26 @@ export default {
               // ******** 立即购买判断 （over）
             }
             console.log(vm.tableData);
+            // 由于multipleTable直接赋值-checkbox勾选视觉效果-还是用原配函数
+            function toggleSelection(rows) {
+              if (rows) {
+                rows.forEach(row => {
+                  vm.$refs.multipleTable.toggleRowSelection(row);
+                });
+              } else {
+                vm.$refs.multipleTable.clearSelection();
+              }
+            }
+            // toggleSelection([tableData[1], tableData[2]]);
+            setTimeout(function() {
+              console.log("***********************");
+              console.log("temp_multipleSelection");
+
+              toggleSelection(temp_multipleSelection);
+            }, 200);
+
             // 计算总价格（不含运费）
-            vm.totalValue = temp_totalValue.toFixed(2);
+            // vm.totalValue = temp_totalValue.toFixed(2); // =》勾选才计算！
           }
         })
         .catch(function(error) {
@@ -533,6 +656,7 @@ export default {
       }
     },
     handleSelectionChange(val) {
+      let vm = this;
       console.log(val);
       this.multipleSelection = val;
     },

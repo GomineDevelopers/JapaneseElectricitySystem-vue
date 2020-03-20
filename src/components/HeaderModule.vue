@@ -22,7 +22,10 @@
           <span class="hoverOpacity LoginOut" @click="LoginOutManage()">（注销）</span>
         </el-col>
         <el-col :span="12" class="inlineBlock_verTopP text_align_right">
-          <div class="hoverOpacity inlineBlock_verTopP" @click="router_toSpec('/personalcenter','2')">
+          <div
+            class="hoverOpacity inlineBlock_verTopP"
+            @click="router_toSpec('/personalcenter','2')"
+          >
             <div class="m_header_div">
               <img class="m_img" src="../assets/pic/order_icon.png" />
             </div>
@@ -117,7 +120,7 @@ export default {
       let token = vm.$Utils.getCookie("user_token");
       let newToken = token.replace('"', "").replace('"', "");
       // console.log(token);
-      if (token != undefined && token != null && token != "") {
+      if (vm.$TokenJudgment(token)) {
         //   // this.ifLogin = true;
         //   refresh_token(newToken)
         //     .then(function(response) {

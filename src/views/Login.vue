@@ -81,7 +81,12 @@
               </div>
               <div class="img_v_code_img_p">
                 <!-- <button class="v_code_btnShow">{{btn_show}}</button> -->
-                <img @click="getVCodeImg('password')" class="hoverOpacity img_v_code_img" :src="ImgUrl" alt />
+                <img
+                  @click="getVCodeImg('password')"
+                  class="hoverOpacity img_v_code_img"
+                  :src="ImgUrl"
+                  alt
+                />
               </div>
             </div>
             <div class="inlineBlock_verTopP l_passwordinfo">
@@ -124,7 +129,12 @@
                 <button class="v_code_btnShow">{{btn_show}}</button>
               </div>-->
               <div class="img_v_code_img_p">
-                <img @click="getVCodeImg('message')" class="hoverOpacity img_v_code_img" :src="ImgUrl2" alt />
+                <img
+                  @click="getVCodeImg('message')"
+                  class="hoverOpacity img_v_code_img"
+                  :src="ImgUrl2"
+                  alt
+                />
               </div>
             </div>
             <div class="inlineBlock_verTopP l_box l_v_code">
@@ -205,7 +215,9 @@ export default {
       ImgUrl: require("@/assets/pic/VCodeImg.png"),
       ImgUrl2: require("@/assets/pic/VCodeImg.png"),
       captcha_key: "",
-      access_token: ""
+      access_token: "",
+      ifGetVCodeImg: false, // ▲防止不点击获取验证码一直登录问题：一直提示验证码失效！
+      ifGetMessage: false
     };
   },
   mounted() {
@@ -325,16 +337,21 @@ export default {
           });
       }
       if (LoginType == "message") {
-        // 短信
-        // 密码
-
-        if (
-          this.$UninputJudgment(
-            [this.phone, this.v_code_pic2, this.v_code],
-            ["请输入手机号！", "请输入图片验证码！", "请输入短信验证码！"]
-          )
-        ) {
-          console.log("请输入手机号~~1");
+        if (this.$PhoneJudgment(vm.phone, "请输入正确的手机号码！")) {
+          return;
+        }
+        if (vm.ifGetVCodeImg == false) {
+          vm.$message("请点击获取图片验证码！");
+          return;
+        }
+        if (this.$UninputJudgment([this.v_code_pic2], ["请输入图片验证码！"])) {
+          return;
+        }
+        if (vm.ifGetMessage == false) {
+          vm.$message("请获取验证码！");
+          return;
+        }
+        if (this.$UninputJudgment([this.v_code], ["请输入短信验证码！"])) {
           return;
         }
 
@@ -402,7 +419,7 @@ export default {
         }
       }
       if (accountType == "message") {
-        if (this.$UninputJudgment(this.phone, "请输入手机号！")) {
+        if (this.$PhoneJudgment(this.phone, "请输入正确的手机号码！")) {
           console.log("请输入手机号~~2");
           return;
         }
@@ -415,6 +432,7 @@ export default {
       }
       if (accountType == "message") {
         formData.append("phone", this.phone);
+        vm.ifGetVCodeImg = true;
       }
 
       captchas(formData)
@@ -458,6 +476,7 @@ export default {
       if (this.$UninputJudgment(this.v_code_pic2, "请输入图片验证码！")) {
         return;
       }
+      vm.ifGetMessage = true;
       var formData = new FormData();
       var formData = new window.FormData();
       formData.append("captcha_key", this.captcha_key);
@@ -559,8 +578,8 @@ export default {
 }
 @media screen and (max-width: 1200px) {
   .Login .login_content {
-    width: 1200px;
-    height: 550px;
+    /* width: 1200px;
+    height: 550px; */
   }
 }
 

@@ -172,7 +172,7 @@ export default {
       let vm = this;
       let token = vm.$Utils.getCookie("user_token");
       let newToken = token.replace('"', "").replace('"', "");
-      if (token != undefined && token != null && token != "") {
+      if (vm.$TokenJudgment(token)) {
         refresh_token(newToken)
           .then(function(response) {
             vm.$Utils.setCookie(
@@ -259,7 +259,9 @@ export default {
               updated_at: initObj.updated_at, // 更新时间
               // ImgUrl: require("@/assets/pic/product.png") // 产品图（需要Arr）// ★★★首页数据
               ImgUrl: image, // 产品图（需要Arr）// ★★★首页数据
-              ImgUrls: images
+              ImgUrls: images,
+              brand: initObj.brand, // 品牌
+              category: initObj.category.name // 分类
             };
 
             setTimeout(function() {
@@ -288,7 +290,9 @@ export default {
                   title: dataObj.title,
                   type: dataObj.type,
                   theme: dataObj.theme,
-                  updated_at: dataObj.updated_at
+                  updated_at: dataObj.updated_at,
+                  brand: dataObj.brand, // 品牌
+                  category: dataObj.category // 分类
                 }
               });
             }, 500);

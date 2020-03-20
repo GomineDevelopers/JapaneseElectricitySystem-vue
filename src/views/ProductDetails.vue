@@ -128,6 +128,14 @@
                       >{{ item.name }}：{{ item.value }}</div>
                     </template>
                   </div>
+                  <div class="inlineBlock_verTopP perMic">
+                    <template v-for="(item, index) in mi_contentArr.slice(9, 12)">
+                      <div
+                        :key="index + 'mic4'"
+                        class="perMic_child"
+                      >{{ item.name }}：{{ item.value }}</div>
+                    </template>
+                  </div>
                 </div>
               </div>
               <!-- 产品介绍 -->
@@ -178,9 +186,13 @@
                     <div class="rd_text">{{ item.text }}</div>
                     <div class="inlineBlock_verTopP rd_imgs">
                       <template v-for="(itemC, indexC) in item.imgs">
-                        <div :key="indexC + 'rdimgs'" class="perRateDataImg">
-                          <img class="rate_img" :src="itemC" alt />
-                        </div>
+                        <img
+                          :key="indexC + 'rdimgsxxx'"
+                          @click="m_hover(true,itemC)"
+                          class="rate_img"
+                          :src="itemC"
+                          alt
+                        />
                       </template>
                     </div>
                     <div class="rd_date">{{ item.date }}</div>
@@ -212,9 +224,13 @@
                     <div class="rd_text">{{ item.text }}</div>
                     <div class="inlineBlock_verTopP rd_imgs">
                       <template v-for="(itemC, indexC) in item.imgs">
-                        <div :key="indexC + 'rdimgs'" class="perRateDataImg">
-                          <img class="rate_img" :src="itemC" alt />
-                        </div>
+                        <img
+                          :key="indexC + 'rdimgsxxx'"
+                          @click="m_hover(true,itemC)"
+                          class="rate_img"
+                          :src="itemC"
+                          alt
+                        />
                       </template>
                     </div>
                     <div class="rd_date">{{ item.date }}</div>
@@ -226,6 +242,17 @@
         </div>
       </div>
     </el-main>
+    <!-- 评论图片触碰显示 -->
+    <div v-show="ifHover" class="hoverPic">
+      <div class="hoverPic_c">
+        <img class="rate_imgBig" :src="currentHoverPic" alt />
+        <div>
+          <br />
+          <br />
+          <div @click="m_close" class="m_close">×</div>
+        </div>
+      </div>
+    </div>
     <!-- 客服咨询按钮 -->
     <div class="CustomerService_bg">
       <div @click="CustomerServiceManage('none')" class="CustomerService">
@@ -290,6 +317,8 @@ export default {
         review_count: 0, // 累计评价数
         art: "-",
         quality: "-",
+        brand: "-",
+        category: "-",
         size: "",
         created_at: "-",
         style: "-",
@@ -357,6 +386,14 @@ export default {
         {
           name: "题材",
           value: "风景"
+        },
+        {
+          name: "品牌",
+          value: "LALA"
+        },
+        {
+          name: "分类",
+          value: "文具"
         }
       ],
       mi_picIntroArr: [
@@ -395,7 +432,10 @@ export default {
       elX: null,
       elY: null,
       diffX: null,
-      diffY: null
+      diffY: null,
+      // 触摸显示图片
+      currentHoverPic: null,
+      ifHover: false
     };
   },
 
@@ -408,7 +448,7 @@ export default {
     }, 500);
 
     window.onresize = function() {
-      console.log("窗口改变！");
+      // console.log("窗口改变！");
       vm.InitMoving();
     };
     // 标题title浮动初始化
@@ -436,9 +476,53 @@ export default {
         }, 1000);
       }
     }, 6000);
+
+    vm.autoClose();
   },
 
   methods: {
+    // 点击图片弹窗外的内容-则自动关闭
+    autoClose() {
+      let vm = this;
+      vm.$("body").on("click", function(e) {
+        // console.log("~~!!");
+        // console.log(e);
+
+        // setTimeout(function() {
+        // console.log(e.target);
+        e.preventDefault();
+        // console.log(e.target);
+        // 触发该事件的直接元素
+        var type = e.target;
+        // 点击其他地方，悬浮框失去焦点隐藏,3种情况
+        // 1、点击的不是作者名称；2、点击的不是悬浮框；3、点击的直接元素不是悬浮框内某一个子元素
+        // console.log(type.className);
+        if (
+          type.className != "hoverPic" &&
+          type.className != "hoverPic_c" &&
+          type.className != "rate_imgBig" &&
+          type.className != "rate_img"
+        ) {
+          // console.log("!!");
+          // console.log(vm.ifHover);
+          vm.ifHover = false;
+          // console.log(vm.ifHover);
+        }
+      });
+    },
+    // 触碰显示 => 点击显示
+    m_hover(status, src) {
+      let vm = this;
+      this.currentHoverPic = src;
+      let m_status = this.ifHover;
+      console.log(m_status);
+      // this.ifHover = !m_status;
+      this.ifHover = true;
+      console.log(this.ifHover);
+    },
+    m_close() {
+      this.ifHover = false;
+    },
     InitMoving() {
       // 抛物线计算公式 y = a*x*x + b*x + c
       // 坐标点x、y是已知的，a、b、c是未知的
@@ -460,10 +544,10 @@ export default {
         oDiv2.getBoundingClientRect().top - oDiv1.getBoundingClientRect().top;
 
       oDiv1.style.cssText = `position:absolute;left:${this.elX}px;top:${this.elY}px`;
-      console.log(this.elX);
-      console.log(this.elY);
-      console.log(this.diffX);
-      console.log(this.diffY);
+      // console.log(this.elX);
+      // console.log(this.elY);
+      // console.log(this.diffX);
+      // console.log(this.diffY);
       oDiv1.style.display = "none";
     },
     DoMoving() {
@@ -647,7 +731,7 @@ export default {
       let vm = this;
       let token = vm.$Utils.getCookie("user_token");
       let newToken = token.replace('"', "").replace('"', "");
-      if (token != undefined && token != null && token != "") {
+      if (vm.$TokenJudgment(token)) {
         refresh_token(newToken)
           .then(function(response) {
             if (response.status == 200) {
@@ -740,6 +824,8 @@ export default {
       this.mi_contentArr[5].value = this.PData.type;
       this.mi_contentArr[6].value = this.PData.style;
       this.mi_contentArr[7].value = this.PData.theme;
+      this.mi_contentArr[8].value = this.PData.brand;
+      this.mi_contentArr[9].value = this.PData.category;
     },
     MainPicChange(index) {
       this.mainPicURL = this.smallPicArr[index].ImgUrl;
@@ -1154,7 +1240,36 @@ export default {
   width: 80px;
   height: 80px;
   margin-right: 16px;
+  cursor: pointer;
+  border: 1px solid #775563;
+  border-radius: 10px;
 }
+.ProductDetails .hoverPic {
+  position: fixed;
+  top: 160px;
+  left: 40%;
+  /* margin: 0 auto; */
+  z-index: 50000;
+}
+.ProductDetails .hoverPic_c {
+  text-align: center;
+}
+.ProductDetails .rate_imgBig {
+  width: 400px;
+  height: 400px;
+  border: 1px solid #775563;
+  border-radius: 10px;
+}
+.ProductDetails .m_close {
+  display: inline-block;
+  border: 1px solid #775563;
+  border-radius: 40px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  cursor: pointer;
+}
+
 .ProductDetails .rd_date {
   height: 17px;
   font-size: 12px;

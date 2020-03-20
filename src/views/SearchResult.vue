@@ -144,8 +144,7 @@ export default {
       CurrentCategoryIdTotal: 0,
       CurrentCategoryIdPageArr: [], // 分页-对应每个分类的当前（历史）页数
       // currentPage: 1,
-      ifSearch: false,
-  
+      ifSearch: false
     };
   },
   mounted() {
@@ -177,7 +176,7 @@ export default {
       let noStockCount = 0;
       for (let i = 0; i < length; i++) {
         let obj = temp_productArr[i];
-        if(obj.stock == 0){
+        if (obj.stock == 0) {
           noStockCount++;
         }
         let images_length = obj.images.length;
@@ -203,6 +202,10 @@ export default {
           }
         }
 
+      
+        // 添加分类
+         obj.category = temp_productArr[i].category.name;
+        // 添加品牌 --pass 可直接赋值
         temp_PArr1.push({
           ...obj
         });
@@ -249,7 +252,9 @@ export default {
             title: dataObj.title,
             type: dataObj.type,
             theme: dataObj.theme,
-            updated_at: dataObj.updated_at
+            updated_at: dataObj.updated_at,
+            brand: dataObj.brand, // 品牌
+            category: dataObj.category // 分类
           }
         });
       }, 500);
@@ -370,7 +375,9 @@ export default {
                 updated_at: data[i].updated_at, // 更新时间
                 // ImgUrl: require("@/assets/pic/product.png") // 产品图（需要Arr）// ★★★首页数据
                 ImgUrl: image, // 产品图（需要Arr）// ★★★首页数据
-                ImgUrls: images
+                ImgUrls: images,
+                brand: data[i].brand, // 品牌
+                category: data[i].category.name // 分类
 
                 // art: "bailey.kieran"
                 // category_id: 1

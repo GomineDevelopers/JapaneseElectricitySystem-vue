@@ -160,7 +160,11 @@ service.interceptors.response.use(
                                 }
                             });
                         }, 1500);
-                    } else {
+                    }
+                    else if (error.response.config.url == global.baseURL + '/authorizations/sms') {
+                        Message("验证码失效！");
+                    }
+                    else {
                         Message("请求失败，请稍后重试！");
                     }
                     break;

@@ -335,7 +335,7 @@ export default {
       let vm = this;
       let token = vm.$Utils.getCookie("user_token");
       let newToken = token.replace('"', "").replace('"', "");
-      if (token != undefined && token != null && token != "") {
+      if (vm.$TokenJudgment(token)) {
         refresh_token(newToken)
           .then(function(response) {
             if (response.status == 200) {
@@ -392,8 +392,8 @@ export default {
                         vm.Gid_A_Oid_common.Gid.push(Gid);
                         vm.Gid_A_Oid_common.Oid.push(Oid);
                         // ▲▲▲ 处理实际显示数据
-                        let good = data[i].good;
-                        let order = data[i].order;
+                        let good = data[i].good; // ▲注意删库会导致good为null
+                        let order = data[i].order; // ▲注意删库会导致order为null
                         let image = require("@/assets/pic/product.png");
                         let content = data[i].content;
                         let created_at = data[i].created_at;
@@ -412,17 +412,30 @@ export default {
                         } catch (error) {
                           console.log(error);
                         }
-                        vm.tableData.push({
-                          OrderNumber: order.no,
-                          ImgUrl: image,
-                          productInfo:
+                        let order_no = "-";
+                        try {
+                          order_no = order.no;
+                        } catch (error) {
+                          console.log(error);
+                        }
+                        let productInfo = "-";
+                        try {
+                          productInfo =
                             good.art +
                             "," +
                             good.title +
                             "," +
                             good.time +
                             "," +
-                            good.quality,
+                            good.quality;
+                        } catch (error) {
+                          console.log(error);
+                        }
+
+                        vm.tableData.push({
+                          OrderNumber: order_no,
+                          ImgUrl: image,
+                          productInfo: productInfo,
                           RateValue1: 0.0, // api暂无 临时
                           RateValue2: 0.0, // api暂无
                           RateValue3: 0.0, // api暂无

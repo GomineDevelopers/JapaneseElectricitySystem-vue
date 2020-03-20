@@ -42,7 +42,7 @@
             <div class="PR_left">新密码</div>
             <div>
               <div class="PR_right">
-                <input class="m_input" v-model="password" placeholder="0-16位字符" type="password" />
+                <input class="m_input" v-model="password" placeholder="6-16位字符" type="password" />
               </div>
             </div>
           </div>
@@ -51,7 +51,7 @@
             <div class="PR_left">确认新密码</div>
             <div>
               <div class="PR_right">
-                <input class="m_input" v-model="password2" placeholder="0-16位字符" type="password" />
+                <input class="m_input" v-model="password2" placeholder="6-16位字符" type="password" />
               </div>
             </div>
           </div>
@@ -140,7 +140,9 @@ export default {
       verification_key: "",
       countDown: 0,
       initTime: 60,
-      ifGetAuthCode: true
+      ifGetAuthCode: true,
+      ifGetVCodeImg: false, // ▲防止不点击获取验证码一直登录问题：一直提示验证码失效！
+      ifGetMessage: false
     };
   },
   mounted() {
@@ -182,6 +184,7 @@ export default {
       if (this.$UninputJudgment(vm.v_code_pic, "请输入图片验证码！")) {
         return;
       }
+      vm.ifGetMessage = true;
       var formData = new FormData();
       var formData = new window.FormData();
       formData.append("captcha_key", this.captcha_key);
@@ -210,9 +213,11 @@ export default {
     },
     getVCodeImg() {
       let vm = this;
-      if (this.$UninputJudgment(vm.phone, "请输入手机号！")) {
+      if (this.$PhoneJudgment(vm.phone, "请输入正确的手机号码！")) {
         return;
       }
+      vm.ifGetVCodeImg = true;
+
       var formData = new FormData();
       var formData = new window.FormData();
       formData.append("phone", this.phone);
@@ -240,28 +245,39 @@ export default {
     },
     RegisterManage() {
       let vm = this;
+      if (this.$PhoneJudgment(vm.phone, "请输入正确的手机号码！")) {
+        return;
+      }
+      if (this.$UninputJudgment(this.password, "请输入新密码！")) {
+        return;
+      }
+      if (
+        this.$PasswordJudgment(
+          this.password,
+          "请输入正确的密码格式，6-16位字符。"
+        )
+      ) {
+        return;
+      }
+      if (this.$UninputJudgment(this.password2, "请确认密码！")) {
+        return;
+      }
       if (this.password2 != this.password) {
         this.$message("两次密码输入不一样！");
         return;
       }
-      if (
-        this.$UninputJudgment(
-          [
-            this.phone,
-            this.password,
-            this.password2,
-            this.v_code_pic,
-            this.v_code
-          ],
-          [
-            "请输入手机号！",
-            "请输入密码！",
-            "请确认密码！",
-            "请输入图片验证码！",
-            "请输入短信验证码！"
-          ]
-        )
-      ) {
+      if (vm.ifGetVCodeImg == false) {
+        this.$message("请点击获取图片验证码");
+        return;
+      }
+      if (this.$UninputJudgment(this.v_code_pic, "请输入图片验证码！")) {
+        return;
+      }
+      if (vm.ifGetMessage == false) {
+        this.$message("请获取短信验证码");
+        return;
+      }
+      if (this.$UninputJudgment(this.v_code, "请输入短信验证码！")) {
         return;
       }
 
