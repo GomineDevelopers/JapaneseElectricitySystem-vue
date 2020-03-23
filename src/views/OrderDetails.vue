@@ -380,7 +380,9 @@ export default {
                   obj.unitPrice = good.price * good.discount;
                   obj.count = GoodsArr[i].amount; // 购买数量：amount
                   // obj.totalPrices = GoodsArr[i].ProductPrice;
-                  obj.totalPrices = GoodsArr[i].amount * good.price; // 订单中 某商品 总价
+                  // obj.totalPrices = GoodsArr[i].amount * good.price; // 订单中 某商品 总价
+                  obj.totalPrices = GoodsArr[i].amount * good.price * good.discount; // 订单中 某商品 总价
+
                   Vue.set(vm.tableData, i, obj);
                 }
 

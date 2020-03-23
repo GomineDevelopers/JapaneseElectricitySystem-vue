@@ -1,7 +1,7 @@
 <template>
   <el-row class="textAlignCenter_w100p FooterModule">
     <el-row class="footer_content main_width_1200">
-      <el-row class="footer_logo">隐私政策 - XXX海购</el-row>
+      <el-row class="footer_logo">隐私政策 - 日本海购美术网</el-row>
       <div class="textAlignCenter_w100p">
         <!-- <span>增值电信业务经营许可证：贵B-20160288</span>
         <span>（贵）网械平台备字[2018]第00007号</span>

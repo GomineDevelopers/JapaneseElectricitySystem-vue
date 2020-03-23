@@ -246,6 +246,8 @@ export default {
             theme: dataObj.theme,
             updated_at: dataObj.updated_at,
             brand: dataObj.brand, // 品牌
+            weight: dataObj.weight, // 净重
+            unit: dataObj.unit, // 净重单位
             category: dataObj.category // 分类
           }
         });
@@ -263,6 +265,28 @@ export default {
       vm.currentCategoryIndex = Number(tab.index); //当前产品数据index
       vm.defaultCategoryId = vm.categoriesDetails[Number(tab.index)].id; //分类id
       vm.getAssign_Goods("index", Number(tab.index)); // 默认：第一个分类产品显示
+    },
+    tempManage() {
+      let vm = this;
+      // vm.categories.push(data[i].name);
+      // vm.categoriesDetails.push({
+      //   id: data[i].id,
+      //   name: data[i].name
+      // });
+      let temp_categories = [];
+      temp_categories.push(vm.categories[2]);
+      temp_categories.push(vm.categories[3]);
+      temp_categories.push(vm.categories[1]);
+      temp_categories.push(vm.categories[0]);
+      vm.categories = [];
+      vm.categories = temp_categories;
+      let temp_categoriesDetails = [];
+      temp_categoriesDetails.push(vm.categoriesDetails[2]);
+      temp_categoriesDetails.push(vm.categoriesDetails[3]);
+      temp_categoriesDetails.push(vm.categoriesDetails[1]);
+      temp_categoriesDetails.push(vm.categoriesDetails[0]);
+      vm.categoriesDetails = [];
+      vm.categoriesDetails = temp_categoriesDetails;
     },
     // 初始化分类
     InitCategories() {
@@ -284,6 +308,9 @@ export default {
           vm.defaultCategoryId = data[0].id; // 默认：分类id
           console.log(vm.categories);
           console.log(vm.categoriesDetails);
+
+          // ▲临时-分类固定 1234 =》
+          vm.tempManage();
           // 初始分类-显示第一个
           vm.getAssign_Goods("index", 0); // 默认：第一个分类产品显示
         })
@@ -371,6 +398,8 @@ export default {
                 ImgUrl: image, // 产品图（需要Arr）// ★★★首页数据
                 ImgUrls: images,
                 brand: data[i].brand, // 品牌
+                weight: data[i].weight, // 净重
+                unit: data[i].unit, // 净重单位
                 category: data[i].category.name // 分类
 
                 // art: "bailey.kieran"

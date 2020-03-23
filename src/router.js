@@ -44,8 +44,8 @@ export default new Router({
       ]
     },
     // search页结构大致同home页
-    { 
-      path: "/search", 
+    {
+      path: "/search",
       name: "search",
       component: () => import("@/views/Search"),
       redirect: "/Search",
@@ -145,6 +145,6 @@ export default new Router({
       name: "FinanceApplyText",
       component: () => import("@/components/FinanceApplyText")
     },
-    
+
   ]
 });

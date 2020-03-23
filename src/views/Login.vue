@@ -407,7 +407,7 @@ export default {
           .catch(function(error) {
             console.info(error);
             // vm.$message("登录失败，请重试！");
-            vm.getVCodeImg("message");
+            // vm.getVCodeImg("message");
           });
       }
     },

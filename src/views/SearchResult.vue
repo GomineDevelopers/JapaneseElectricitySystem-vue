@@ -254,6 +254,8 @@ export default {
             theme: dataObj.theme,
             updated_at: dataObj.updated_at,
             brand: dataObj.brand, // 品牌
+            weight: dataObj.weight, // 净重
+            unit: dataObj.unit, // 净重单位
             category: dataObj.category // 分类
           }
         });
@@ -377,6 +379,8 @@ export default {
                 ImgUrl: image, // 产品图（需要Arr）// ★★★首页数据
                 ImgUrls: images,
                 brand: data[i].brand, // 品牌
+                weight: data[i].weight, // 净重
+                unit: data[i].unit, // 净重单位
                 category: data[i].category.name // 分类
 
                 // art: "bailey.kieran"

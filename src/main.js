@@ -53,7 +53,7 @@ Vue.prototype.$message = Message;
 global.IMGPrefix = "http://shop.zidata.cn/storage/"
 // 处理方式搜  .image
 
-global.MVersion = "0.9.1.1"; // 页面版本号（实时更新）
+global.MVersion = "1.0.0.9"; // 页面版本号（实时更新）
 // 页面版本号处理 --以防测试出现缓存问题！
 let local_Version = Utils.getCookieCry("MVersion");
 // console.log(local_Version);
@@ -64,11 +64,70 @@ if (local_Version != global.MVersion) {
   }, 200);
 }
 
+// 浏览器兼容
+function myBrowser() {
+  var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
+  var isOpera = userAgent.indexOf("Opera") > -1; //判断是否Opera浏览器
+  var isIE = userAgent.indexOf("compatible") > -1
+    && userAgent.indexOf("MSIE") > -1 && !isOpera; //判断是否IE浏览器
+  var isEdge = userAgent.indexOf("Edge") > -1; //判断是否IE的Edge浏览器
+  var isFF = userAgent.indexOf("Firefox") > -1; //判断是否Firefox浏览器
+  var isSafari = userAgent.indexOf("Safari") > -1
+    && userAgent.indexOf("Chrome") == -1; //判断是否Safari浏览器
+  var isChrome = userAgent.indexOf("Chrome") > -1
+    && userAgent.indexOf("Safari") > -1; //判断Chrome浏览器
+
+  if (isIE) {
+    var reIE = new RegExp("MSIE (\\d+\\.\\d+);");
+    reIE.test(userAgent);
+    var fIEVersion = parseFloat(RegExp["$1"]);
+    if (fIEVersion == 7) {
+      return "IE7";
+    } else if (fIEVersion == 8) {
+      return "IE8";
+    } else if (fIEVersion == 9) {
+      return "IE9";
+    } else if (fIEVersion == 10) {
+      return "IE10";
+    } else if (fIEVersion == 11) {
+      return "IE11";
+    } else {
+      return "0";
+    }//IE版本过低
+    return "IE";
+  }
+  if (isOpera) {
+    return "Opera";
+  }
+  if (isEdge) {
+    return "Edge";
+  }
+  if (isFF) {
+    return "FF";
+  }
+  if (isSafari) {
+    return "Safari";
+  }
+  if (isChrome) {
+    return "Chrome";
+  }
+
+}
+let BroType = myBrowser();
+console.log("ooooooooooooooooo");
+console.log(BroType);
+if (BroType == "FF") {
+  $('body').addClass('mac');
+}
+
 if (navigator.userAgent.indexOf('Mac OS X') !== -1) {
   $('body').addClass('mac');
 } else {
   $('body').addClass('pc');
 }
+
+
+
 
 // 跳转后滚动条初始化
 router.afterEach((to, from, next) => {

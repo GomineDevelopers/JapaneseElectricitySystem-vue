@@ -17,7 +17,7 @@
             </div>
 
             <div class="inlineBlock_verTopP header_right">
-              <span class="hr_common hr_left">您好，欢迎来到XXX海购！</span>
+              <span class="hr_common hr_left">您好，欢迎来到日本美术海购网！</span>
               <span class="hr_common hr_right">
                 请
                 <span @click="router_to('/login')" class="top_login">登录</span>
@@ -42,7 +42,7 @@
             <div class="PR_left">新密码</div>
             <div>
               <div class="PR_right">
-                <input class="m_input" v-model="password" placeholder="6-16位字符" type="password" />
+                <input class="m_input" v-model="password" placeholder="6-16位任意数字或字母" type="password" />
               </div>
             </div>
           </div>
@@ -51,7 +51,7 @@
             <div class="PR_left">确认新密码</div>
             <div>
               <div class="PR_right">
-                <input class="m_input" v-model="password2" placeholder="6-16位字符" type="password" />
+                <input class="m_input" v-model="password2" placeholder="6-16位任意数字或字母" type="password" />
               </div>
             </div>
           </div>
@@ -254,7 +254,7 @@ export default {
       if (
         this.$PasswordJudgment(
           this.password,
-          "请输入正确的密码格式，6-16位字符。"
+          "请输入正确的密码格式，6-16位任意数字或字母。"
         )
       ) {
         return;
@@ -303,7 +303,7 @@ export default {
         .catch(function(error) {
           console.info(error);
           // vm.$message("重置密码失败，请重试！");
-          vm.getVCodeImg();
+          // vm.getVCodeImg();
         });
     }
   }

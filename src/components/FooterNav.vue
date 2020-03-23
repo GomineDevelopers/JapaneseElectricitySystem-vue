@@ -28,8 +28,18 @@
               <template v-for="(itemC,indexC) in item.content ">
                 <div class :key="indexC+ 'haC'">
                   <div
-                    v-if="itemC.sTitle !='CEO邮箱' && itemC.sTitle !='线下店' && itemC.sTitle !='联系我们'"
+                    v-if="ManageSTitle.indexOf(itemC.sTitle) <= -1"
                     @click="GoHref(itemC.URL)"
+                    class="sTitleContent"
+                  >{{itemC.sTitle}}</div>
+                  <div
+                    v-if="ManageSTitle_word.indexOf(itemC.sTitle) > -1"
+                    @click="router_toSpec(itemC.URL)"
+                    class="sTitleContent"
+                  >{{itemC.sTitle}}</div>
+                  <div
+                    v-if="itemC.sTitle =='假一赔十'"
+                    @click="MOpen(1)"
                     class="sTitleContent"
                   >{{itemC.sTitle}}</div>
                   <div
@@ -53,7 +63,7 @@
           </template>
         </div>
       </div>
-      <div class="inlineBlock_verTopP hs_right">
+      <!-- <div class="inlineBlock_verTopP hs_right">
         <div class="perQR">
           <div class="QRCode_P">
             <img class="QRCode" src="../assets/pic/QRCode.png" alt />
@@ -69,10 +79,11 @@
           <div class="QR_info">XXX海淘</div>
           <div class="QR_info">微博账号</div>
         </div>
-      </div>
+      </div> -->
+
     </div>
 
-    <!-- 二维码弹窗 -->
+    <!-- 二维码弹窗 - 联系我们-->
     <div v-show="Dialog1 == true" class="Dialog1">
       <div class="Dialog1_bg">
         <h2>联系我们</h2>
@@ -108,21 +119,33 @@
         <el-button class="closeBtn" @click="Cancel1()">关闭</el-button>
       </div>
     </div>
-    <!-- 二维码弹窗2 -->
+    <!-- 二维码弹窗2 - CEO邮箱 -->
 
     <div v-show="Dialog2 == true" class="Dialog1 Dialog2">
       <div class="Dialog1_bg Dialog2_bg">
         <h2>CEO邮箱</h2>
-        <div class="inlineBlock_verTopP cu_text cu_text2">尊敬的xxx海购合作伙伴：</div>
+        <div class="inlineBlock_verTopP cu_text cu_text2">尊敬的日本美术海购网合作伙伴：</div>
         <div
           class="inlineBlock_verTopP cu_text cu_text2 indent"
-        >为了加强xxx海购与商户之间的密切交流与合作，我们特别开通了xxx海购CEO邮箱，希望能够与大家更直接有效的进行沟通交流。当您在xxx海购的交易合作过程中遇到问题，或您对我们的发展有更多的建议及意见反馈。请您通过此邮箱联系我们！</div>
+        >为了加强日本美术海购与商户之间的密切交流与合作，我们特别开通了日本美术海购网CEO邮箱，希望能够与大家更直接有效的进行沟通交流。当您在日本美术海购网的交易合作过程中遇到问题，或您对我们的发展有更多的建议及意见反馈。请您通过此邮箱联系我们！</div>
         <div class="inlineBlock_verTopP cu_text cu_text2">
           邮箱地址：
           <a href="mailto:marketing@gomine.cn">marketing@gomine.cn</a>
         </div>
         <div class="inlineBlock_verTopP cu_text cu_text2">感谢您对我们的支持与配合！</div>
         <el-button class="closeBtn" @click="Cancel2()">关闭</el-button>
+      </div>
+    </div>
+
+    <!-- 二维码弹窗3 - 假一赔十 -->
+    <div v-show="Dialog3 == true" class="Dialog1 Dialog3">
+      <div class="Dialog1_bg Dialog3_bg">
+        <h2>假一赔十</h2>
+        <h3 class="inlineBlock_verTopP cu_text cu_text2">正品保障，我们是认真的</h3>
+        <div
+          class="inlineBlock_verTopP cu_text cu_text2 indent"
+        >我们承诺，日本美术海购网所售商品均为全新正品，如有假冒，根据消协最新规定“假一赔二”给予赔偿外，我们另行赔付8倍，实现假一赔十承诺，请放心购买。</div>
+        <el-button class="closeBtn" @click="MCancel(1)">关闭</el-button>
       </div>
     </div>
   </div>
@@ -162,25 +185,37 @@ export default {
         {
           title: "正品保障",
           content: [
-            { sTitle: "假一赔十", URL: "" },
-            { sTitle: "廉政举报", URL: "" }
+            { sTitle: "假一赔十", URL: "" }
+            // { sTitle: "廉政举报", URL: "" }
           ]
         },
         {
           title: "新品指南",
           content: [
-            { sTitle: "购物流程", URL: "" },
-            { sTitle: "支付方式", URL: "" },
-            { sTitle: "通关税费", URL: "" },
-            { sTitle: "常见问题", URL: "" }
+            {
+              sTitle: "购物流程",
+              URL: "http://demo.companycheck.cn/doc2/购物流程v1.docx"
+            },
+            {
+              sTitle: "支付方式",
+              URL: "http://demo.companycheck.cn/doc2/支付方式v1.docx"
+            },
+            {
+              sTitle: "通关税费",
+              URL: "http://demo.companycheck.cn/doc2/通关税费v1.docx"
+            },
+            {
+              sTitle: "常见问题",
+              URL: "http://demo.companycheck.cn/doc2/常见问题v1.docx"
+            }
           ]
         },
         {
           title: "售后服务",
           content: [
             { sTitle: "售后政策", URL: "" },
-            { sTitle: "退货流程", URL: "" },
-            { sTitle: "特色服务", URL: "" },
+            // { sTitle: "退货流程", URL: "" },
+            // { sTitle: "特色服务", URL: "" },
             { sTitle: "联系客服", URL: "" }
           ]
         },
@@ -188,7 +223,7 @@ export default {
           title: "物流配送",
           content: [
             { sTitle: "配送方式", URL: "" },
-            { sTitle: "配送服务", URL: "" },
+            // { sTitle: "配送服务", URL: "" },
             { sTitle: "运费标准", URL: "" },
             { sTitle: "物流标准", URL: "" }
           ]
@@ -196,22 +231,54 @@ export default {
         {
           title: "关于我们",
           content: [
-            { sTitle: "联系我们", URL: "http://www.gomine.cn/contact.html" },
-            { sTitle: "CEO邮箱", URL: "/" },
-            { sTitle: "线下店", URL: "/" }
+            { sTitle: "联系我们", URL: "http://www.gomine.cn/contact.html" }
+            // { sTitle: "CEO邮箱", URL: "/" }, // 临时隐藏
+            // { sTitle: "线下店", URL: "/" }
           ]
         }
       ],
       img_Dialog: require("@/assets/pic/about.png"),
       OfficialWebsite: "http://www.gomine.cn/index.html",
       Dialog1: false,
-      Dialog2: false
+      Dialog2: false,
+      Dialog3: false,
+      ManageSTitle: [
+        "CEO邮箱",
+        "线下店",
+        "联系我们",
+        "假一赔十",
+        "购物流程",
+        "支付方式",
+        "通关税费",
+        "常见问题"
+      ],
+      ManageSTitle_word: ["购物流程", "支付方式", "通关税费", "常见问题"]
     };
   },
   mounted() {
     let vm = this;
   },
   methods: {
+    router_toSpec(url) {
+      let vm = this;
+      // 待添加query 对应 pid
+      // vm.$router.push({ path: str });
+      let m_url = "http://view.officeapps.live.com/op/view.aspx?src=" + url;
+      console.log(m_url);
+      window.location.href = m_url;
+      // window.location.href = m_url;
+    },
+    MCancel(number) {
+      let vm = this;
+      if (number == 1) {
+        vm.Dialog3 = false;
+      }
+    },
+    MOpen(number) {
+      if (number == 1) {
+        this.Dialog3 = true;
+      }
+    },
     Cancel2() {
       let vm = this;
       vm.Dialog2 = false;
@@ -354,7 +421,8 @@ export default {
 /* ***** 弹出框 */
 .FooterNav .Dialog1 {
   top: 0;
-  padding-top: 90px;
+  /* padding-top: 90px; */
+  padding-top: 5%;
   position: fixed;
   text-align: center;
   width: 100%;
@@ -365,18 +433,27 @@ export default {
 .FooterNav .Dialog2 {
   padding-top: 180px;
 }
+.FooterNav .Dialog3 {
+  padding-top: 200px;
+}
 
 .FooterNav .Dialog1_bg {
   height: 660px;
   width: 800px;
   text-align: center;
-  padding: 32px 68px;
+  /* padding: 32px 68px; */
+  padding: 10px 68px;
+
   background-color: #ffffff;
   margin: 0 auto;
   border-radius: 10px;
 }
 .FooterNav .Dialog2_bg {
   height: 400px;
+  width: 800px;
+}
+.FooterNav .Dialog3_bg {
+  height: 300px;
   width: 800px;
 }
 

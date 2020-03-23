@@ -120,7 +120,7 @@
                       >{{ item.name }}：{{ item.value }}</div>
                     </template>
                   </div>
-                  <div class="inlineBlock_verTopP perMic">
+                  <div v-if="mi_contentArr.length >= 7" class="inlineBlock_verTopP perMic">
                     <template v-for="(item, index) in mi_contentArr.slice(6, 9)">
                       <div
                         :key="index + 'mic3'"
@@ -128,7 +128,7 @@
                       >{{ item.name }}：{{ item.value }}</div>
                     </template>
                   </div>
-                  <div class="inlineBlock_verTopP perMic">
+                  <div v-if="mi_contentArr.length >= 10" class="inlineBlock_verTopP perMic">
                     <template v-for="(item, index) in mi_contentArr.slice(9, 12)">
                       <div
                         :key="index + 'mic4'"
@@ -318,6 +318,8 @@ export default {
         art: "-",
         quality: "-",
         brand: "-",
+        weight: "-",
+        unit:"-",
         category: "-",
         size: "",
         created_at: "-",
@@ -394,6 +396,10 @@ export default {
         {
           name: "分类",
           value: "文具"
+        },
+        {
+          name: "净重",
+          value: "1kg"
         }
       ],
       mi_picIntroArr: [
@@ -826,6 +832,27 @@ export default {
       this.mi_contentArr[7].value = this.PData.theme;
       this.mi_contentArr[8].value = this.PData.brand;
       this.mi_contentArr[9].value = this.PData.category;
+      this.mi_contentArr[10].value = this.PData.weight + this.PData.unit;
+      console.log(this.mi_contentArr);
+      // 商品字段信息去空处理
+      this.manageContentArr();
+    },
+    // 商品字段信息去空处理
+    manageContentArr() {
+      let length = this.mi_contentArr.length;
+      let temp_arr = [];
+      console.log("~~~~~: " + length);
+      for (let i = 0; i < length; i++) {
+        console.log(this.mi_contentArr[i]);
+        let value = this.mi_contentArr[i].value;
+        if (value == "" || value == null || value == undefined) {
+        } else {
+          temp_arr.push(this.mi_contentArr[i]);
+        }
+        // this.mi_contentArr.splice(i, 1);
+      }
+      this.mi_contentArr = [];
+      this.mi_contentArr = temp_arr;
     },
     MainPicChange(index) {
       this.mainPicURL = this.smallPicArr[index].ImgUrl;

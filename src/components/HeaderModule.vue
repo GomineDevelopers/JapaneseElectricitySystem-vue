@@ -19,7 +19,8 @@
             class="hoverOpacity"
             @click="router_toSpec('/personalcenter','1')"
           >{{HeaderInfo2}}</span>
-          <span class="hoverOpacity LoginOut" @click="LoginOutManage()">（注销）</span>
+          <!-- <span class="hoverOpacity LoginOut" @click="LoginOutManage()">（注销）</span> -->
+          <span class="hoverOpacity LoginOut" @click="LoginOutManage()">（退出）</span>
         </el-col>
         <el-col :span="12" class="inlineBlock_verTopP text_align_right">
           <div
@@ -103,7 +104,8 @@ export default {
         .then(function(response) {
           console.log(response);
           if (response.status == 204) {
-            vm.$message("注销成功！即将跳转登录页面！");
+            // vm.$message("注销成功！即将跳转登录页面！");
+            vm.$message("退出成功！即将跳转登录页面！");
             // 删除本地token的Cookie
 
             setTimeout(function() {

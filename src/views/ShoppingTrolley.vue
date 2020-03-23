@@ -181,6 +181,7 @@ export default {
         //     operation: "删除"
       ],
       multipleSelection: [],
+      multipleSelection_EmptyDoor: true, // （两种情况：1是勾不勾问题置零问题 2是增减时候置零问题）
       ifChoosel_checkbox: false,
       totalValue: 0,
       CurrentCartIndexArr: [],
@@ -225,11 +226,15 @@ export default {
           if (length > 0) {
             let t_totalValue = 0;
             for (let i = 0; i < length; i++) {
-              t_totalValue += newValue[i].totalPrices;
+              // t_totalValue += newValue[i].totalPrices;
+              t_totalValue += newValue[i].count * newValue[i].unitPrice;
             }
             vm.totalValue = t_totalValue.toFixed(2);
           } else {
-            // vm.totalValue = 0; // 关掉-防闪烁至0
+            // if (vm.multipleSelection_EmptyDoor == true) {
+            console.log(vm.tableData);
+            vm.totalValue = 0; // 关掉-防闪烁至0
+            // }
           }
         }, 500);
       }
@@ -482,6 +487,8 @@ export default {
       let vm = this;
       let token = vm.$Utils.getCookie("user_token");
       let newToken = token.replace('"', "").replace('"', "");
+      let ifBuyNow = 0;
+
       getCartList(newToken)
         .then(function(response) {
           console.log("getCartList");
@@ -491,6 +498,8 @@ export default {
           if (response.status == 200) {
             vm.tableData = [];
             vm.multipleSelection = []; // 初始化历史选中
+            console.log(vm.mTimeDoor);
+            vm.multipleSelection_EmptyDoor = false;
             // vm.tableData.splice(0); // 改变长度
             let temp_multipleSelection = [];
             let data = response.data.data;
@@ -524,7 +533,10 @@ export default {
                   count: data[i].amount,
                   unitPriceHistory: good.price,
                   unitPrice: Number(good.price) * Number(good.discount),
-                  totalPrices: data[i].amount * Number(good.price),
+                  // totalPrices: data[i].amount * Number(good.price),
+                  totalPrices:
+                    data[i].amount * Number(good.price) * Number(good.discount),
+
                   operation: "删除"
                 };
                 if (t_ifBuyNow == 1) {
@@ -547,7 +559,6 @@ export default {
                   temp_multipleSelection = vm.multipleSelection;
                 }
               }
-              let ifBuyNow = 0;
               // let routeValue = vm.$route.query;
               let routeValue = vm.$route.params;
               console.log(routeValue);
@@ -567,7 +578,11 @@ export default {
                 if (Number(data[i].good_id) == Number(routeValue.id)) {
                   // 只传入立即购买的商品id
                   ManageTableData(ifBuyNow);
-                  temp_totalValue = data[i].amount * Number(good.price);
+                  // temp_totalValue = data[i].amount * Number(good.price);
+
+                  let unitPrice = Number(good.price) * Number(good.discount);
+                  temp_totalValue = (data[i].amount * unitPrice).toFixed(2);
+
                   // vm.totalValue = temp_totalValue; // 总价 // =》勾选才计算！
                   // 进行普通跳转结算即可！
                   console.log(vm.tableData);
@@ -585,7 +600,11 @@ export default {
                 }
               } else if (ifBuyNow != 1) {
                 ManageTableData(ifBuyNow); // 传入所有购物车商品id
-                temp_totalValue += vm.tableData[i].totalPrices;
+                // temp_totalValue += vm.tableData[i].totalPrices;
+                temp_totalValue += (
+                  vm.tableData[i].count * vm.tableData[i].unitPrice
+                ).toFixed(2);
+
                 vm.ifOk = true;
               }
 
@@ -611,7 +630,10 @@ export default {
             }, 200);
 
             // 计算总价格（不含运费）
-            // vm.totalValue = temp_totalValue.toFixed(2); // =》勾选才计算！
+            if (ifBuyNow == 1) {
+              // vm.totalValue = temp_totalValue.toFixed(2); // =》勾选才计算！ // =》 立即购买需要计算，购物车不需要
+              vm.totalValue = temp_totalValue; // =》勾选才计算！ // =》 立即购买需要计算，购物车不需要
+            }
           }
         })
         .catch(function(error) {
@@ -647,6 +669,7 @@ export default {
     },
 
     toggleSelection(rows) {
+      let vm = this;
       if (rows) {
         rows.forEach(row => {
           this.$refs.multipleTable.toggleRowSelection(row);
@@ -654,13 +677,28 @@ export default {
       } else {
         this.$refs.multipleTable.clearSelection();
       }
+      vm.multipleSelection_EmptyDoor = true;
     },
     handleSelectionChange(val) {
       let vm = this;
+      // vm.historyChooseGId = [];
+      // let length = val.length;
+      // for (let i = 0; i < length; i++) {
+      //   vm.historyChooseGId.push(val[i].id);
+      // }
+      // if (length == 0) {
+      //   console.log(vm.mTimeDoor);
+      //   // 总价置0  ---不勾选时候watch那里好像没生效  --...不是没生效而是关掉了... watch重新打开，并新增防判断
+      //   vm.totalValue = (0.0).toFixed(2);
+      // }
       console.log(val);
+      console.log(vm.historyChooseGId);
+
       this.multipleSelection = val;
     },
     ChooseCheckboxManage(ifChoosel_checkbox) {
+      let vm = this;
+
       console.log(ifChoosel_checkbox);
       if (ifChoosel_checkbox) {
         this.multipleSelection = this.tableData;

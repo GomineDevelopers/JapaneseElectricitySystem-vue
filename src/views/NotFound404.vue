@@ -1,7 +1,9 @@
 <template>
   <div class="NotFound404">
     <vue-headful title="404"></vue-headful>
-    <span>404 - 无当前页</span>
+    <div class="textAlignCenter_w100p">
+      <h3>404 - 无当前页</h3>
+    </div>
   </div>
 </template>
 <script>

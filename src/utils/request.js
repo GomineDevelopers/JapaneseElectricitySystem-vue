@@ -112,17 +112,24 @@ service.interceptors.response.use(
                             Message(error.response.data.errors.password[0]);
                         } catch (error) {
                             // Message("请求失败，请稍后重试！");
-                            Message("密码格式或验证码错误！");
+                            Message("验证码错误！");
                             console.log(error)
                         }
                     }
                     else if (error.response.config.url == global.baseURL + '/users') {
                         try {
-                            Message(error.response.data.errors.password[0]);
+                            Message(error.response.data.errors);
                         } catch (error) {
-                            Message("密码格式或验证码错误！");
+                            // Message("验证码错误！");
                             console.log(error)
+                            try {
+                                Message(error.response.data.errors.password[0]);
+                            } catch (error) {
+                                Message("验证码错误！");
+                                console.log(error)
+                            }
                         }
+
                     }
                     else if (error.response.config.url == global.baseURL + '/cart') {
                         Message("该商品已售完，将返回首页");
@@ -172,7 +179,13 @@ service.interceptors.response.use(
                     if (error.response.config.url == global.baseURL + '/verificationCodes') {
                         Message("图片验证码错误,请重新输入！");
                     } else if (error.response.config.url == global.baseURL + '/users') {
-                        Message("用户名、密码或验证码错误！");
+                        // Message("用户名、密码或验证码错误！");
+                        try {
+                            Message(error.response.data.message);
+                        } catch (error) {
+                            console.log(error)
+                            Message("用户名、密码或验证码错误！");
+                        }
                     }
                     else if (error.response.config.url == global.baseURL + '/authorizations') {
                         if (error.response.data.message == "用户名或密码错误") {

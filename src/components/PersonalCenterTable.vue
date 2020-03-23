@@ -261,6 +261,8 @@ export default {
               ImgUrl: image, // 产品图（需要Arr）// ★★★首页数据
               ImgUrls: images,
               brand: initObj.brand, // 品牌
+              weight: initObj.weight, // 净重
+              unit: initObj.unit, // 净重单位
               category: initObj.category.name // 分类
             };
 
@@ -292,6 +294,8 @@ export default {
                   theme: dataObj.theme,
                   updated_at: dataObj.updated_at,
                   brand: dataObj.brand, // 品牌
+                  weight: dataObj.weight, // 净重
+                  unit: dataObj.unit, // 净重单位
                   category: dataObj.category // 分类
                 }
               });
