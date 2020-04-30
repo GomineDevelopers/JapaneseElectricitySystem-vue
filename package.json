@@ -34,7 +34,7 @@
     "babel-plugin-import": "^1.13.0",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "script-loader": "^0.7.2",
     "vue-svg-icon": "^1.2.9",
     "vue-template-compiler": "^2.6.10"
